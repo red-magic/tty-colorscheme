@@ -38,7 +38,7 @@ if [[ -n "$PRINT_SCHEMES" || -n "$PRINT_COLORED_SCHEMES" ]]; then
 				if [[ $line =~ ^color[0-9]+=.*$ ]]; then
 					eval "$line"
 					hex_color="${line#*=}"
-					printf '\e[48;2;%bm   \e[0m' "$(printf "%d;%d;%d" 0x"${hex_color:0:2}" 0x"${hex_color:2:2}" 0x"${hex_color:4:2}")"
+					printf '\e[48;2;%d;%d;%dm   \e[0m' 0x"${hex_color:0:2}" 0x"${hex_color:2:2}" 0x"${hex_color:4:2}"
 					cnt="$((cnt+1))"
 					if [[ $((cnt % 8)) -eq 0 ]]; then
 						echo
