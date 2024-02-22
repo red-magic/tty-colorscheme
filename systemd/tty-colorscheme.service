@@ -1,0 +1,10 @@
+[Unit]
+Description=Change TTY colors
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/tty-colorscheme/tty-colorscheme.conf
+ExecStart=/usr/bin/tty-colorscheme ${colorscheme}
+
+[Install]
+WantedBy=getty.target
