@@ -39,7 +39,7 @@ Type ```reset``` to get back to the system default colors
 
 ![screenshot 1](images/screenshot-1.png)
 
-### aura
+### monokai-soda
 
 ![screenshot 2](images/screenshot-2.png)
 
