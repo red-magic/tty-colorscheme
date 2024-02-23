@@ -31,7 +31,7 @@ If you get screen artifacts hit ```Ctrl+l``` or type ```clear```
 
 Type ```reset``` to get back to the system default colors
 
-```tty-colorscheme -c | less -R``` to scroll through schemes with colors printed, it's better to use ```reset``` before doing it to see proper colors
+```tty-colorscheme -c | less -R``` to scroll through schemes with colors printed, it's better to use ```reset``` before doing it to see approximate colors
 
 ## Screenshots
 
