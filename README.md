@@ -37,19 +37,19 @@ Type ```reset``` to get back to the system default colors
 
 ### blood-dragon
 
-![screenshot 1](images/screenshot-1.png)
+![blood-dragon](images/blood-dragon.png)
 
 ### mono-light
 
-![screenshot 2](images/screenshot-2.png)
+![mono-light](images/mono-light.png)
 
 ### monokai-soda
 
-![screenshot 3](images/screenshot-3.png)
+![monokai-soda](images/monokai-soda.png)
 
 ### mono-amber
 
-![screenshot 4](images/screenshot-4.png)
+![mono-amber](images/mono-amber.png)
 
 ## Customization
 
