@@ -62,7 +62,7 @@ if [ -n "$PRINT_CURRENT_PALETTE" ]; then
 				while [ "${#cntprt}" -lt 3 ]; do
 					cntprt=" ${cntprt}"
 				done
-				printf '%b' "\033[${frgrnd}m ${cntprt} "
+				printf '%b' "\033[${frgrnd}m ${cntprt}"
 				cnt=$((cnt+1))
 			done
 		done
