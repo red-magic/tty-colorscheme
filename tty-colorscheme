@@ -35,14 +35,12 @@ if [[ -n "$PRINT_SCHEMES" || -n "$PRINT_COLORED_SCHEMES" ]]; then
 		if [[ -n "$PRINT_COLORED_SCHEMES" ]]; then
 			cnt=0
 			while IFS= read -r line || [[ -n "$line" ]]; do
-				if [[ $line =~ ^color[0-9]+=.*$ ]]; then
-					eval "$line"
-					hex_color="${line#*=}"
-					printf '\e[48;2;%d;%d;%dm   \e[0m' 0x"${hex_color:0:2}" 0x"${hex_color:2:2}" 0x"${hex_color:4:2}"
-					cnt="$((cnt+1))"
-					if [[ $((cnt % 8)) -eq 0 ]]; then
-						echo
-					fi
+				eval "$line"
+				hex_color="${line#*=}"
+				printf '\e[48;2;%d;%d;%dm   \e[0m' 0x"${hex_color:0:2}" 0x"${hex_color:2:2}" 0x"${hex_color:4:2}"
+				cnt="$((cnt+1))"
+				if [[ $((cnt % 8)) -eq 0 ]]; then
+					echo
 				fi
 			done < "$scheme_file"
 		fi
@@ -83,9 +81,7 @@ if [[ "$OPTIND" -eq 1 && -n "$1" || -n "$PICK_RANDOM_COLORSCHEME" ]]; then
 		fi
 	fi
 	while IFS= read -r line || [[ -n "$line" ]]; do
-		if [[ $line =~ ^color[0-9]+=.*$ ]]; then
-			eval "$line"
-		fi
+		eval "$line"
 	done < "$colorschemes_dir/$colorscheme"
 	set_tty_colors() {
 		echo -en "\e]P0${color1:?}"  # Background
