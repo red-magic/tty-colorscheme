@@ -19,7 +19,7 @@ Usage: tty-colorscheme [flags | colorscheme]
   -l    list colorschemes
   -c    list colorschemes and print their colors
   -p    print current color palette
-  -r    pick a random colorscheme
+  -r    set a random colorscheme
   -h    print help
 ```
 

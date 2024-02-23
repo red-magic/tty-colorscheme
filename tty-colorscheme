@@ -7,7 +7,7 @@ print_help() {
 	printf '  -l    list colorschemes\n'
 	printf '  -c    list colorschemes and print their colors\n'
 	printf '  -p    print current color palette\n'
-	printf '  -r    pick a random colorscheme\n'
+	printf '  -r    set a random colorscheme\n'
 	printf '  -h    print help\n'
 }
 
@@ -20,7 +20,7 @@ while getopts ":lcprh" opt; do
 		l) PRINT_SCHEMES=1;;
 		c) PRINT_COLORED_SCHEMES=1;;
 		p) PRINT_CURRENT_PALETTE=1;;
-		r) PICK_RANDOM_COLORSCHEME=1;;
+		r) SET_RANDOM_COLORSCHEME=1;;
 		h) PRINT_HELP=1;;
 		*) printf 'Invalid option -%s\n' "$OPTARG" && print_help && exit 1;;
 	esac
@@ -74,8 +74,8 @@ if [ -n "$PRINT_HELP" ]; then
 	print_help
 fi
 
-if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$PICK_RANDOM_COLORSCHEME" ]; then
-	if [ -n "$PICK_RANDOM_COLORSCHEME" ]; then
+if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$SET_RANDOM_COLORSCHEME" ]; then
+	if [ -n "$SET_RANDOM_COLORSCHEME" ]; then
 		colorscheme="$(basename "$(find "$colorschemes_dir" -type f | shuf -n 1)")"
 	else
 		colorscheme="$1"
