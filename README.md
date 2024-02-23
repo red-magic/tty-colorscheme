@@ -35,11 +35,19 @@ Type ```reset``` to get back to the system default colors
 
 ## Screenshots
 
+### blood-dragon
+
 ![screenshot 1](images/screenshot-1.png)
+
+### aura
 
 ![screenshot 2](images/screenshot-2.png)
 
+### mono-light
+
 ![screenshot 3](images/screenshot-3.png)
+
+### mono-amber
 
 ![screenshot 4](images/screenshot-4.png)
 
