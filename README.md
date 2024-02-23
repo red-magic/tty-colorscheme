@@ -33,6 +33,8 @@ Type ```reset``` to get back to the system default colors
 
 ```tty-colorscheme -c | less -R``` to scroll through schemes with palettes printed, it's better to use ```reset``` before doing it to see approximate colors
 
+You can set a random colorscheme with ```-r``` or set them one by one with something like ```for i in /etc/tty-colorscheme/colorschemes/*; do tty-colorscheme "$(basename "$i")" && ls /etc && tty-colorscheme -p && read; done``` and keep the one you like
+
 ## Screenshots
 
 ### blood-dragon
