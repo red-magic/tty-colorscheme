@@ -17,8 +17,8 @@ A desired colorscheme can be set in ```/etc/tty-colorscheme/tty-colorscheme.conf
 ```
 Usage: tty-colorscheme [flags | colorscheme]
   -l    list colorschemes
-  -c    list colorschemes and print their colors
-  -p    print current color palette
+  -c    list colorschemes and print their palettes
+  -p    print current palette
   -r    set a random colorscheme
   -h    print help
 ```
@@ -31,7 +31,7 @@ If you get screen artifacts hit ```Ctrl+l``` or type ```clear```
 
 Type ```reset``` to get back to the system default colors
 
-```tty-colorscheme -c | less -R``` to scroll through schemes with colors printed, it's better to use ```reset``` before doing it to see approximate colors
+```tty-colorscheme -c | less -R``` to scroll through schemes with palettes printed, it's better to use ```reset``` before doing it to see approximate colors
 
 ## Screenshots
 

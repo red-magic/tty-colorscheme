@@ -5,8 +5,8 @@ colorschemes_dir="/etc/tty-colorscheme/colorschemes"
 print_help() {
 	printf 'Usage: tty-colorscheme [flags | colorscheme]\n'
 	printf '  -l    list colorschemes\n'
-	printf '  -c    list colorschemes and print their colors\n'
-	printf '  -p    print current color palette\n'
+	printf '  -c    list colorschemes and print their palettes\n'
+	printf '  -p    print current palette\n'
 	printf '  -r    set a random colorscheme\n'
 	printf '  -h    print help\n'
 }
@@ -18,7 +18,7 @@ fi
 while getopts ":lcprh" opt; do
 	case "$opt" in
 		l) PRINT_SCHEMES=1;;
-		c) PRINT_COLORED_SCHEMES=1;;
+		c) PRINT_SCHEMES_PALETTES=1;;
 		p) PRINT_CURRENT_PALETTE=1;;
 		r) SET_RANDOM_COLORSCHEME=1;;
 		h) PRINT_HELP=1;;
@@ -28,11 +28,11 @@ done
 
 shift "$((OPTIND-1))"
 
-if [ -n "$PRINT_SCHEMES" ] || [ -n "$PRINT_COLORED_SCHEMES" ]; then
+if [ -n "$PRINT_SCHEMES" ] || [ -n "$PRINT_SCHEMES_PALETTES" ]; then
 	for scheme_file in "$colorschemes_dir"/*; do
 		scheme_name="$(basename "$scheme_file")"
 		printf '%s\n' "$scheme_name"
-		if [ -n "$PRINT_COLORED_SCHEMES" ]; then
+		if [ -n "$PRINT_SCHEMES_PALETTES" ]; then
 			cnt=0
 			while IFS= read -r line || [ -n "$line" ]; do
 				eval "$line"
