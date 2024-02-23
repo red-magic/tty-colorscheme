@@ -39,11 +39,11 @@ Type ```reset``` to get back to the system default colors
 
 ![screenshot 1](images/screenshot-1.png)
 
-### monokai-soda
+### mono-light
 
 ![screenshot 2](images/screenshot-2.png)
 
-### mono-light
+### monokai-soda
 
 ![screenshot 3](images/screenshot-3.png)
 
