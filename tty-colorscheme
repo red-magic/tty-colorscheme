@@ -53,11 +53,11 @@ fi
 
 if [ -n "$PRINT_CURRENT_PALETTE" ]; then
 	cnt=0
-	for bkgrnd in 40 41 42 43 44 45 46 47; do
+	for bkgrnd in $(seq 40 47); do
 		printf '%b' "\033[${bkgrnd}m"
 		for bold in 22 1; do
 			printf '%b' "\033[${bold}m"
-			for frgrnd in 30 31 32 33 34 35 36 37; do
+			for frgrnd in $(seq 30 37); do
 				cntprt="$cnt"
 				while [ "${#cntprt}" -lt 3 ]; do
 					cntprt=" ${cntprt}"
