@@ -60,9 +60,9 @@ if [ -n "$PRINT_CURRENT_PALETTE" ]; then
 			for frgrnd in $(seq 30 37); do
 				cntprt=$cnt
 				while [ ${#cntprt} -lt 3 ]; do
-					cntprt=" ${cntprt}"
+					cntprt=" $cntprt"
 				done
-				printf '%b' "\033[${frgrnd}m ${cntprt}"
+				printf '%b' "\033[${frgrnd}m $cntprt"
 				cnt=$((cnt+1))
 			done
 		done
