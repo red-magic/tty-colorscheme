@@ -3,10 +3,10 @@
 colorschemes_dir=/etc/tty-colorscheme/colorschemes
 
 print_help() {
-	printf 'Usage: %s [-lcprh | colorscheme]\n' "$(basename "$0")"
+	printf 'Usage: %s [-lpcrh | colorscheme]\n' "$(basename "$0")"
 	printf '  -l    list colorschemes\n'
-	printf '  -c    list colorschemes and print their palettes\n'
-	printf '  -p    print current palette\n'
+	printf '  -p    list colorschemes and print their palettes\n'
+	printf '  -c    print current palette\n'
 	printf '  -r    set a random colorscheme\n'
 	printf '  -h    print help\n'
 }
@@ -15,11 +15,11 @@ if [ $# -eq 0 ]; then
 	PRINT_HELP=1
 fi
 
-while getopts :lcprh opt; do
+while getopts :lpcrh opt; do
 	case $opt in
 		l) PRINT_SCHEMES=1;;
-		c) PRINT_SCHEMES_PALETTES=1;;
-		p) PRINT_CURRENT_PALETTE=1;;
+		p) PRINT_SCHEMES_PALETTES=1;;
+		c) PRINT_CURRENT_PALETTE=1;;
 		r) SET_RANDOM_COLORSCHEME=1;;
 		h) PRINT_HELP=1;;
 		*) printf 'Invalid option -%s\n' "$OPTARG" && print_help && exit 1;;
