@@ -1,9 +1,9 @@
 #!/bin/sh
 
-colorschemes_dir="/etc/tty-colorscheme/colorschemes"
+colorschemes_dir=/etc/tty-colorscheme/colorschemes
 
 print_help() {
-	printf 'Usage: tty-colorscheme [flags | colorscheme]\n'
+	printf 'Usage: %s [-lcprh | colorscheme]\n' "$(basename "$0")"
 	printf '  -l    list colorschemes\n'
 	printf '  -c    list colorschemes and print their palettes\n'
 	printf '  -p    print current palette\n'
@@ -15,8 +15,8 @@ if [ $# -eq 0 ]; then
 	PRINT_HELP=1
 fi
 
-while getopts ":lcprh" opt; do
-	case "$opt" in
+while getopts :lcprh opt; do
+	case $opt in
 		l) PRINT_SCHEMES=1;;
 		c) PRINT_SCHEMES_PALETTES=1;;
 		p) PRINT_CURRENT_PALETTE=1;;
@@ -26,21 +26,21 @@ while getopts ":lcprh" opt; do
 	esac
 done
 
-shift "$((OPTIND-1))"
+shift $((OPTIND-1))
 
 if [ -n "$PRINT_SCHEMES" ] || [ -n "$PRINT_SCHEMES_PALETTES" ]; then
 	for scheme_file in "$colorschemes_dir"/*; do
-		scheme_name="$(basename "$scheme_file")"
+		scheme_name=$(basename "$scheme_file")
 		printf '%s\n' "$scheme_name"
 		if [ -n "$PRINT_SCHEMES_PALETTES" ]; then
 			cnt=0
 			while IFS= read -r line || [ -n "$line" ]; do
 				eval "$line"
-				hex_color="${line#*=}"
-				r="${hex_color%"${hex_color#??}"}"
-				g="${hex_color#"${r}"}"
-				g="${g%"${g#??}"}"
-				b="${hex_color#"${r}${g}"}"
+				hex_color=${line#*=}
+				r=${hex_color%"${hex_color#??}"}
+				g=${hex_color#"${r}"}
+				g=${g%"${g#??}"}
+				b=${hex_color#"${r}${g}"}
 				printf '\e[48;2;%d;%d;%dm   \e[0m' 0x"$r" 0x"$g" 0x"$b"
 				cnt=$((cnt+1))
 				if [ $((cnt % 8)) -eq 0 ]; then
@@ -58,8 +58,8 @@ if [ -n "$PRINT_CURRENT_PALETTE" ]; then
 		for bold in 22 1; do
 			printf '%b' "\033[${bold}m"
 			for frgrnd in $(seq 30 37); do
-				cntprt="$cnt"
-				while [ "${#cntprt}" -lt 3 ]; do
+				cntprt=$cnt
+				while [ ${#cntprt} -lt 3 ]; do
 					cntprt=" ${cntprt}"
 				done
 				printf '%b' "\033[${frgrnd}m ${cntprt}"
@@ -76,9 +76,9 @@ fi
 
 if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$SET_RANDOM_COLORSCHEME" ]; then
 	if [ -n "$SET_RANDOM_COLORSCHEME" ]; then
-		colorscheme="$(basename "$(find "$colorschemes_dir" -type f | shuf -n 1)")"
+		colorscheme=$(basename "$(find "$colorschemes_dir" -type f | shuf -n 1)")
 	else
-		colorscheme="$1"
+		colorscheme=$1
 		if [ ! -f "$colorschemes_dir/$colorscheme" ]; then
 			printf 'Invalid colorscheme\n'
 			exit 1
@@ -108,7 +108,7 @@ if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$SET_RANDOM_COLORSCHEME" ]; then
 	for i in $(seq 1 6); do
 		set_tty_colors > /dev/tty"$i"
 	done
-	if [ "$TERM" = "linux" ]; then
+	if [ "$TERM" = linux ]; then
 		clear
 	fi
 	printf 'Setting %s colorscheme\n' "$colorscheme"

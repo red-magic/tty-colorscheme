@@ -15,7 +15,7 @@ if [ -z "$1" ]; then
 		printf '\nEnable tty-colorscheme.service to change tty colors on boot\n'
 		printf 'Colorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n'
 	fi
-elif [ "$1" = "remove" ]; then
+elif [ "$1" = remove ]; then
 	rm -vf /usr/bin/tty-colorscheme
 	rm -vrf /etc/tty-colorscheme
 	if [ -x "$(command -v systemctl)" ]; then
