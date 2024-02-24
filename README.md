@@ -15,7 +15,7 @@ A desired colorscheme can be set in ```/etc/tty-colorscheme/tty-colorscheme.conf
 ## Usage
 
 ```
-Usage: tty-colorscheme [flags | colorscheme]
+Usage: tty-colorscheme [-lcprh | colorscheme]
   -l    list colorschemes
   -c    list colorschemes and print their palettes
   -p    print current palette
