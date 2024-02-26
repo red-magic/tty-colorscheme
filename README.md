@@ -2,15 +2,15 @@
 
 ## Installation
 
-Run ```./install``` script as root to install ```tty-colorscheme``` and various themes
+Run ```./install``` script as root to install ```tty-colorscheme``` and various themes.
 
-```./install remove``` if you want to uninstall it
+```./install remove``` if you want to uninstall it.
 
 ### systemd
 
-If you are using systemd it will also install ```tty-colorscheme.service``` which you can enable to change TTY colors on boot
+If you are using systemd it will also install ```tty-colorscheme.service``` which you can enable to change TTY colors on boot.
 
-A desired colorscheme can be set in ```/etc/tty-colorscheme/tty-colorscheme.conf```
+A desired colorscheme can be set in ```/etc/tty-colorscheme/tty-colorscheme.conf```.
 
 ## Usage
 
@@ -23,17 +23,17 @@ Usage: tty-colorscheme [-lpcrh | colorscheme]
   -h    print help
 ```
 
-To change colors for a current TTY at user logon add ```tty-colorscheme [colorscheme]``` to ```.profile```
+To change colors for a current TTY at user logon add ```tty-colorscheme [colorscheme]``` to ```.profile```.
 
-It still requires using ```sudo``` if you want to change colors across all TTYs
+It still requires using ```sudo``` if you want to change colors across all TTYs.
 
-If you get screen artifacts hit ```Ctrl+l``` or type ```clear```
+If you get screen artifacts hit ```Ctrl+l``` or type ```clear```.
 
-Type ```reset``` to get back to the system default colors
+Type ```reset``` to get back to the system default colors.
 
-```tty-colorscheme -p | less -R``` to scroll through schemes with palettes printed, it's better to use ```reset``` before doing it to see approximate colors
+```tty-colorscheme -p | less -R``` to scroll through schemes with palettes printed, it's better to use ```reset``` before doing it to see approximate colors.
 
-You can set a random colorscheme with ```-r``` or set them one by one with something like ```for i in /etc/tty-colorscheme/colorschemes/*; do tty-colorscheme "$(basename "$i")" && ls /etc && tty-colorscheme -c && read; done``` and keep the one you like
+You can set a random colorscheme with ```-r``` or set them one by one with something like ```for i in /etc/tty-colorscheme/colorschemes/*; do tty-colorscheme "$(basename "$i")" && ls /etc && tty-colorscheme -c && read; done``` and keep the one you like.
 
 ## Screenshots
 
@@ -55,7 +55,7 @@ You can set a random colorscheme with ```-r``` or set them one by one with somet
 
 ## Customization
 
-A colorscheme file looks like this
+A colorscheme file looks like this:
 
 ```
 color1=000000  # Background
@@ -76,4 +76,4 @@ color15=00BCD4 # Cyan
 color16=9E9E9E # White
 ```
 
-Just change the hex values of colors and put it in ```/etc/tty-colorscheme/colorschemes``` directory
+Just change the hex values of colors and put it in ```/etc/tty-colorscheme/colorschemes``` directory.
