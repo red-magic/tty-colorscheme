@@ -30,8 +30,7 @@ shift $((OPTIND-1))
 
 if [ -n "$PRINT_SCHEMES" ] || [ -n "$PRINT_SCHEMES_PALETTES" ]; then
 	for scheme_file in "$colorschemes_dir"/*; do
-		scheme_name=$(basename "$scheme_file")
-		printf '%s\n' "$scheme_name"
+		printf '%s\n' "$(basename "$scheme_file")"
 		if [ -n "$PRINT_SCHEMES_PALETTES" ]; then
 			cnt=0
 			while IFS= read -r line || [ -n "$line" ]; do
