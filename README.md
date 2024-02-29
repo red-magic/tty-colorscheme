@@ -39,11 +39,11 @@ You can set a random colorscheme with ```-r``` or set them one by one with somet
 
 ### blood-dragon
 
-![extra-blood-dragon](images/blood-dragon.png)
+![extra-blood-dragon](images/extra-blood-dragon.png)
 
 ### mono-light
 
-![mono-light](images/mono-light.png)
+![extra-mono-light](images/extra-mono-light.png)
 
 ### monokai-soda
 
