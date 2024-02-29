@@ -37,11 +37,11 @@ You can set a random colorscheme with ```-r``` or set them one by one with somet
 
 ## Screenshots
 
-### blood-dragon
+### extra-blood-dragon
 
 ![extra-blood-dragon](images/extra-blood-dragon.png)
 
-### mono-light
+### extra-mono-light
 
 ![extra-mono-light](images/extra-mono-light.png)
 
