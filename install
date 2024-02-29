@@ -8,7 +8,8 @@ fi
 
 if [ -z "$1" ]; then
 	install -vm 755 tty-colorscheme -t /usr/bin
-	install -vDm 644 colorschemes/* -t /etc/tty-colorscheme/colorschemes
+	install -vDm 644 colorschemes/gogh/* -t /etc/tty-colorscheme/colorschemes
+	install -vDm 644 colorschemes/extra/* -t /etc/tty-colorscheme/colorschemes
 	if [ -x "$(command -v systemctl)" ]; then
 		install -vm 644 systemd/tty-colorscheme.conf -t /etc/tty-colorscheme
 		install -vm 644 systemd/tty-colorscheme.service -t /usr/lib/systemd/system

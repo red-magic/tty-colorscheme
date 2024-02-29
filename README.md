@@ -37,14 +37,6 @@ You can set a random colorscheme with ```-r``` or set them one by one with somet
 
 ## Screenshots
 
-### blood-dragon
-
-![blood-dragon](images/blood-dragon.png)
-
-### mono-light
-
-![mono-light](images/mono-light.png)
-
 ### monokai-soda
 
 ![monokai-soda](images/monokai-soda.png)
@@ -52,6 +44,14 @@ You can set a random colorscheme with ```-r``` or set them one by one with somet
 ### mono-amber
 
 ![mono-amber](images/mono-amber.png)
+
+### extra-mono-light
+
+![extra-mono-light](images/extra-mono-light.png)
+
+### extra-blood-dragon
+
+![extra-blood-dragon](images/extra-blood-dragon.png)
 
 ## Customization
 
