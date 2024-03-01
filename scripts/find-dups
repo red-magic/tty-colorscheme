@@ -1,0 +1,4 @@
+#!/bin/sh
+
+find ../colorschemes -type f -exec sha256sum {} + > checksums.txt
+awk '{print $1}' checksums.txt | sort | uniq -d | while read -r dup; do grep "$dup" checksums.txt; done

@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Converting Gogh schemes for tty-colorscheme.
+# TTY background is color1 and foreground is color8.
+# color9 and color16 are the same but for reversed colors.
+# The script could be better and faster,
+# but for now it gets the job done propely.
+
+gogh_ver=254
+gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v$gogh_ver.tar.gz"
+
+curl -LO $gogh_link
+tar xvf v$gogh_ver.tar.gz
+mkdir -v converted-schemes
+
+for scheme_file in Gogh-"$gogh_ver"/installs/*.sh; do
+	get_colors() {
+		printf 'color1=%s\n' "$(grep BACKGROUND_COLOR "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color2=%s\n' "$(grep COLOR_02 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color3=%s\n' "$(grep COLOR_03 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color4=%s\n' "$(grep COLOR_04 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color5=%s\n' "$(grep COLOR_05 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color6=%s\n' "$(grep COLOR_06 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color7=%s\n' "$(grep COLOR_07 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color8=%s\n' "$(grep FOREGROUND_COLOR "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color9=%s\n' "$(grep BACKGROUND_COLOR "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color10=%s\n' "$(grep COLOR_10 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color11=%s\n' "$(grep COLOR_11 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color12=%s\n' "$(grep COLOR_12 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color13=%s\n' "$(grep COLOR_13 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color14=%s\n' "$(grep COLOR_14 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color15=%s\n' "$(grep COLOR_15 "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+		printf 'color16=%s\n' "$(grep FOREGROUND_COLOR "$scheme_file" | awk -F '#' '{print substr($2, 1, 6)}')"
+	}
+	printf 'Converting %s\n' "$(basename "$scheme_file" .sh)"
+	get_colors > converted-schemes/"$(basename "$scheme_file" .sh)"
+done
+
+# c64 dirs are completely unreadable
+printf 'Fixing c64\n'
+sed -i 's|color5=40318D|color5=7869C4|' converted-schemes/c64
+sed -i 's|color13=40318D|color13=7869C4|' converted-schemes/c64
+
+rm -vf ../colorschemes/gogh/*
+cp -vf converted-schemes/* ../colorschemes/gogh
+
+printf '\nCompleted\n\n'
+printf 'Duplicate colorschemes:\n'
+
+# Checking for duplicates
+./find-dups
