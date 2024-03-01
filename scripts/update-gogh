@@ -47,11 +47,10 @@ cp -vf converted-schemes/* ../colorschemes/gogh
 printf '\nCompleted\n\n'
 printf 'Duplicate colorschemes:\n'
 
-find_dups() {
-	find ../colorschemes -type f -exec sha256sum {} + > checksums.txt
+# Checking for duplicates and removing them
+find ../colorschemes -type f -exec sha256sum {} + > checksums.txt
+list_dups() {
 	awk '{print $1}' checksums.txt | sort | uniq -d | while read -r dup; do grep "$dup" checksums.txt; done
 }
-
-# Checking for duplicates and removing them
-find_dups
-find_dups | awk 'NR % 2 == 1 {print $2}' | while read -r line; do rm -vf "$line"; done
+list_dups
+list_dups | awk 'NR % 2 == 1 {print $2}' | while read -r line; do rm -vf "$line"; done
