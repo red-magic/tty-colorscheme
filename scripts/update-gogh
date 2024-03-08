@@ -1,5 +1,5 @@
 #!/bin/sh
-#
+
 # A tool for converting Gogh schemes for tty-colorscheme.
 # TTY background is color1 and foreground is color8.
 # color9 and color16 are the same but for reversed colors.
