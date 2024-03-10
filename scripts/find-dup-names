@@ -1,0 +1,3 @@
+#!/bin/sh
+
+find ../colorschemes -type f -printf '%p %f\n' | sort -k2 | uniq -f1 --all-repeated=separate

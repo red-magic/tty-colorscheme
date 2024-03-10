@@ -45,13 +45,13 @@ You can set a random colorscheme with ```-r``` or set them one by one with somet
 
 ![mono-amber](images/mono-amber.png)
 
-### extra-mono-light
+### mono-light
 
-![extra-mono-light](images/extra-mono-light.png)
+![mono-light](images/mono-light.png)
 
-### extra-blood-dragon
+### blood-dragon
 
-![extra-blood-dragon](images/extra-blood-dragon.png)
+![blood-dragon](images/blood-dragon.png)
 
 ## Customization
 
