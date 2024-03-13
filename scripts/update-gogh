@@ -43,7 +43,7 @@ sed -i 's|color5=40318D|color5=7869C4|' converted-schemes/c64
 sed -i 's|color13=40318D|color13=7869C4|' converted-schemes/c64
 sleep 1
 
-rm -vf ../colorschemes/gogh/*
-cp -vf converted-schemes/* ../colorschemes/gogh
+rm -vf ../tty-colorscheme/colorschemes/gogh/*
+cp -vf converted-schemes/* ../tty-colorscheme/colorschemes/gogh
 
 printf '\nCompleted\n\n'
