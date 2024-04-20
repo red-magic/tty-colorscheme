@@ -1,0 +1,83 @@
+.TH TTY-COLORSCHEME "1" "April 2024" "tty-colorscheme" "User Commands"
+.SH NAME
+tty-colorscheme - Colorschemes for the linux TTY
+.SH SYNOPSIS
+.B tty-colorscheme
+[\fB\,-lpcrh\fR | \fIcolorscheme\/\fR]
+.SH DESCRIPTION
+A simple tool to set colors in the linux TTY from colorscheme files.
+.TP
+\fB\-l\fR
+List colorschemes.
+.TP
+\fB\-p\fR
+List colorschemes and print their palettes.
+.TP
+\fB\-c\fR
+Print current palette.
+.TP
+\fB\-r\fR
+Set a random colorscheme.
+.TP
+\fB\-h\fR
+Print help.
+.TP
+Example:
+.HP
+.br
+\fB$ tty-colorscheme\fR \fIaura\fR
+.PP
+To change colors for a current TTY at user logon add \fBtty-colorscheme\fR [\fIcolorscheme\fR] to your \fI~/.profile\fR.
+It still requires using \fIsudo\fP(8) if you want to change colors across all TTYs.
+If you get screen artifacts use \fIclear\fP(1) or hit C-l.
+Use \fIreset\fP(1) to get back to the system default colors.
+.br
+\fBtty-colorscheme -p\fR | \fIless\fP(1) \fB-R\fR to scroll through schemes with palettes printed, it's better to use \fIreset\fP(1) before doing it to see approximate colors.
+.SH CUSTOMIZATION
+.TP
+A colorscheme file looks like this:
+.HP
+.br
+color1=000000  # Black (Background)
+.br
+color2=F44336  # Red
+.br
+color3=4CAF50  # Green
+.br
+color4=FFEB3B  # Yellow
+.br
+color5=2196F3  # Blue
+.br
+color6=9C27B0  # Magenta
+.br
+color7=00BCD4  # Cyan
+.br
+color8=9E9E9E  # White (Foreground)
+.br
+color9=000000  # Black
+.br
+color10=F44336 # Red
+.br
+color11=4CAF50 # Green
+.br
+color12=FFEB3B # Yellow
+.br
+color13=2196F3 # Blue
+.br
+color14=9C27B0 # Magenta
+.br
+color15=00BCD4 # Cyan
+.br
+color16=9E9E9E # White
+.TP
+Just change the hex values of colors and put it in \fI/etc/tty-colorscheme/colorschemes/\fR directory.
+.SH FILES
+.TP
+\fI/etc/tty-colorscheme/colorschemes/\fR
+Default directory for colorscheme files.
+.TP
+\fI/usr/lib/systemd/system/tty-colorscheme.service\fR
+Systemd service to set colors on boot.
+.TP
+\fI/etc/tty-colorscheme/tty-colorscheme.conf\fR
+Config file for the systemd service.
