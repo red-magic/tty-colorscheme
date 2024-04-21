@@ -24,12 +24,17 @@ Set a random colorscheme.
 \fB\-h\fR
 Print help.
 .SH EXAMPLES
+.TP
 \fB$ tty\-colorscheme\fR \fIaura\fR
+Sets a colorscheme for the TTYs you are logged in.
+.TP
+\fB# tty\-colorscheme \-r\fR
+Sets a random colorscheme for all TTYs despite user log on.
 .SH CONFIGURATION
-To change colors for a current TTY at user logon add \fBtty\-colorscheme\fR [\fIcolorscheme\fR] to your \fI~/.profile\fR.
+To change colors for a current TTY at user log on add \fBtty\-colorscheme\fR [\fIcolorscheme\fR] to your \fI~/.profile\fR.
 It still requires using \fBsudo\fR(8) if you want to change colors across all TTYs.
 If you get screen artifacts use \fBclear\fR(1) or hit \fIC\-l\fR. Use \fBreset\fR(1) to get back to the system default colors.
-\fBtty\-colorscheme \-p | less\fR(1) \fB\-R\fR to scroll through schemes with palettes printed, it's better to use \fBreset\fR(1) before doing it to see approximate colors.
+\fBtty\-colorscheme \-p | less\fR \fB\-R\fR to scroll through schemes with palettes printed, it's better to use \fBreset\fR(1) before doing it to see approximate colors.
 .SH CUSTOMIZATION
 A colorscheme file looks like this:
 .RS
