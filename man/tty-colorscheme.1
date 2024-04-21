@@ -6,7 +6,8 @@ tty\-colorscheme \- Colorschemes for the linux TTY
 .B tty\-colorscheme
 [\fB\-lpcrh\fR | \fIcolorscheme\fR]
 .SH DESCRIPTION
-A simple tool to set colors in the linux TTY from colorscheme files.
+A simple script to set colors in the linux TTY.
+.SH OPTIONS
 .TP
 \fB\-l\fR
 List colorschemes.
@@ -22,13 +23,9 @@ Set a random colorscheme.
 .TP
 \fB\-h\fR
 Print help.
-.TP
-Example:
-.RS
-.TP
+.SH EXAMPLES
 \fB$ tty\-colorscheme\fR \fIaura\fR
-.RE
-.PP
+.SH CONFIGURATION
 To change colors for a current TTY at user logon add \fBtty\-colorscheme\fR [\fIcolorscheme\fR] to your \fI~/.profile\fR.
 It still requires using \fBsudo\fR(8) if you want to change colors across all TTYs.
 If you get screen artifacts use \fBclear\fR(1) or hit \fIC\-l\fR. Use \fBreset\fR(1) to get back to the system default colors.
@@ -71,7 +68,7 @@ color15=00BCD4 # Cyan
 color16=9E9E9E # White
 .RE
 .PP
-Just change the hex values of colors and put it in colorschemes directory.
+Just change the hex values of colors and put it in the colorschemes directory.
 .SH FILES
 .TP
 \fI/etc/tty\-colorscheme/colorschemes\fR
