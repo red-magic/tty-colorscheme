@@ -1,9 +1,10 @@
-.TH TTY-COLORSCHEME "1" "April 2024" "tty-colorscheme" "User Commands"
+.TH TTY\-COLORSCHEME "1" "April 2024" "tty\-colorscheme" "User Commands"
+.hy 0
 .SH NAME
-tty-colorscheme - Colorschemes for the linux TTY
+tty\-colorscheme \- Colorschemes for the linux TTY
 .SH SYNOPSIS
-.B tty-colorscheme
-[\fB\,-lpcrh\fR | \fIcolorscheme\/\fR]
+.B tty\-colorscheme
+[\fB\-lpcrh\fR | \fIcolorscheme\fR]
 .SH DESCRIPTION
 A simple tool to set colors in the linux TTY from colorscheme files.
 .TP
@@ -23,21 +24,20 @@ Set a random colorscheme.
 Print help.
 .TP
 Example:
-.HP
-.br
-\fB$ tty-colorscheme\fR \fIaura\fR
-.PP
-To change colors for a current TTY at user logon add \fBtty-colorscheme\fR [\fIcolorscheme\fR] to your \fI~/.profile\fR.
-It still requires using \fIsudo\fP(8) if you want to change colors across all TTYs.
-If you get screen artifacts use \fIclear\fP(1) or hit C-l.
-Use \fIreset\fP(1) to get back to the system default colors.
-.br
-\fBtty-colorscheme -p\fR | \fIless\fP(1) \fB-R\fR to scroll through schemes with palettes printed, it's better to use \fIreset\fP(1) before doing it to see approximate colors.
-.SH CUSTOMIZATION
+.RS
 .TP
+\fB$ tty\-colorscheme\fR \fIaura\fR
+.RE
+.PP
+To change colors for a current TTY at user logon add \fBtty\-colorscheme\fR [\fIcolorscheme\fR] to your \fI~/.profile\fR.
+It still requires using \fBsudo\fR(8) if you want to change colors across all TTYs.
+If you get screen artifacts use \fBclear\fR(1) or hit \fIC\-l\fR. Use \fBreset\fR(1) to get back to the system default colors.
+\fBtty\-colorscheme \-p | less\fR(1) \fB\-R\fR to scroll through schemes with palettes printed, it's better to use \fBreset\fR(1) before doing it to see approximate colors.
+.PP
+.SH CUSTOMIZATION
 A colorscheme file looks like this:
-.HP
-.br
+.RS
+.PP
 color1=000000  # Black (Background)
 .br
 color2=F44336  # Red
@@ -69,15 +69,16 @@ color14=9C27B0 # Magenta
 color15=00BCD4 # Cyan
 .br
 color16=9E9E9E # White
-.TP
-Just change the hex values of colors and put it in \fI/etc/tty-colorscheme/colorschemes/\fR directory.
+.RE
+.PP
+Just change the hex values of colors and put it in colorschemes directory.
 .SH FILES
 .TP
-\fI/etc/tty-colorscheme/colorschemes/\fR
+\fI/etc/tty\-colorscheme/colorschemes\fR
 Default directory for colorscheme files.
 .TP
-\fI/usr/lib/systemd/system/tty-colorscheme.service\fR
+\fI/usr/lib/systemd/system/tty\-colorscheme.service\fR
 Systemd service to set colors on boot.
 .TP
-\fI/etc/tty-colorscheme/tty-colorscheme.conf\fR
+\fI/etc/tty\-colorscheme/tty\-colorscheme.conf\fR
 Config file for the systemd service.
