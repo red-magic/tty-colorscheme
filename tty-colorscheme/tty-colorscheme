@@ -1,13 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 colorschemes_dir=/etc/tty-colorscheme/colorschemes
 
 print_help() {
-	printf 'Usage: %s [-lpcrh | colorscheme]\n' "$(basename "$0")"
+	printf 'Usage: %s [-lcrsh | colorscheme]\n' "$(basename "$0")"
 	printf '  -l    list colorschemes\n'
-	printf '  -p    list colorschemes and print their palettes\n'
 	printf '  -c    print current palette\n'
 	printf '  -r    set a random colorscheme\n'
+	printf '  -s    shift through colorschemes\n'
 	printf '  -h    print help\n'
 }
 
@@ -15,12 +15,12 @@ if [ $# -eq 0 ]; then
 	PRINT_HELP=1
 fi
 
-while getopts :lpcrh opt; do
-	case $opt in
+while getopts :lcrsh OPT; do
+	case $OPT in
 		l) PRINT_SCHEMES=1;;
-		p) PRINT_SCHEMES_PALETTES=1;;
 		c) PRINT_CURRENT_PALETTE=1;;
 		r) SET_RANDOM_COLORSCHEME=1;;
+		s) SHIFT_THROUGH_COLORSCHEMES=1;;
 		h) PRINT_HELP=1;;
 		*) printf 'Invalid option -%s\n' "$OPTARG" && print_help && exit 1;;
 	esac
@@ -28,25 +28,9 @@ done
 
 shift $((OPTIND-1))
 
-if [ -n "$PRINT_SCHEMES" ] || [ -n "$PRINT_SCHEMES_PALETTES" ]; then
+if [ -n "$PRINT_SCHEMES" ]; then
 	for scheme_file in "$colorschemes_dir"/*; do
 		printf '%s\n' "$(basename "$scheme_file")"
-		if [ -n "$PRINT_SCHEMES_PALETTES" ]; then
-			cnt=0
-			while IFS= read -r line || [ -n "$line" ]; do
-				eval "$line"
-				hex_color=${line#*=}
-				r=${hex_color%"${hex_color#??}"}
-				g=${hex_color#"${r}"}
-				g=${g%"${g#??}"}
-				b=${hex_color#"${r}${g}"}
-				printf '\e[48;2;%d;%d;%dm   \e[0m' 0x"$r" 0x"$g" 0x"$b"
-				cnt=$((cnt+1))
-				if [ $((cnt % 8)) -eq 0 ]; then
-					printf '\n'
-				fi
-			done < "$scheme_file"
-		fi
 	done
 fi
 
@@ -66,6 +50,23 @@ if [ -n "$PRINT_CURRENT_PALETTE" ]; then
 			done
 		done
 		printf '%b\n' '\e[0m'
+	done
+fi
+
+if [ -n "$SHIFT_THROUGH_COLORSCHEMES" ]; then
+	mapfile -t colorschemes_list < <($(basename "$0") -l)
+	max_ind="$((${#colorschemes_list[@]}-1))"
+	i=0
+	while true; do
+		colorscheme="${colorschemes_list[$i]}"
+		$(basename "$0") "$colorscheme"
+		printf "\nUse j and k keys to shift through colorschemes\n"
+		read -rsn1
+		case $REPLY in
+			j) [ $i -lt $max_ind ] && ((++i));;
+			k) [ $i -gt 0 ] && ((--i));;
+			*) exit 0;;
+		esac
 	done
 fi
 
@@ -110,5 +111,6 @@ if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$SET_RANDOM_COLORSCHEME" ]; then
 	if [ "$TERM" = linux ]; then
 		clear
 	fi
+	$(basename "$0") -c
 	printf 'Setting %s colorscheme\n' "$colorscheme"
 fi

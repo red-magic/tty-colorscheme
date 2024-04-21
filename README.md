@@ -17,9 +17,9 @@ A desired colorscheme can be set in ```/etc/tty-colorscheme/tty-colorscheme.conf
 ```
 Usage: tty-colorscheme [-lpcrh | colorscheme]
   -l    list colorschemes
-  -p    list colorschemes and print their palettes
   -c    print current palette
   -r    set a random colorscheme
+  -s    shift through colorschemes
   -h    print help
 ```
 
@@ -30,10 +30,6 @@ It still requires using ```sudo``` if you want to change colors across all TTYs.
 If you get screen artifacts hit ```Ctrl+l``` or type ```clear```.
 
 Type ```reset``` to get back to the system default colors.
-
-```tty-colorscheme -p | less -R``` to scroll through schemes with palettes printed, it's better to use ```reset``` before doing it to see approximate colors.
-
-You can set a random colorscheme with ```-r``` or set them one by one with something like ```for i in /etc/tty-colorscheme/colorschemes/*; do tty-colorscheme "$(basename "$i")" && ls /etc && tty-colorscheme -c && read; done``` and keep the one you like.
 
 ## Screenshots
 
