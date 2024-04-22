@@ -18,14 +18,14 @@ if [ -z "$1" ]; then
 	install -vm 644 man/tty-colorscheme.1.gz -t /usr/share/man/man1
 	install -vm 755 tty-colorscheme/tty-colorscheme -t /usr/bin
 	if [ -n "$(command -v systemctl)" ]; then
-		install -vm 644 systemd/tty-colorscheme.conf -t /etc/tty-colorscheme
-		install -vm 644 systemd/tty-colorscheme.service -t /usr/lib/systemd/system
+		install -vm 644 service/systemd/tty-colorscheme.conf -t /etc/tty-colorscheme
+		install -vm 644 service/systemd/tty-colorscheme.service -t /usr/lib/systemd/system
 		printf '\nRun systemctl enable tty-colorscheme to change tty colors on boot\n'
 		printf 'Colorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n'
 	fi
 	if [ -n "$(command -v openrc-run)" ]; then
-		install -vm 755 openrc/init.d/tty-colorscheme -t /etc/init.d
-		install -vm 644 openrc/conf.d/tty-colorscheme -t /etc/conf.d
+		install -vm 755 service/openrc/init.d/tty-colorscheme -t /etc/init.d
+		install -vm 644 service/openrc/conf.d/tty-colorscheme -t /etc/conf.d
 		printf '\nRun rc-update add tty-colorscheme to change tty colors on boot\n'
 		printf 'Colorscheme can be set in /etc/conf.d/tty-colorscheme\n\n'
 	fi
