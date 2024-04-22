@@ -88,22 +88,22 @@ if [[ $OPTIND -eq 1 && -n $1 || -n $SET_RANDOM_COLORSCHEME ]]; then
 		eval "$line"
 	done < "$colorschemes_dir/$colorscheme"
 	set_tty_colors() {
-		echo -e "\e]P0${color1:?}"  # Black (Background)
-		echo -e "\e]P1${color2:?}"  # Red
-		echo -e "\e]P2${color3:?}"  # Green
-		echo -e "\e]P3${color4:?}"  # Yellow
-		echo -e "\e]P4${color5:?}"  # Blue
-		echo -e "\e]P5${color6:?}"  # Magenta
-		echo -e "\e]P6${color7:?}"  # Cyan
-		echo -e "\e]P7${color8:?}"  # White (Foreground)
-		echo -e "\e]P8${color9:?}"  # Black
-		echo -e "\e]P9${color10:?}" # Red
-		echo -e "\e]PA${color11:?}" # Green
-		echo -e "\e]PB${color12:?}" # Yellow
-		echo -e "\e]PC${color13:?}" # Blue
-		echo -e "\e]PD${color14:?}" # Magenta
-		echo -e "\e]PE${color15:?}" # Cyan
-		echo -e "\e]PF${color16:?}" # White
+		echo -en "\e]P0${color1:?}"  # Black (Background)
+		echo -en "\e]P1${color2:?}"  # Red
+		echo -en "\e]P2${color3:?}"  # Green
+		echo -en "\e]P3${color4:?}"  # Yellow
+		echo -en "\e]P4${color5:?}"  # Blue
+		echo -en "\e]P5${color6:?}"  # Magenta
+		echo -en "\e]P6${color7:?}"  # Cyan
+		echo -en "\e]P7${color8:?}"  # White (Foreground)
+		echo -en "\e]P8${color9:?}"  # Black
+		echo -en "\e]P9${color10:?}" # Red
+		echo -en "\e]PA${color11:?}" # Green
+		echo -en "\e]PB${color12:?}" # Yellow
+		echo -en "\e]PC${color13:?}" # Blue
+		echo -en "\e]PD${color14:?}" # Magenta
+		echo -en "\e]PE${color15:?}" # Cyan
+		echo -en "\e]PF${color16:?}" # White
 	}
 	for i in {1..6}; do
 		set_tty_colors > /dev/tty"$i"

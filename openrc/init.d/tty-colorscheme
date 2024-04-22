@@ -1,0 +1,13 @@
+#!/sbin/openrc-run
+
+description="Change TTY colors"
+
+checkconfig() {
+	eval "$(grep ^colorscheme /etc/conf.d/tty-colorscheme)"
+	[ -z "$colorscheme" ] && ewarn "No colorscheme set, using system default colors" && exit 0
+}
+
+start() {
+	checkconfig
+	TERM= tty-colorscheme ${colorscheme} &> /dev/null && einfo "Setting $colorscheme colorscheme" || eerror "Invalid colorscheme"
+}
