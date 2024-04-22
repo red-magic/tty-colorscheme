@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ -z "$(command -v bash)" ]; then
+	printf '\nInstall bash\n\n'
+	exit 1
+fi
+
+
 if [ "$(id -u)" -ne 0 ]; then
 	printf '\nYou must run this script as root to install tty-colorscheme and themes\n'
 	printf 'Pass remove arg to uninstall\n\n'
