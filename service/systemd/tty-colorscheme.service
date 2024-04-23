@@ -1,5 +1,6 @@
 [Unit]
 Description=Change TTY colors
+After=getty@tty1.service
 
 [Service]
 Type=oneshot
