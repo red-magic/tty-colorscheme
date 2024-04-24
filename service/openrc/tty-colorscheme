@@ -1,6 +1,5 @@
 #!/sbin/openrc-run
 
-supervisor="supervise-daemon"
 description="Change TTY colors"
 command="/usr/bin/tty-colorscheme"
 
