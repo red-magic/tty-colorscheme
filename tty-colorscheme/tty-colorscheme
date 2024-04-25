@@ -107,7 +107,7 @@ if [[ $OPTIND -eq 1 && -n $1 || -n $SET_RANDOM_COLORSCHEME ]]; then
 	}
 	for i in {1..6}; do
 		set_tty_colors > /dev/tty"$i"
-	done
+	done > /dev/null 2>&1
 	if [[ $TERM = linux ]]; then
 		clear
 		$(basename "$0") -c
