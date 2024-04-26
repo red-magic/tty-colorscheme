@@ -2,9 +2,9 @@
 
 ## Installation
 
-Run ```./install``` script as root to install ```tty-colorscheme``` and various themes.
+Run `./install` script as root to install `tty-colorscheme` and various themes.
 
-```./install remove``` if you want to uninstall it.
+`./install remove` if you want to uninstall it.
 
 ## Usage
 
@@ -17,13 +17,13 @@ Usage: tty-colorscheme [-lpcrh | colorscheme]
   -h    print help
 ```
 
-To change colors for a current TTY at user log on add ```tty-colorscheme [colorscheme]``` to ```.profile```.
+To change colors for a current TTY at user log on add `tty-colorscheme [colorscheme]` to `.profile`.
 
-It still requires using ```sudo``` if you want to change colors across all TTYs.
+It still requires using `sudo` if you want to change colors across all TTYs.
 
-If you get screen artifacts hit ```Ctrl+l``` or type ```clear```.
+If you get screen artifacts hit `Ctrl+l` or type `clear`.
 
-Type ```reset``` to get back to the system default colors.
+Type `reset` to get back to the system default colors.
 
 ## Screenshots
 
@@ -66,4 +66,4 @@ color15=00BCD4 # Cyan
 color16=9E9E9E # White
 ```
 
-Just change the hex values of colors and put it in ```/etc/tty-colorscheme/colorschemes``` directory.
+Just change the hex values of colors and put it in `/etc/tty-colorscheme/colorschemes` directory.
