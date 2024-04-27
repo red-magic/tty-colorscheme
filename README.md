@@ -48,15 +48,15 @@ Type `reset` to get back to the system default colors.
 A colorscheme file looks like this:
 
 ```
-color1=000000  # Black (Background)
-color2=F44336  # Red
-color3=4CAF50  # Green
-color4=FFEB3B  # Yellow
-color5=2196F3  # Blue
-color6=9C27B0  # Magenta
-color7=00BCD4  # Cyan
-color8=9E9E9E  # White (Foreground)
-color9=000000  # Black
+color01=000000 # Black (Background)
+color02=F44336 # Red
+color03=4CAF50 # Green
+color04=FFEB3B # Yellow
+color05=2196F3 # Blue
+color06=9C27B0 # Magenta
+color07=00BCD4 # Cyan
+color08=9E9E9E # White (Foreground)
+color09=000000 # Black
 color10=F44336 # Red
 color11=4CAF50 # Green
 color12=FFEB3B # Yellow

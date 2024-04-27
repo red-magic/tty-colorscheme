@@ -88,15 +88,15 @@ if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$SET_RANDOM_COLORSCHEME" ]; then
 		eval "$line"
 	done < "$colorschemes_dir/$colorscheme"
 	set_tty_colors() {
-		printf '\033]P0%s' "${color1:?}"  # Black (Background)
-		printf '\033]P1%s' "${color2:?}"  # Red
-		printf '\033]P2%s' "${color3:?}"  # Green
-		printf '\033]P3%s' "${color4:?}"  # Yellow
-		printf '\033]P4%s' "${color5:?}"  # Blue
-		printf '\033]P5%s' "${color6:?}"  # Magenta
-		printf '\033]P6%s' "${color7:?}"  # Cyan
-		printf '\033]P7%s' "${color8:?}"  # White (Foreground)
-		printf '\033]P8%s' "${color9:?}"  # Black
+		printf '\033]P0%s' "${color01:?}" # Black (Background)
+		printf '\033]P1%s' "${color02:?}" # Red
+		printf '\033]P2%s' "${color03:?}" # Green
+		printf '\033]P3%s' "${color04:?}" # Yellow
+		printf '\033]P4%s' "${color05:?}" # Blue
+		printf '\033]P5%s' "${color06:?}" # Magenta
+		printf '\033]P6%s' "${color07:?}" # Cyan
+		printf '\033]P7%s' "${color08:?}" # White (Foreground)
+		printf '\033]P8%s' "${color09:?}" # Black
 		printf '\033]P9%s' "${color10:?}" # Red
 		printf '\033]PA%s' "${color11:?}" # Green
 		printf '\033]PB%s' "${color12:?}" # Yellow

@@ -88,15 +88,15 @@ if [[ $OPTIND -eq 1 && -n $1 || -n $SET_RANDOM_COLORSCHEME ]]; then
 		eval "$line"
 	done < "$colorschemes_dir/$colorscheme"
 	set_tty_colors() {
-		echo -en "\e]P0${color1:?}"  # Black (Background)
-		echo -en "\e]P1${color2:?}"  # Red
-		echo -en "\e]P2${color3:?}"  # Green
-		echo -en "\e]P3${color4:?}"  # Yellow
-		echo -en "\e]P4${color5:?}"  # Blue
-		echo -en "\e]P5${color6:?}"  # Magenta
-		echo -en "\e]P6${color7:?}"  # Cyan
-		echo -en "\e]P7${color8:?}"  # White (Foreground)
-		echo -en "\e]P8${color9:?}"  # Black
+		echo -en "\e]P0${color01:?}" # Black (Background)
+		echo -en "\e]P1${color02:?}" # Red
+		echo -en "\e]P2${color03:?}" # Green
+		echo -en "\e]P3${color04:?}" # Yellow
+		echo -en "\e]P4${color05:?}" # Blue
+		echo -en "\e]P5${color06:?}" # Magenta
+		echo -en "\e]P6${color07:?}" # Cyan
+		echo -en "\e]P7${color08:?}" # White (Foreground)
+		echo -en "\e]P8${color09:?}" # Black
 		echo -en "\e]P9${color10:?}" # Red
 		echo -en "\e]PA${color11:?}" # Green
 		echo -en "\e]PB${color12:?}" # Yellow
