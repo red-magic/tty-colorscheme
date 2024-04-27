@@ -5,7 +5,7 @@ command="/usr/bin/tty-colorscheme"
 
 start_pre() {
 	eval "$(grep ^colorscheme /etc/tty-colorscheme/tty-colorscheme.conf | sed 's: ::g')"
-	${command} ${colorscheme} &> /dev/null
+	${command} ${colorscheme} > /dev/null 2>&1
 	eend $? "$(${command} ${colorscheme})"
 }
 
