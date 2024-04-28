@@ -17,7 +17,7 @@ Usage: tty-colorscheme [-lpcrh | colorscheme]
   -h    print help
 ```
 
-To change colors for a current TTY at user log on add `tty-colorscheme [colorscheme]` to `~/.profile`.
+To change colors for a current TTY at user log on add `tty-colorscheme [colorscheme]` to your `~/.profile`.
 
 It still requires using `sudo` if you want to change colors across all TTYs.
 
