@@ -12,29 +12,29 @@ print_help() {
 }
 
 if [ $# -eq 0 ]; then
-	PRINT_HELP=1
+	print_help=1
 fi
 
-while getopts :lcrsh OPT; do
-	case $OPT in
-		l) PRINT_SCHEMES=1;;
-		c) PRINT_CURRENT_PALETTE=1;;
-		r) SET_RANDOM_COLORSCHEME=1;;
-		s) SHIFT_THROUGH_COLORSCHEMES=1;;
-		h) PRINT_HELP=1;;
+while getopts :lcrsh opt; do
+	case $opt in
+		l) print_schemes=1;;
+		c) print_current_palette=1;;
+		r) set_random_colorscheme=1;;
+		s) shift_through_colorschemes=1;;
+		h) print_help=1;;
 		*) printf 'Invalid option -%s\n' "$OPTARG" && print_help && exit 1;;
 	esac
 done
 
 shift $((OPTIND-1))
 
-if [ -n "$PRINT_SCHEMES" ]; then
+if [ -n "$print_schemes" ]; then
 	for scheme_file in "$colorschemes_dir"/*; do
 		basename "$scheme_file"
 	done
 fi
 
-if [ -n "$PRINT_CURRENT_PALETTE" ]; then
+if [ -n "$print_current_palette" ]; then
 	cnt=0
 	for bkgrnd in $(seq 40 47); do
 		printf '%b' "\033[${bkgrnd}m"
@@ -53,7 +53,7 @@ if [ -n "$PRINT_CURRENT_PALETTE" ]; then
 	done
 fi
 
-if [ -n "$SHIFT_THROUGH_COLORSCHEMES" ]; then
+if [ -n "$shift_through_colorschemes" ]; then
 	set -- $($(basename "$0") -l)
 	max_ind=$#
 	i=1
@@ -70,12 +70,12 @@ if [ -n "$SHIFT_THROUGH_COLORSCHEMES" ]; then
 	done
 fi
 
-if [ -n "$PRINT_HELP" ]; then
+if [ -n "$print_help" ]; then
 	print_help
 fi
 
-if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$SET_RANDOM_COLORSCHEME" ]; then
-	if [ -n "$SET_RANDOM_COLORSCHEME" ]; then
+if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$set_random_colorscheme" ]; then
+	if [ -n "$set_random_colorscheme" ]; then
 		colorscheme=$(basename "$(find "$colorschemes_dir" -type f | shuf -n 1)")
 	else
 		colorscheme=$1
