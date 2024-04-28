@@ -11,7 +11,6 @@ if [ -z "$(command -v bash)" ]; then
 	exit 1
 fi
 
-
 if [ -z "$1" ]; then
 	install -vDm 644 tty-colorscheme/colorschemes/gogh/* -t /etc/tty-colorscheme/colorschemes
 	install -vDm 644 tty-colorscheme/colorschemes/extra/* -t /etc/tty-colorscheme/colorschemes
