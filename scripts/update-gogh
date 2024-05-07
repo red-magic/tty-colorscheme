@@ -4,7 +4,7 @@
 # TTY background is color1 and foreground is color8.
 # color9 and color16 are the same but for reversed colors.
 
-gogh_ver=260
+gogh_ver=272
 gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v$gogh_ver.tar.gz"
 
 curl -LO $gogh_link
