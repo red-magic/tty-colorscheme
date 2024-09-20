@@ -9,7 +9,7 @@ Run `./install` script as root to install `tty-colorscheme` and various themes.
 ## Usage
 
 ```
-Usage: tty-colorscheme [-lpsh | colorscheme]
+Usage: tty-colorscheme [-lps | colorscheme]
   -l    list colorschemes
   -p    print current palette
   -s    shift through colorschemes
