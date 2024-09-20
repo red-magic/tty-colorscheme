@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # A tool for converting Gogh schemes for tty-colorscheme.
 # TTY background is color1 and foreground is color8.
@@ -12,7 +12,7 @@ tar xvf v$gogh_ver.tar.gz
 mkdir -v converted-schemes-gogh
 sleep 1
 
-for scheme_file in Gogh-"$gogh_ver"/installs/*.sh; do
+for scheme_file in Gogh-"$gogh_ver/installs/"*.sh; do
 	get_colors() {
 		awk -F '#' '
 		/BACKGROUND_COLOR/ { printf "color01=%s\n", substr($2, 1, 6) }
@@ -33,12 +33,12 @@ for scheme_file in Gogh-"$gogh_ver"/installs/*.sh; do
 		/FOREGROUND_COLOR/ { printf "color16=%s\n", substr($2, 1, 6) }
 		' "$scheme_file" | sort -V
 	}
-	printf 'Converting %s\n' "$(basename "$scheme_file" .sh)"
-	get_colors > converted-schemes-gogh/"$(basename "$scheme_file" .sh)"
+	echo "Converting $(basename "$scheme_file" .sh)"
+	get_colors > "converted-schemes-gogh/$(basename "$scheme_file" .sh)"
 done
 
 # c64 dirs are completely unreadable
-printf 'Fixing c64\n'
+echo 'Fixing c64'
 sed -i 's|color05=40318D|color05=7869C4|' converted-schemes-gogh/c64
 sed -i 's|color13=40318D|color13=7869C4|' converted-schemes-gogh/c64
 sleep 1
@@ -46,4 +46,4 @@ sleep 1
 rm -vf ../tty-colorscheme/colorschemes/gogh/*
 cp -vf converted-schemes-gogh/* ../tty-colorscheme/colorschemes/gogh
 
-printf '\nCompleted\n\n'
+echo 'Completed'

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 find ../tty-colorscheme/colorschemes -type f -exec sha256sum {} + > checksums.txt
 list_dups() {
