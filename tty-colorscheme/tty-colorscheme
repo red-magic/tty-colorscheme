@@ -32,7 +32,7 @@ print_current_palette() {
 
 shift_colorschemes() {
 	mapfile -t colorschemes_list < <(list_colorschemes)
-	max_ind=$((${#colorschemes_list[@]} - 1))
+	max_ind=$((${#colorschemes_list[@]}-1))
 	i=0
 	while true; do
 		colorscheme="${colorschemes_list[$i]}"
@@ -40,8 +40,8 @@ shift_colorschemes() {
 		echo 'Use j and k keys to shift through colorschemes'
 		read -rsn1
 		case $REPLY in
-			j) [[ $i -lt $max_ind ]] && ((i++));;
-			k) [[ $i -gt 0 ]] && ((i--));;
+			j) [ $i -lt $max_ind ] && ((i++));;
+			k) [ $i -gt 0 ] && ((i--));;
 			*) exit 0;;
 		esac
 	done
@@ -49,9 +49,7 @@ shift_colorschemes() {
 
 set_colorscheme() {
 	colorscheme_file="$colorschemes_dir/$1"
-	if [[ ! -f $colorscheme_file ]]; then
-		echo "Invalid colorscheme: $1"; exit 1
-	fi
+	[ ! -f "$colorscheme_file" ] &&	echo "Invalid colorscheme: $1" && exit 1
 	source "$colorscheme_file"
 	set_tty_colors() {
 		echo -en "\e]P0${color01:?}" # Black (Background)
@@ -90,9 +88,6 @@ done
 
 shift $((OPTIND - 1))
 
-if [[ $# -eq 1 ]]; then
-	set_colorscheme "$1"
-	exit 0
-fi
+[ $# -eq 1 ] && set_colorscheme "$1" && exit 0
 
 print_help
