@@ -1,39 +1,39 @@
 #!/bin/sh
 
-if [ "$(id -u)" -ne 0 ]; then
-	printf '\nRun this script as root\n'
-	printf 'Pass remove arg to uninstall\n\n'
-	exit 1
-fi
+[ "$(id -u)" -eq 0 ] || { printf '\nRun this script as root\nPass "remove" to uninstall\n\n'; exit 1; }
 
-if [ -z "$(command -v bash)" ]; then
-	printf '\nInstall bash\n\n'
-	exit 1
-fi
+command -v bash >/dev/null 2>&1 || { printf '\nInstall bash\n\n'; exit 1; }
 
-if [ -z "$1" ]; then
-	install -vDm 644 tty-colorscheme/colorschemes/gogh/* -t /etc/tty-colorscheme/colorschemes
-	install -vDm 644 tty-colorscheme/colorschemes/extra/* -t /etc/tty-colorscheme/colorschemes
-	install -vm 644 man/tty-colorscheme.1.gz -t /usr/share/man/man1
+install_files() {
+	install -vDm 644 tty-colorscheme/colorschemes/*/* -t /etc/tty-colorscheme/colorschemes
 	install -vm 755 tty-colorscheme/tty-colorscheme -t /usr/bin
-	if [ -n "$(command -v systemctl)" ]; then
-		install -vm 644 service/tty-colorscheme.conf -t /etc/tty-colorscheme
+	install -vm 644 man/tty-colorscheme.1.gz -t /usr/share/man/man1
+	install -vDm 644 service/tty-colorscheme.conf -t /etc/tty-colorscheme
+
+	if command -v systemctl >/dev/null 2>&1; then
 		install -vm 644 service/systemd/tty-colorscheme.service -t /usr/lib/systemd/system
-		printf '\nRun systemctl enable tty-colorscheme to change tty colors on boot\n'
-		printf 'Colorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n'
-	elif [ -n "$(command -v openrc-run)" ]; then
-		install -vm 644 service/tty-colorscheme.conf -t /etc/tty-colorscheme
+		printf '\nRun "systemctl enable tty-colorscheme" to apply colors at boot\n'
+	elif command -v openrc-run >/dev/null 2>&1; then
 		install -vm 755 service/openrc/tty-colorscheme -t /etc/init.d
-		printf '\nRun rc-update add tty-colorscheme to change tty colors on boot\n'
-		printf 'Colorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n'
+		printf '\nRun "rc-update add tty-colorscheme" to apply colors at boot\n'
 	fi
-elif [ "$1" = remove ]; then
+
+	printf 'Colorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n'
+}
+
+remove_files() {
 	rm -vrf /etc/tty-colorscheme
-	rm -vf /usr/share/man/man1/tty-colorscheme.1.gz
 	rm -vf /usr/bin/tty-colorscheme
-	if [ -n "$(command -v systemctl)" ]; then
+	rm -vf /usr/share/man/man1/tty-colorscheme.1.gz
+
+	if command -v systemctl >/dev/null 2>&1; then
 		rm -vf /usr/lib/systemd/system/tty-colorscheme.service
-	elif [ -n "$(command -v openrc-run)" ]; then
+	elif command -v openrc-run >/dev/null 2>&1; then
 		rm -vf /etc/init.d/tty-colorscheme
 	fi
-fi
+}
+
+case "$1" in
+	remove) remove_files ;;
+	*) install_files ;;
+esac

@@ -11,82 +11,50 @@ print_help() {
 	echo "  -h    print help"
 }
 
-if [[ $# -eq 0 ]]; then
-	print_help=1
-fi
-
-while getopts :lcrsh opt; do
-	case $opt in
-		l) print_schemes=1;;
-		c) print_current_palette=1;;
-		r) set_random_colorscheme=1;;
-		s) shift_through_colorschemes=1;;
-		h) print_help=1;;
-		*) echo "Invalid option -$OPTARG" && print_help && exit 1;;
-	esac
-done
-
-shift $((OPTIND-1))
-
-if [[ -n $print_schemes ]]; then
+list_colorschemes() {
 	for scheme_file in "$colorschemes_dir"/*; do
 		basename "$scheme_file"
 	done
-fi
+}
 
-if [[ -n $print_current_palette ]]; then
-	cnt=0
+print_current_palette() {
+	local cnt=0
 	for bkgrnd in {40..47}; do
 		echo -en "\e[${bkgrnd}m"
 		for bold in 22 1; do
 			echo -en "\e[${bold}m"
 			for frgrnd in {30..37}; do
-				cntprt=$cnt
-				while [[ ${#cntprt} -lt 3 ]]; do
-					cntprt=" $cntprt"
-				done
-				echo -en "\e[${frgrnd}m $cntprt"
+				printf "\e[%sm %3d" "$frgrnd" "$cnt"
 				((cnt++))
 			done
 		done
 		echo -en "\e[0m\n"
 	done
-fi
+}
 
-if [[ -n $shift_through_colorschemes ]]; then
-	mapfile -t colorschemes_list < <($(basename "$0") -l)
-	max_ind=$((${#colorschemes_list[@]}-1))
-	i=0
+shift_colorschemes() {
+	mapfile -t colorschemes_list < <(list_colorschemes)
+	local max_ind=$((${#colorschemes_list[@]} - 1))
+	local i=0
 	while true; do
-		colorscheme="${colorschemes_list[$i]}"
+		local colorscheme="${colorschemes_list[$i]}"
 		$(basename "$0") "$colorscheme"
 		echo "Use j and k keys to shift through colorschemes"
 		read -rsn1
 		case $REPLY in
-			j) [[ $i -lt $max_ind ]] && ((++i));;
-			k) [[ $i -gt 0 ]] && ((--i));;
+			j) [[ $i -lt $max_ind ]] && ((i++));;
+			k) [[ $i -gt 0 ]] && ((i--));;
 			*) exit 0;;
 		esac
 	done
-fi
+}
 
-if [[ -n $print_help ]]; then
-	print_help
-fi
-
-if [[ $OPTIND -eq 1 && -n $1 || -n $set_random_colorscheme ]]; then
-	if [[ -n $set_random_colorscheme ]]; then
-		colorscheme=$(basename "$(find "$colorschemes_dir" -type f | shuf -n 1)")
-	else
-		colorscheme=$1
-		if [[ ! -f $colorschemes_dir/$colorscheme ]]; then
-			echo "Invalid colorscheme"
-			exit 1
-		fi
+set_colorscheme() {
+	local colorscheme_file="$colorschemes_dir/$1"
+	if [[ ! -f $colorscheme_file ]]; then
+		echo "Invalid colorscheme: $1"; exit 1
 	fi
-	while IFS= read -r line || [[ -n "$line" ]]; do
-		eval "$line"
-	done < "$colorschemes_dir/$colorscheme"
+	source "$colorscheme_file"
 	set_tty_colors() {
 		echo -en "\e]P0${color01:?}" # Black (Background)
 		echo -en "\e]P1${color02:?}" # Red
@@ -106,11 +74,35 @@ if [[ $OPTIND -eq 1 && -n $1 || -n $set_random_colorscheme ]]; then
 		echo -en "\e]PF${color16:?}" # White
 	}
 	for i in {1..6}; do
-		set_tty_colors > /dev/tty"$i"
+		set_tty_colors > "/dev/tty$i"
 	done > /dev/null 2>&1
-	if [[ $TERM = linux ]]; then
-		clear
-		$(basename "$0") -c
-	fi
-	echo "Setting $colorscheme colorscheme"
+
+	[[ $TERM = linux ]] && clear && $(basename "$0") -c
+	echo "Setting $1 colorscheme"
+}
+
+set_random_colorscheme() {
+	local random_scheme
+	random_scheme=$(basename "$(find "$colorschemes_dir" -type f | shuf -n 1)")
+	set_colorscheme "$random_scheme"
+}
+
+while getopts :lcrsh opt; do
+	case $opt in
+		l) list_colorschemes; exit 0;;
+		c) print_current_palette; exit 0;;
+		r) set_random_colorscheme; exit 0;;
+		s) shift_colorschemes; exit 0;;
+		h) print_help; exit 0;;
+		*) echo "Invalid option -$OPTARG"; print_help; exit 1;;
+	esac
+done
+
+shift $((OPTIND - 1))
+
+if [[ $# -eq 1 ]]; then
+	set_colorscheme "$1"
+	exit 0
 fi
+
+print_help
