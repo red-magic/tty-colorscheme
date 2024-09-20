@@ -1,24 +1,24 @@
-#!/bin/sh
+#!/bin/bash
 
-[ "$(id -u)" -eq 0 ] || { printf '\nRun this script as root\nPass "remove" to uninstall\n\n'; exit 1; }
+[ "$(id -u)" -eq 0 ] || { echo 'Run this script as root'; echo 'Pass "remove" arg to uninstall'; exit 1; }
 
-command -v bash >/dev/null 2>&1 || { printf '\nInstall bash\n\n'; exit 1; }
+command -v bash > /dev/null 2>&1 || { echo 'Install bash'; exit 1; }
 
 install_files() {
 	install -vDm 644 tty-colorscheme/colorschemes/*/* -t /etc/tty-colorscheme/colorschemes
 	install -vm 755 tty-colorscheme/tty-colorscheme -t /usr/bin
-	install -vm 644 man/tty-colorscheme.1.gz -t /usr/share/man/man1
 	install -vDm 644 service/tty-colorscheme.conf -t /etc/tty-colorscheme
+	install -vm 644 man/tty-colorscheme.1.gz -t /usr/share/man/man1
 
-	if command -v systemctl >/dev/null 2>&1; then
+	if command -v systemctl > /dev/null 2>&1; then
 		install -vm 644 service/systemd/tty-colorscheme.service -t /usr/lib/systemd/system
-		printf '\nRun "systemctl enable tty-colorscheme" to apply colors at boot\n'
-	elif command -v openrc-run >/dev/null 2>&1; then
+		echo -en '\nRun "systemctl enable tty-colorscheme" to apply colors at boot'
+	elif command -v openrc-run > /dev/null 2>&1; then
 		install -vm 755 service/openrc/tty-colorscheme -t /etc/init.d
-		printf '\nRun "rc-update add tty-colorscheme" to apply colors at boot\n'
+		echo -en '\nRun "rc-update add tty-colorscheme" to apply colors at boot'
 	fi
 
-	printf 'Colorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n'
+	echo -en '\nColorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n';
 }
 
 remove_files() {
@@ -26,14 +26,14 @@ remove_files() {
 	rm -vf /usr/bin/tty-colorscheme
 	rm -vf /usr/share/man/man1/tty-colorscheme.1.gz
 
-	if command -v systemctl >/dev/null 2>&1; then
+	if command -v systemctl > /dev/null 2>&1; then
 		rm -vf /usr/lib/systemd/system/tty-colorscheme.service
-	elif command -v openrc-run >/dev/null 2>&1; then
+	elif command -v openrc-run > /dev/null 2>&1; then
 		rm -vf /etc/init.d/tty-colorscheme
 	fi
 }
 
-case "$1" in
+case $1 in
 	remove) remove_files ;;
-	*) install_files ;;
+	"") install_files ;;
 esac

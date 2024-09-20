@@ -3,12 +3,10 @@
 colorschemes_dir=/etc/tty-colorscheme/colorschemes
 
 print_help() {
-	echo "Usage: $(basename "$0") [-lcrsh | colorscheme]"
+	echo "Usage: $(basename "$0") [-lps | colorscheme]"
 	echo "  -l    list colorschemes"
-	echo "  -c    print current palette"
-	echo "  -r    set a random colorscheme"
+	echo "  -p    print current palette"
 	echo "  -s    shift through colorschemes"
-	echo "  -h    print help"
 }
 
 list_colorschemes() {
@@ -18,7 +16,7 @@ list_colorschemes() {
 }
 
 print_current_palette() {
-	local cnt=0
+	cnt=0
 	for bkgrnd in {40..47}; do
 		echo -en "\e[${bkgrnd}m"
 		for bold in 22 1; do
@@ -34,12 +32,12 @@ print_current_palette() {
 
 shift_colorschemes() {
 	mapfile -t colorschemes_list < <(list_colorschemes)
-	local max_ind=$((${#colorschemes_list[@]} - 1))
-	local i=0
+	max_ind=$((${#colorschemes_list[@]} - 1))
+	i=0
 	while true; do
-		local colorscheme="${colorschemes_list[$i]}"
+		colorscheme="${colorschemes_list[$i]}"
 		$(basename "$0") "$colorscheme"
-		echo "Use j and k keys to shift through colorschemes"
+		echo 'Use j and k keys to shift through colorschemes'
 		read -rsn1
 		case $REPLY in
 			j) [[ $i -lt $max_ind ]] && ((i++));;
@@ -50,7 +48,7 @@ shift_colorschemes() {
 }
 
 set_colorscheme() {
-	local colorscheme_file="$colorschemes_dir/$1"
+	colorscheme_file="$colorschemes_dir/$1"
 	if [[ ! -f $colorscheme_file ]]; then
 		echo "Invalid colorscheme: $1"; exit 1
 	fi
@@ -77,23 +75,15 @@ set_colorscheme() {
 		set_tty_colors > "/dev/tty$i"
 	done > /dev/null 2>&1
 
-	[[ $TERM = linux ]] && clear && $(basename "$0") -c
+	[ "$TERM" = linux ] && clear && $(basename "$0") -p
 	echo "Setting $1 colorscheme"
 }
 
-set_random_colorscheme() {
-	local random_scheme
-	random_scheme=$(basename "$(find "$colorschemes_dir" -type f | shuf -n 1)")
-	set_colorscheme "$random_scheme"
-}
-
-while getopts :lcrsh opt; do
+while getopts :lps opt; do
 	case $opt in
 		l) list_colorschemes; exit 0;;
-		c) print_current_palette; exit 0;;
-		r) set_random_colorscheme; exit 0;;
+		p) print_current_palette; exit 0;;
 		s) shift_colorschemes; exit 0;;
-		h) print_help; exit 0;;
 		*) echo "Invalid option -$OPTARG"; print_help; exit 1;;
 	esac
 done
