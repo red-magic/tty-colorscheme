@@ -15,9 +15,9 @@ Usage: tty-colorscheme [-lpsh | colorscheme]
   -s    shift through colorschemes
 ```
 
-To change colors for a current TTY at user log on add `tty-colorscheme [colorscheme]` to your `~/.profile`.
+To change colors for a current TTY at user log in add `tty-colorscheme [colorscheme]` to your `~/.profile`.
 
-It still requires using `sudo` if you want to change colors across all TTYs.
+It requires using `sudo` if you want to change colors across the TTYs you are not logged in.
 
 If you get screen artifacts hit `Ctrl+l` or type `clear`.
 
