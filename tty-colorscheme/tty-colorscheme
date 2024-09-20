@@ -4,9 +4,9 @@ colorschemes_dir=/etc/tty-colorscheme/colorschemes
 
 print_help() {
 	echo "Usage: $(basename "$0") [-lps | colorscheme]"
-	echo "  -l    list colorschemes"
-	echo "  -p    print current palette"
-	echo "  -s    shift through colorschemes"
+	echo '  -l    list colorschemes'
+	echo '  -p    print current palette'
+	echo '  -s    shift through colorschemes'
 }
 
 list_colorschemes() {
