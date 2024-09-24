@@ -86,7 +86,7 @@ while getopts :lps opt; do
 	esac
 done
 
-shift $((OPTIND - 1))
+shift $((OPTIND-1))
 
 [ $# -eq 1 ] && set_colorscheme "$1" && exit 0
 

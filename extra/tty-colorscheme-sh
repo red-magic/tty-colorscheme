@@ -3,90 +3,56 @@
 colorschemes_dir=/etc/tty-colorscheme/colorschemes
 
 print_help() {
-	printf 'Usage: %s [-lcrsh | colorscheme]\n' "$(basename "$0")"
+	printf 'Usage: %s [-lps | colorscheme]\n' "$(basename "$0")"
 	printf '  -l    list colorschemes\n'
-	printf '  -c    print current palette\n'
-	printf '  -r    set a random colorscheme\n'
+	printf '  -p    print current palette\n'
 	printf '  -s    shift through colorschemes\n'
-	printf '  -h    print help\n'
 }
 
-if [ $# -eq 0 ]; then
-	print_help=1
-fi
-
-while getopts :lcrsh opt; do
-	case $opt in
-		l) print_schemes=1;;
-		c) print_current_palette=1;;
-		r) set_random_colorscheme=1;;
-		s) shift_through_colorschemes=1;;
-		h) print_help=1;;
-		*) printf 'Invalid option -%s\n' "$OPTARG" && print_help && exit 1;;
-	esac
-done
-
-shift $((OPTIND-1))
-
-if [ -n "$print_schemes" ]; then
+list_colorschemes() {
 	for scheme_file in "$colorschemes_dir"/*; do
 		basename "$scheme_file"
 	done
-fi
+}
 
-if [ -n "$print_current_palette" ]; then
+print_current_palette() {
 	cnt=0
-	for bkgrnd in $(seq 40 47); do
-		printf '%b' "\033[${bkgrnd}m"
+	for bkgrnd in 40 41 42 43 44 45 46 47; do
+		printf '\e[%sm' "${bkgrnd}"
 		for bold in 22 1; do
-			printf '%b' "\033[${bold}m"
-			for frgrnd in $(seq 30 37); do
-				cntprt=$cnt
-				while [ ${#cntprt} -lt 3 ]; do
-					cntprt=" $cntprt"
-				done
-				printf '%b' "\033[${frgrnd}m $cntprt"
+			printf '\e[%sm' "${bold}"
+			for frgrnd in 30 31 32 33 34 35 36 37; do
+				printf "\e[%sm %3d" "$frgrnd" "$cnt"
 				cnt=$((cnt+1))
 			done
 		done
-		printf '%b\n' '\033[0m'
+		printf '\e[0m\n'
 	done
-fi
+}
 
-if [ -n "$shift_through_colorschemes" ]; then
-	set -- $($(basename "$0") -l)
+shift_colorschemes() {
+	set -- $(list_colorschemes)
 	max_ind=$#
 	i=1
 	while true; do
 		colorscheme=$(eval "printf \"\${${i}}"\")
 		$(basename "$0") "$colorscheme"
-		printf "\nPress Enter to go to the next colorscheme"
-		printf "\nPress b then Enter to go one colorscheme back\n"
+		printf '\nPress Enter to go to the next colorscheme'
+		printf '\nPress b and then Enter to go one colorscheme back\n'
 		read -r char
 		case $char in
 			b) [ $i -gt 1 ] && i=$((i-1));;
 			*) [ $i -lt "$max_ind" ] && i=$((i+1));;
 		esac
 	done
-fi
+}
 
-if [ -n "$print_help" ]; then
-	print_help
-fi
-
-if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$set_random_colorscheme" ]; then
-	if [ -n "$set_random_colorscheme" ]; then
-		colorscheme=$(basename "$(find "$colorschemes_dir" -type f | shuf -n 1)")
-	else
-		colorscheme=$1
-		if [ ! -f "$colorschemes_dir/$colorscheme" ]; then
-			printf 'Invalid colorscheme\n'
-			exit 1
-		fi
-	fi
+set_colorscheme() {
+	colorscheme_file="$colorschemes_dir/$1"
+	[ ! -f "$colorscheme_file" ] &&	echo "Invalid colorscheme: $1" && exit 1
 	while IFS= read -r line || [ -n "$line" ]; do
 		eval "$line"
-	done < "$colorschemes_dir/$colorscheme"
+	done < "$colorscheme_file"
 	set_tty_colors() {
 		printf '\033]P0%s' "${color01:?}" # Black (Background)
 		printf '\033]P1%s' "${color02:?}" # Red
@@ -105,12 +71,25 @@ if [ "$OPTIND" -eq 1 ] && [ -n "$1" ] || [ -n "$set_random_colorscheme" ]; then
 		printf '\033]PE%s' "${color15:?}" # Cyan
 		printf '\033]PF%s' "${color16:?}" # White
 	}
-	for i in $(seq 1 6); do
-		set_tty_colors > /dev/tty"$i"
+	for i in 1 2 3 4 5 6; do
+		set_tty_colors > "/dev/tty$i"
 	done > /dev/null 2>&1
-	if [ "$TERM" = linux ]; then
-		clear
-		$(basename "$0") -c
-	fi
-	printf 'Setting %s colorscheme\n' "$colorscheme"
-fi
+
+	[ "$TERM" = linux ] && clear && $(basename "$0") -p
+	echo "Setting $1 colorscheme"
+}
+
+while getopts :lps opt; do
+	case $opt in
+		l) list_colorschemes; exit 0;;
+		p) print_current_palette; exit 0;;
+		s) shift_colorschemes; exit 0;;
+		*) echo "Invalid option -$OPTARG"; print_help; exit 1;;
+	esac
+done
+
+shift $((OPTIND-1))
+
+[ $# -eq 1 ] && set_colorscheme "$1" && exit 0
+
+print_help
