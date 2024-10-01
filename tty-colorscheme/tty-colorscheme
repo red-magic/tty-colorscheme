@@ -49,7 +49,7 @@ shift_colorschemes() {
 
 set_colorscheme() {
 	colorscheme_file="$colorschemes_dir/$1"
-	[ ! -f "$colorscheme_file" ] &&	echo "Invalid colorscheme: $1" && exit 1
+	[ ! -f "$colorscheme_file" ] && echo "Invalid colorscheme: $1" && exit 1
 	source "$colorscheme_file"
 	set_tty_colors() {
 		echo -en "\e]P0${color01:?}" # Black (Background)
