@@ -1,17 +1,17 @@
 #!/bin/bash
 
-colorschemes_dir=/etc/tty-colorscheme/colorschemes
+colorschemes_dir="/etc/tty-colorscheme/colorschemes"
 
 print_help() {
 	echo "Usage: $(basename "$0") [-lps | colorscheme]"
-	echo '  -l    list colorschemes'
-	echo '  -p    print current palette'
-	echo '  -s    shift through colorschemes'
+	echo "  -l    list colorschemes"
+	echo "  -p    print current palette"
+	echo "  -s    shift through colorschemes"
 }
 
 list_colorschemes() {
-	for scheme_file in "$colorschemes_dir"/*; do
-		basename "$scheme_file"
+	for scheme_file in "${colorschemes_dir}"/*; do
+		basename "${scheme_file}"
 	done
 }
 
@@ -22,7 +22,7 @@ print_current_palette() {
 		for bold in 22 1; do
 			echo -en "\e[${bold}m"
 			for frgrnd in {30..37}; do
-				printf "\e[%sm %3d" "$frgrnd" "$cnt"
+				printf "\e[%dm %3d" "${frgrnd}" "${cnt}"
 				((cnt++))
 			done
 		done
@@ -32,25 +32,25 @@ print_current_palette() {
 
 shift_colorschemes() {
 	mapfile -t colorschemes_list < <(list_colorschemes)
-	max_ind=$((${#colorschemes_list[@]}-1))
+	max_ind="$((${#colorschemes_list[@]}-1))"
 	i=0
 	while true; do
-		colorscheme="${colorschemes_list[$i]}"
-		$(basename "$0") "$colorscheme"
-		echo 'Use j and k keys to shift through colorschemes'
+		colorscheme="${colorschemes_list[${i}]}"
+		$(basename "$0") "${colorscheme}"
+		echo "Use j and k keys to shift through colorschemes"
 		read -rsn1
-		case $REPLY in
-			j) [ $i -lt $max_ind ] && ((i++));;
-			k) [ $i -gt 0 ] && ((i--));;
-			*) exit 0;;
+		case "${REPLY}" in
+			j) [[ "${i}" -lt "${max_ind}" ]] && ((i++)) ;;
+			k) [[ "${i}" -gt 0 ]] && ((i--)) ;;
+			*) exit 0 ;;
 		esac
 	done
 }
 
 set_colorscheme() {
-	colorscheme_file="$colorschemes_dir/$1"
-	[ ! -f "$colorscheme_file" ] && echo "Invalid colorscheme: $1" && exit 1
-	source "$colorscheme_file"
+	colorscheme_file="${colorschemes_dir}/$1"
+	[[ ! -f "${colorscheme_file}" ]] && echo "Invalid colorscheme: $1" && exit 1
+	source "${colorscheme_file}"
 	set_tty_colors() {
 		echo -en "\e]P0${color01:?}" # Black (Background)
 		echo -en "\e]P1${color02:?}" # Red
@@ -70,24 +70,22 @@ set_colorscheme() {
 		echo -en "\e]PF${color16:?}" # White
 	}
 	for i in {1..6}; do
-		set_tty_colors > "/dev/tty$i"
+		set_tty_colors > "/dev/tty${i}"
 	done > /dev/null 2>&1
 
-	[ "$TERM" = linux ] && clear && $(basename "$0") -p
+	[[ "${TERM}" == "linux" ]] && clear && $(basename "$0") -p
 	echo "Setting $1 colorscheme"
 }
 
-while getopts :lps opt; do
-	case $opt in
-		l) list_colorschemes; exit 0;;
-		p) print_current_palette; exit 0;;
-		s) shift_colorschemes; exit 0;;
-		*) echo "Invalid option -$OPTARG"; print_help; exit 1;;
+while getopts ':lps' opt; do
+	case "${opt}" in
+		l) list_colorschemes; exit 0 ;;
+		p) print_current_palette; exit 0 ;;
+		s) shift_colorschemes; exit 0 ;;
+		*) echo "Invalid option -${OPTARG}"; print_help; exit 1 ;;
 	esac
 done
 
-shift $((OPTIND-1))
-
-[ $# -eq 1 ] && set_colorscheme "$1" && exit 0
+[[ "$#" -eq 1 ]] && set_colorscheme "$1" && exit 0
 
 print_help

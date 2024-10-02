@@ -7,12 +7,12 @@
 gogh_ver=327
 gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v$gogh_ver.tar.gz"
 
-curl -LO $gogh_link
-tar xvf v$gogh_ver.tar.gz
+curl -LO "${gogh_link}"
+tar xvf "v${gogh_ver}.tar.gz"
 mkdir -v converted-schemes-gogh
 sleep 1
 
-for scheme_file in Gogh-"$gogh_ver/installs/"*.sh; do
+for scheme_file in "Gogh-${gogh_ver}/installs/"*.sh; do
 	get_colors() {
 		awk -F '#' '
 		/BACKGROUND_COLOR/ { printf "color01=%s\n", substr($2, 1, 6) }
@@ -31,14 +31,14 @@ for scheme_file in Gogh-"$gogh_ver/installs/"*.sh; do
 			/COLOR_14/ { printf "color14=%s\n", substr($2, 1, 6) }
 			/COLOR_15/ { printf "color15=%s\n", substr($2, 1, 6) }
 		/FOREGROUND_COLOR/ { printf "color16=%s\n", substr($2, 1, 6) }
-		' "$scheme_file" | sort -V
+		' "${scheme_file}" | sort -V
 	}
-	echo "Converting $(basename "$scheme_file" .sh)"
-	get_colors > "converted-schemes-gogh/$(basename "$scheme_file" .sh)"
+	echo "Converting $(basename "${scheme_file}" .sh)"
+	get_colors > "converted-schemes-gogh/$(basename "${scheme_file}" .sh)"
 done
 
 # c64 dirs are completely unreadable
-echo 'Fixing c64'
+echo "Fixing c64"
 sed -i 's|color05=40318D|color05=7869C4|' converted-schemes-gogh/c64
 sed -i 's|color13=40318D|color13=7869C4|' converted-schemes-gogh/c64
 sleep 1
@@ -46,4 +46,4 @@ sleep 1
 rm -vf ../tty-colorscheme/colorschemes/gogh/*
 cp -vf converted-schemes-gogh/* ../tty-colorscheme/colorschemes/gogh
 
-echo 'Completed'
+echo "Completed"

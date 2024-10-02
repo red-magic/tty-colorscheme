@@ -5,7 +5,7 @@ After=getty@tty1.service
 [Service]
 Type=oneshot
 EnvironmentFile=/etc/tty-colorscheme/tty-colorscheme.conf
-ExecStart=/usr/bin/tty-colorscheme $colorscheme
+ExecStart=/usr/bin/tty-colorscheme ${colorscheme}
 
 [Install]
 WantedBy=multi-user.target
