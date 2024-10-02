@@ -46,22 +46,22 @@ Type `reset` to get back to the system default colors.
 A colorscheme file looks like this:
 
 ```
-color01=000000 # Black (Background)
-color02=F44336 # Red
-color03=4CAF50 # Green
-color04=FFEB3B # Yellow
-color05=2196F3 # Blue
-color06=9C27B0 # Magenta
-color07=00BCD4 # Cyan
-color08=9E9E9E # White (Foreground)
-color09=000000 # Black
-color10=F44336 # Red
-color11=4CAF50 # Green
-color12=FFEB3B # Yellow
-color13=2196F3 # Blue
-color14=9C27B0 # Magenta
-color15=00BCD4 # Cyan
-color16=9E9E9E # White
+color01="000000" # Black (Background)
+color02="F44336" # Red
+color03="4CAF50" # Green
+color04="FFEB3B" # Yellow
+color05="2196F3" # Blue
+color06="9C27B0" # Magenta
+color07="00BCD4" # Cyan
+color08="9E9E9E" # White (Foreground)
+color09="000000" # Black
+color10="F44336" # Red
+color11="4CAF50" # Green
+color12="FFEB3B" # Yellow
+color13="2196F3" # Blue
+color14="9C27B0" # Magenta
+color15="00BCD4" # Cyan
+color16="9E9E9E" # White
 ```
 
 Just change the hex values of colors and put it in `/etc/tty-colorscheme/colorschemes` directory.
