@@ -2,14 +2,9 @@
 
 ./01-update-gogh
 ./02-make-hex-uppercase
-
-echo -en "\nDuplicate names:\n"
 ./03-find-dup-names
-
-echo -en "\nDuplicate files:\n"
 ./04-find-and-remove-dups
 
-echo -en "\nPress Enter to continue\n"
-read -r
+echo -en "\nPress Enter to continue\n" && read -r
 
 rm -vrf Gogh-* converted-gogh-schemes checksums.txt ./*.tar.gz
