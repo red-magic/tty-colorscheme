@@ -1,9 +1,12 @@
 #!/bin/bash
 
+[[ "$(basename "$(pwd)")" != "extra" ]] && echo "Run this script from \"extra\" directory" && exit 1
+
 update_gogh() {
 	gogh_ver=327
 	gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
-	gogh_dir="../tty-colorscheme/colorschemes/gogh"
+	colorschemes_dir="../tty-colorscheme/colorschemes"
+	gogh_dir="${colorschemes_dir}/gogh"
 	tmp_dir="converted-gogh-schemes"
 
 	curl -LO "${gogh_link}"
@@ -41,20 +44,20 @@ update_gogh() {
 }
 
 make_hex_uppercase() {
-	for file in ../tty-colorscheme/colorschemes/*/*; do
+	for file in "${colorschemes_dir}"/*/*; do
 		sed -i 's/=\(.*\)/=\U\1/' "${file}"
 	done
 }
 
 find_dup_names() {
 	echo -en "\nDuplicate names:\n"
-	find ../tty-colorscheme/colorschemes -type f -printf '%p %f\n' \
+	find "${colorschemes_dir}" -type f -printf '%p %f\n' \
 		| sort -k2 \
 		| uniq -f1 --all-repeated=separate
 }
 
 find_and_remove_dups() {
-	find ../tty-colorscheme/colorschemes -type f -exec sha256sum {} + > checksums.txt
+	find "${colorschemes_dir}" -type f -exec sha256sum {} + > checksums.txt
 	list_dups() {
 		awk '{print $1}' checksums.txt \
 			| sort \
