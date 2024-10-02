@@ -1,10 +1,85 @@
 #!/bin/bash
 
-./01-update-gogh
-./02-make-hex-uppercase
-./03-find-dup-names
-./04-find-and-remove-dups
+update_gogh() {
+	gogh_ver=327
+	gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
+	colorscheme_dir="../tty-colorscheme/colorschemes/gogh"
+	target_dir="converted-gogh-schemes"
 
-echo -en "\nPress Enter to continue\n" && read -r
+	curl -LO "${gogh_link}"
+	tar xvf "v${gogh_ver}.tar.gz"
+	mkdir -vp "${target_dir}"
 
-rm -vrf Gogh-* converted-gogh-schemes checksums.txt ./*.tar.gz
+	for scheme_file in "Gogh-${gogh_ver}/installs/"*.sh; do
+		echo "Converting $(basename "${scheme_file}" .sh)"
+		awk -F '#' '
+		/BACKGROUND_COLOR/ { printf "color01=\"%s\"\ncolor09=\"%s\"\n", substr($2,1,6), substr($2,1,6) }
+		/FOREGROUND_COLOR/ { printf "color08=\"%s\"\ncolor16=\"%s\"\n", substr($2,1,6), substr($2,1,6) }
+			/COLOR_02/ { printf "color02=\"%s\"\n", substr($2,1,6) }
+			/COLOR_03/ { printf "color03=\"%s\"\n", substr($2,1,6) }
+			/COLOR_04/ { printf "color04=\"%s\"\n", substr($2,1,6) }
+			/COLOR_05/ { printf "color05=\"%s\"\n", substr($2,1,6) }
+			/COLOR_06/ { printf "color06=\"%s\"\n", substr($2,1,6) }
+			/COLOR_07/ { printf "color07=\"%s\"\n", substr($2,1,6) }
+			/COLOR_10/ { printf "color10=\"%s\"\n", substr($2,1,6) }
+			/COLOR_11/ { printf "color11=\"%s\"\n", substr($2,1,6) }
+			/COLOR_12/ { printf "color12=\"%s\"\n", substr($2,1,6) }
+			/COLOR_13/ { printf "color13=\"%s\"\n", substr($2,1,6) }
+			/COLOR_14/ { printf "color14=\"%s\"\n", substr($2,1,6) }
+			/COLOR_15/ { printf "color15=\"%s\"\n", substr($2,1,6) }
+		' "${scheme_file}" | sort -V > "${target_dir}/$(basename "${scheme_file}" .sh)"
+	done
+
+	# Fixing c64 scheme, dirs are unreadable
+	sed -i 's|color05="40318D"|color05="7869C4"|' "${target_dir}/c64"
+	sed -i 's|color13="40318D"|color13="7869C4"|' "${target_dir}/c64"
+
+	rm -vf "${colorscheme_dir}"/*
+	cp -vf "${target_dir}"/* "${colorscheme_dir}"
+}
+
+make_hex_uppercase() {
+	for file in ../tty-colorscheme/colorschemes/*/*; do
+		sed -i 's/=\(.*\)/=\U\1/' "${file}"
+	done
+}
+
+find_dup_names() {
+	echo -en "\nDuplicate names:\n"
+	find ../tty-colorscheme/colorschemes -type f -printf '%p %f\n' \
+		| sort -k2 \
+		| uniq -f1 --all-repeated=separate
+}
+
+find_and_remove_dups() {
+	find ../tty-colorscheme/colorschemes -type f -exec sha256sum {} + > checksums.txt
+	list_dups() {
+		awk '{print $1}' checksums.txt \
+			| sort \
+			| uniq -d \
+			| while read -r dup; do
+				grep "${dup}" checksums.txt
+			done
+	}
+
+	echo -en "\nDuplicate files:\n"
+	list_dups
+
+	echo -en "\nDuplicates removed:\n"
+	list_dups \
+		| awk 'NR % 2 == 1 {print $2}' \
+		| while read -r line; do
+			rm -vf "${line}";
+		done
+}
+
+clean_up() {
+	echo -en "\nPress Enter to continue\n" && read -r
+	rm -vrf Gogh-* converted-gogh-schemes checksums.txt ./*.tar.gz
+}
+
+update_gogh
+make_hex_uppercase
+find_dup_names
+find_and_remove_dups
+clean_up

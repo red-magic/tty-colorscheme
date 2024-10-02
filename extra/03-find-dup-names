@@ -1,4 +1,0 @@
-#!/bin/bash
-
-echo -en "\nDuplicate names:\n"
-find ../tty-colorscheme/colorschemes -type f -printf '%p %f\n' | sort -k2 | uniq -f1 --all-repeated=separate
