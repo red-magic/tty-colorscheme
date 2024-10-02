@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for file in ../tty-colorscheme/colorschemes/*/*; do
+	sed -i 's/=\(.*\)/=\U\1/' "${file}"
+done
