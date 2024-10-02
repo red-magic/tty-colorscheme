@@ -1,6 +1,9 @@
 #!/bin/bash
 
-[[ "$(basename "$(pwd)")" != "extra" ]] && echo "Run this script from \"extra\" directory" && exit 1
+if [[ "$(basename "$(pwd)")" != "extra" ]] && [[ ! -f "total-update"  ]]; then
+	echo "Run this script from \"extra\" directory"
+	exit 1
+fi
 
 update_gogh() {
 	gogh_ver=327
