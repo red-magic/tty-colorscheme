@@ -17,7 +17,7 @@ update_gogh() {
     mkdir -vp "${tmp_dir}"
 
     for scheme_file in "Gogh-${gogh_ver}/installs/"*.sh; do
-        printf "Converting %s" "$(basename "${scheme_file}" .sh)"
+        printf "Converting %s\n" "$(basename "${scheme_file}" .sh)"
         awk -F '#' '
         /BACKGROUND_COLOR/ { printf "color01=\"%s\"\n", substr($2,1,6) }
                 /COLOR_02/ { printf "color02=\"%s\"\n", substr($2,1,6) }
