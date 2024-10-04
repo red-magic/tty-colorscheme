@@ -27,6 +27,11 @@ remove_files() {
 }
 
 case "$1" in
-    remove) remove_files ;;
-        "") install_files ;;
+    remove)
+        remove_files
+    ;;
+
+    "")
+        install_files
+    ;;
 esac
