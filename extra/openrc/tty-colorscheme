@@ -4,19 +4,19 @@ description="Change TTY colors"
 command="/usr/bin/tty-colorscheme"
 
 start_pre() {
-	eval "$(grep ^colorscheme /etc/tty-colorscheme/tty-colorscheme.conf | sed 's: ::g')"
-	${command} ${colorscheme} > /dev/null 2>&1
-	eend $? "$(${command} ${colorscheme})"
+    eval "$(grep ^colorscheme /etc/tty-colorscheme/tty-colorscheme.conf | sed 's: ::g')"
+    ${command} ${colorscheme} > /dev/null 2>&1
+    eend $? "$(${command} ${colorscheme})"
 }
 
 start() {
-	if [ -z "${colorscheme}" ]; then
-		ewarn "No colorscheme set, using system default colors"
-	else
-		einfo "$(TERM= ${command} ${colorscheme})"
-	fi
+    if [ -z "${colorscheme}" ]; then
+        ewarn "No colorscheme set, using system default colors"
+    else
+        einfo "$(TERM= ${command} ${colorscheme})"
+    fi
 }
 
 stop() {
-	return 0
+    return 0
 }

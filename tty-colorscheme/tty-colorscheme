@@ -3,87 +3,86 @@
 colorschemes_dir="/etc/tty-colorscheme/colorschemes"
 
 print_help() {
-	echo "Usage: $(basename "$0") [-lps | colorscheme]"
-	echo "  -l    list colorschemes"
-	echo "  -p    print current palette"
-	echo "  -s    shift through colorschemes"
+    printf "Usage: %s [-lps | colorscheme]\n" "$(basename "$0")"
+    printf "  -l    list colorschemes\n"
+    printf "  -p    print current palette\n"
+    printf "  -s    shift through colorschemes\n"
 }
 
 list_colorschemes() {
-	for scheme_file in "${colorschemes_dir}"/*; do
-		basename "${scheme_file}"
-	done
+    for scheme_file in "${colorschemes_dir}"/*; do
+        basename "${scheme_file}"
+    done
 }
 
 print_current_palette() {
-	cnt=0
-	for bkgrnd in {40..47}; do
-		echo -en "\e[${bkgrnd}m"
-		for bold in 22 1; do
-			echo -en "\e[${bold}m"
-			for frgrnd in {30..37}; do
-				printf "\e[%dm %3d" "${frgrnd}" "${cnt}"
-				((cnt++))
-			done
-		done
-		echo -en "\e[0m\n"
-	done
+    cnt=0
+    for bkgrnd in {40..47}; do
+        printf "\e[%sm" "${bkgrnd}"
+        for bold in 22 1; do
+            printf "\e[%sm" "${bold}"
+            for frgrnd in {30..37}; do
+                printf "\e[%sm %3s" "${frgrnd}" "${cnt}"
+                ((cnt++))
+            done
+        done
+        printf "\e[0m\n"
+    done
 }
 
 shift_colorschemes() {
-	mapfile -t colorschemes_list < <(list_colorschemes)
-	max_ind="$((${#colorschemes_list[@]}-1))"
-	i=0
-	while true; do
-		colorscheme="${colorschemes_list[${i}]}"
-		$(basename "$0") "${colorscheme}"
-		echo "Use j and k keys to shift through colorschemes"
-		read -rsn1
-		case "${REPLY}" in
-			j) [[ "${i}" -lt "${max_ind}" ]] && ((i++)) ;;
-			k) [[ "${i}" -gt 0 ]] && ((i--)) ;;
-			*) exit 0 ;;
-		esac
-	done
+    mapfile -t colorschemes_list < <(list_colorschemes)
+    max_ind="$((${#colorschemes_list[@]}-1))"
+    i=0
+    while true; do
+        colorscheme="${colorschemes_list[${i}]}"
+        $(basename "$0") "${colorscheme}"
+        printf "Use j and k keys to shift through colorschemes\n"
+        read -rsn1
+        case "${REPLY}" in
+            j) [[ "${i}" -lt "${max_ind}" ]] && ((i++)) ;;
+            k) [[ "${i}" -gt 0 ]] && ((i--)) ;;
+            *) exit 0 ;;
+        esac
+    done
 }
 
 set_colorscheme() {
-	colorscheme_file="${colorschemes_dir}/$1"
-	[[ ! -f "${colorscheme_file}" ]] && echo "Invalid colorscheme: $1" && exit 1
-	source "${colorscheme_file}"
-	set_tty_colors() {
-		echo -en "\e]P0${color01:?}" # Black (Background)
-		echo -en "\e]P1${color02:?}" # Red
-		echo -en "\e]P2${color03:?}" # Green
-		echo -en "\e]P3${color04:?}" # Yellow
-		echo -en "\e]P4${color05:?}" # Blue
-		echo -en "\e]P5${color06:?}" # Magenta
-		echo -en "\e]P6${color07:?}" # Cyan
-		echo -en "\e]P7${color08:?}" # White (Foreground)
-		echo -en "\e]P8${color09:?}" # Black
-		echo -en "\e]P9${color10:?}" # Red
-		echo -en "\e]PA${color11:?}" # Green
-		echo -en "\e]PB${color12:?}" # Yellow
-		echo -en "\e]PC${color13:?}" # Blue
-		echo -en "\e]PD${color14:?}" # Magenta
-		echo -en "\e]PE${color15:?}" # Cyan
-		echo -en "\e]PF${color16:?}" # White
-	}
-	for i in {1..6}; do
-		set_tty_colors > "/dev/tty${i}"
-	done > /dev/null 2>&1
-
-	[[ "${TERM}" == "linux" ]] && clear && $(basename "$0") -p
-	echo "Setting $1 colorscheme"
+    colorscheme_file="${colorschemes_dir}/$1"
+    [[ ! -f "${colorscheme_file}" ]] && printf "Invalid colorscheme: %s\n" "$1" && exit 1
+    source "${colorscheme_file}"
+    set_tty_colors() {
+        printf "\e]P0%s" "${color01:?}" # Black (Background)
+        printf "\e]P1%s" "${color02:?}" # Red
+        printf "\e]P2%s" "${color03:?}" # Green
+        printf "\e]P3%s" "${color04:?}" # Yellow
+        printf "\e]P4%s" "${color05:?}" # Blue
+        printf "\e]P5%s" "${color06:?}" # Magenta
+        printf "\e]P6%s" "${color07:?}" # Cyan
+        printf "\e]P7%s" "${color08:?}" # White (Foreground)
+        printf "\e]P8%s" "${color09:?}" # Black
+        printf "\e]P9%s" "${color10:?}" # Red
+        printf "\e]PA%s" "${color11:?}" # Green
+        printf "\e]PB%s" "${color12:?}" # Yellow
+        printf "\e]PC%s" "${color13:?}" # Blue
+        printf "\e]PD%s" "${color14:?}" # Magenta
+        printf "\e]PE%s" "${color15:?}" # Cyan
+        printf "\e]PF%s" "${color16:?}" # White
+    }
+    for i in {1..6}; do
+        set_tty_colors > "/dev/tty${i}"
+    done > /dev/null 2>&1
+    [[ "${TERM}" == "linux" ]] && clear && $(basename "$0") -p
+    printf "Setting %s colorscheme\n" "$1"
 }
 
 while getopts ':lps' opt; do
-	case "${opt}" in
-		l) list_colorschemes; exit 0 ;;
-		p) print_current_palette; exit 0 ;;
-		s) shift_colorschemes; exit 0 ;;
-		*) echo "Invalid option -${OPTARG}"; print_help; exit 1 ;;
-	esac
+    case "${opt}" in
+        l) list_colorschemes; exit 0 ;;
+        p) print_current_palette; exit 0 ;;
+        s) shift_colorschemes; exit 0 ;;
+        *) printf "Invalid option -%s\n" "${OPTARG}"; print_help; exit 1 ;;
+    esac
 done
 
 [[ "$#" -eq 1 ]] && set_colorscheme "$1" && exit 0
