@@ -79,12 +79,25 @@ set_colorscheme() {
     printf "Setting %s colorscheme" "$1"
 }
 
-while getopts ':lps' opt; do
+while getopts ":lps" opt; do
     case "${opt}" in
-        l) list_colorschemes; exit 0 ;;
-        p) print_current_palette; exit 0 ;;
-        s) shift_colorschemes; exit 0 ;;
-        *) printf "Invalid option -%s\n" "${OPTARG}"; print_help; exit 1 ;;
+        l)
+            list_colorschemes
+            exit 0
+            ;;
+        p)
+            print_current_palette
+            exit 0
+            ;;
+        s)
+            shift_colorschemes
+            exit 0
+            ;;
+        *)
+            printf "Invalid option -%s\n" "${OPTARG}"
+            print_help
+            exit 1
+            ;;
     esac
 done
 
