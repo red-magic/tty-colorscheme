@@ -8,8 +8,8 @@ fi
 update_gogh() {
     gogh_ver=327
     gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
-    colorschemes_dir="../tty-colorscheme/colorschemes"
-    gogh_dir="${colorschemes_dir}/gogh"
+    cs_dir="../tty-colorscheme/colorschemes"
+    gogh_dir="${cs_dir}/gogh"
     tmp_dir="converted-gogh-schemes"
 
     curl -LO "${gogh_link}"
@@ -47,20 +47,20 @@ update_gogh() {
 }
 
 make_hex_uppercase() {
-    for file in "${colorschemes_dir}"/*/*; do
-        sed -i 's/=\(.*\)/=\U\1/' "${file}"
+    for cs_file in "${cs_dir}"/*/*; do
+        sed -i 's/=\(.*\)/=\U\1/' "${cs_file}"
     done
 }
 
 find_dup_names() {
     printf "\nDuplicate names:\n"
-    find "${colorschemes_dir}" -type f -printf "%p %f\n" \
+    find "${cs_dir}" -type f -printf "%p %f\n" \
         | sort -k2 \
         | uniq -f1 --all-repeated=separate
 }
 
 find_and_remove_dups() {
-    find "${colorschemes_dir}" -type f -exec sha256sum {} + > checksums.txt
+    find "${cs_dir}" -type f -exec sha256sum {} + > checksums.txt
     list_dups() {
         awk '{print $1}' checksums.txt \
             | sort \
