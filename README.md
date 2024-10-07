@@ -9,10 +9,11 @@ Run `./install` script as root to install `tty-colorscheme` and various themes.
 ## Usage
 
 ```
-Usage: tty-colorscheme [-lps | colorscheme]
+Usage: tty-colorscheme [-lfps | colorscheme]
   -l    list colorschemes
+  -f    list psf fonts
   -p    print current palette
-  -s    shift through colorschemes
+  -s    shift through colorschemes and fonts
 ```
 
 To change colors for a current TTY at user log in add `tty-colorscheme [colorscheme]` to your `~/.profile`.
