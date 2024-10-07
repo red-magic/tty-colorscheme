@@ -1,21 +1,49 @@
 #!/bin/bash
 
-colorschemes_dir="/etc/tty-colorscheme/colorschemes"
+cs_dir="/etc/tty-colorscheme/colorschemes"
 
-print_help() {
-    printf "Usage: %s [-lps | colorscheme]\n" "$(basename "$0")"
-    printf "  -l    list colorschemes\n"
-    printf "  -p    print current palette\n"
-    printf "  -s    shift through colorschemes\n"
+_get_fonts() {
+    fnt_dir="$(find /usr -type d -name "consolefonts")"
+    find "${fnt_dir}" -name "*.psf*" -exec file {} + \
+        | grep -E 'gzip | PC Screen Font' \
+        | cut -d: -f 1 \
+        | sort -V
 }
 
-list_colorschemes() {
-    for scheme_file in "${colorschemes_dir}"/*; do
-        basename "${scheme_file}"
+_set_colors() {
+    printf "\e]P0%s" "${color01:?}" # Black (Background)
+    printf "\e]P1%s" "${color02:?}" # Red
+    printf "\e]P2%s" "${color03:?}" # Green
+    printf "\e]P3%s" "${color04:?}" # Yellow
+    printf "\e]P4%s" "${color05:?}" # Blue
+    printf "\e]P5%s" "${color06:?}" # Magenta
+    printf "\e]P6%s" "${color07:?}" # Cyan
+    printf "\e]P7%s" "${color08:?}" # White (Foreground)
+    printf "\e]P8%s" "${color09:?}" # Black
+    printf "\e]P9%s" "${color10:?}" # Red
+    printf "\e]PA%s" "${color11:?}" # Green
+    printf "\e]PB%s" "${color12:?}" # Yellow
+    printf "\e]PC%s" "${color13:?}" # Blue
+    printf "\e]PD%s" "${color14:?}" # Magenta
+    printf "\e]PE%s" "${color15:?}" # Cyan
+    printf "\e]PF%s" "${color16:?}" # White
+}
+
+cs_list_schemes() {
+    for cs_name in "${cs_dir}"/*; do
+        basename "${cs_name}"
     done
 }
 
-print_current_palette() {
+cs_list_fonts() {
+    mapfile -t fnt_list < <(_get_fonts 2>/dev/null)
+
+    for fnt_name in "${fnt_list[@]}"; do
+        basename "${fnt_name}" | cut -d. -f1
+    done
+}
+
+cs_print_palette() {
     cnt=0
     for bkgrnd in {40..47}; do
         printf "\e[%sm" "${bkgrnd}"
@@ -30,74 +58,109 @@ print_current_palette() {
     done
 }
 
-shift_colorschemes() {
-    mapfile -t colorschemes_list < <(list_colorschemes)
-    max_ind="$((${#colorschemes_list[@]}-1))"
-    i=0
+cs_shift() {
+    mapfile -t cs_arr < <(cs_list_schemes)
+    max_ind_cs="$((${#cs_arr[@]}-1))"
+    ind_cs=-1
+
+    mapfile -t fnt_arr < <(_get_fonts 2>/dev/null)
+    max_ind_fnt="$((${#fnt_arr[@]}-1))"
+    ind_fnt=-1
+
+    mode=""
+
     while true; do
-        colorscheme="${colorschemes_list[${i}]}"
-        $(basename "$0") "${colorscheme}"
-        printf "Use j and k keys to shift through colorschemes\n"
+        clear
+
+        if [[ "${mode}" == "cs" ]] && [[ "${ind_cs}" -gt -1 ]]; then
+            cs="${cs_arr[${ind_cs}]}"
+            cs_set_scheme "${cs}" > /dev/null 2>&1
+            clear
+            cs_print_palette
+            printf "Setting %s colorscheme\n" "${cs}"
+        elif [[ "${mode}" == "fnt" ]] && [[ "${ind_fnt}" -gt -1 ]]; then
+            fnt="${fnt_arr[${ind_fnt}]}"
+            setfont "${fnt}" > /dev/null 2>&1
+            clear
+            showconsolefont
+            printf "Setting %s font\n" "$(basename "${fnt}" | cut -d. -f1)"
+        fi
+
+        printf "\nUse j and k keys to shift through colorschemes\n"
+        printf "Use h and l keys to shift through fonts\n"
+
         read -rsn1
         case "${REPLY}" in
-            j) [[ "${i}" -lt "${max_ind}" ]] && ((i++)) ;;
-            k) [[ "${i}" -gt 0 ]] && ((i--)) ;;
-            *) exit 0 ;;
+            j)
+                [[ "${ind_cs}" -lt "${max_ind_cs}" ]] && ((ind_cs++))
+                mode="cs"
+                ;;
+            k)
+                [[ "${ind_cs}" -gt 0 ]] && ((ind_cs--))
+                mode="cs"
+                ;;
+            l)
+                [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]] && ((ind_fnt++))
+                mode="fnt"
+                ;;
+            h)
+                [[ "${ind_fnt}" -gt 0 ]] && ((ind_fnt--))
+                mode="fnt"
+                ;;
+            *)
+                exit 0
+                ;;
         esac
     done
 }
 
-set_colorscheme() {
-    colorscheme_file="${colorschemes_dir}/$1"
-    [[ ! -f "${colorscheme_file}" ]] && printf "Invalid colorscheme: %s\n" "$1" && exit 1
-    source "${colorscheme_file}"
-    set_tty_colors() {
-        printf "\e]P0%s" "${color01:?}" # Black (Background)
-        printf "\e]P1%s" "${color02:?}" # Red
-        printf "\e]P2%s" "${color03:?}" # Green
-        printf "\e]P3%s" "${color04:?}" # Yellow
-        printf "\e]P4%s" "${color05:?}" # Blue
-        printf "\e]P5%s" "${color06:?}" # Magenta
-        printf "\e]P6%s" "${color07:?}" # Cyan
-        printf "\e]P7%s" "${color08:?}" # White (Foreground)
-        printf "\e]P8%s" "${color09:?}" # Black
-        printf "\e]P9%s" "${color10:?}" # Red
-        printf "\e]PA%s" "${color11:?}" # Green
-        printf "\e]PB%s" "${color12:?}" # Yellow
-        printf "\e]PC%s" "${color13:?}" # Blue
-        printf "\e]PD%s" "${color14:?}" # Magenta
-        printf "\e]PE%s" "${color15:?}" # Cyan
-        printf "\e]PF%s" "${color16:?}" # White
-    }
+cs_set_scheme() {
+    cs_file="${cs_dir}/$1"
+    [[ ! -f "${cs_file}" ]] && printf "Invalid colorscheme: %s\n" "$1" && exit 1
+    source "${cs_file}"
+
     for i in {1..6}; do
-        set_tty_colors > "/dev/tty${i}"
+        _set_colors > "/dev/tty${i}"
     done > /dev/null 2>&1
+
     [[ "${TERM}" == "linux" ]] && clear && $(basename "$0") -p
     printf "Setting %s colorscheme\n" "$1"
 }
 
-while getopts ":lps" opt; do
+cs_print_help() {
+    printf "Usage: %s [-lps | colorscheme]\n" "$(basename "$0")"
+    printf "  -l    list colorschemes\n"
+    printf "  -f    list psf fonts\n"
+    printf "  -p    print current palette\n"
+    printf "  -s    shift through colorschemes and fonts\n"
+}
+
+while getopts ":lfps" opt; do
     case "${opt}" in
         l)
-            list_colorschemes
+            cs_list_schemes
+            exit 0
+            ;;
+        f)
+            cs_list_fonts
             exit 0
             ;;
         p)
-            print_current_palette
+            cs_print_palette
             exit 0
             ;;
         s)
-            shift_colorschemes
+            cs_shift
             exit 0
             ;;
         *)
             printf "Invalid option -%s\n" "${OPTARG}"
-            print_help
+            cs_print_help
             exit 1
             ;;
     esac
 done
 
-[[ "$#" -eq 1 ]] && set_colorscheme "$1" && exit 0
+[[ "$#" -eq 1 ]] && cs_set_scheme "$1" && exit 0
 
-print_help
+cs_print_help
