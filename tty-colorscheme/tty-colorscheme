@@ -37,7 +37,6 @@ cs_list_schemes() {
 
 cs_list_fonts() {
     mapfile -t fnt_list < <(_get_fonts 2>/dev/null)
-
     for fnt_name in "${fnt_list[@]}"; do
         basename "${fnt_name}" | cut -d. -f1
     done
