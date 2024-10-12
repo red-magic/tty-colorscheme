@@ -116,14 +116,23 @@ cs_shift() {
 
 cs_set_scheme() {
     cs_file="${cs_dir}/$1"
-    [[ ! -f "${cs_file}" ]] && printf "Invalid colorscheme: %s\n" "$1" && exit 1
+
+    if [[ ! -f "${cs_file}" ]]; then
+        printf "Invalid colorscheme: %s\n" "$1"
+        exit 1
+    fi
+
     source "${cs_file}"
 
     for i in {1..6}; do
         _set_colors > "/dev/tty${i}"
     done > /dev/null 2>&1
 
-    [[ "${TERM}" == "linux" ]] && clear && $(basename "$0") -p
+    if [[ "${TERM}" == "linux" ]]; then
+        clear
+        $(basename "$0") -p
+    fi
+
     printf "Setting %s colorscheme\n" "$1"
 }
 
@@ -161,6 +170,9 @@ while getopts ":lfps" opt; do
     esac
 done
 
-[[ "$#" -eq 1 ]] && cs_set_scheme "$1" && exit 0
+if [[ "$#" -eq 1 ]]; then
+    cs_set_scheme "$1"
+    exit 0
+fi
 
 cs_print_help
