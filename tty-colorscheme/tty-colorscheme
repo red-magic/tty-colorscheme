@@ -3,7 +3,7 @@
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _get_fonts() {
-    fnt_dir="$(find /usr -type d -name "consolefonts")"
+    fnt_dir="$(find /usr -type d -name "consolefonts" 2>/dev/null)"
     find "${fnt_dir}" -name "*.psf*" -exec file {} + \
         | grep -E 'gzip | PC Screen Font' \
         | cut -d: -f 1 \
@@ -36,7 +36,7 @@ cs_list_schemes() {
 }
 
 cs_list_fonts() {
-    mapfile -t fnt_list < <(_get_fonts 2>/dev/null)
+    mapfile -t fnt_list < <(_get_fonts)
     for fnt_name in "${fnt_list[@]}"; do
         basename "${fnt_name}" | cut -d. -f1
     done
