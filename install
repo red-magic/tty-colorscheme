@@ -6,6 +6,20 @@ if [[ "$(id -u)" -ne 0 ]]; then
     exit 1
 fi
 
+check_depends() {
+    pkgs=("file" "gzip")
+    missing_pkgs=""
+
+    for pkg in "${pkgs[@]}"; do
+        [[ -x "$(command -v "${pkg}")" ]] || missing_pkgs="${missing_pkgs} ${pkg}"
+    done
+
+    if [[ -n "${missing_pkgs}" ]]; then
+        printf "Install the following packages:%s\n" "${missing_pkgs}"
+        exit 1
+    fi
+}
+
 install_files() {
     install -vDm 644 tty-colorscheme/colorschemes/*/* -t /etc/tty-colorscheme/colorschemes
     install -vm 755 tty-colorscheme/tty-colorscheme -t /usr/bin
@@ -31,6 +45,7 @@ case "$1" in
         remove_files
         ;;
     "")
+        check_depends
         install_files
         ;;
 esac
