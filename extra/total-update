@@ -16,8 +16,12 @@ update_gogh() {
     tar xvf "v${gogh_ver}.tar.gz"
     mkdir -vp "${tmp_dir}"
 
-    for scheme_file in "Gogh-${gogh_ver}/installs/"*.sh; do
-        printf "Converting %s\n" "$(basename "${scheme_file}" .sh)"
+    for scheme_path in "Gogh-${gogh_ver}/installs/"*.sh; do
+        scheme_file="${scheme_path##*/}"
+        scheme_short="${scheme_file%%.*}"
+
+        printf "Converting %s\n" "${scheme_short}"
+
         awk -F '#' '
         /BACKGROUND_COLOR/ { printf "color01=\"%s\"\n", substr($2,1,6) }
                 /COLOR_02/ { printf "color02=\"%s\"\n", substr($2,1,6) }
@@ -35,7 +39,7 @@ update_gogh() {
                 /COLOR_14/ { printf "color14=\"%s\"\n", substr($2,1,6) }
                 /COLOR_15/ { printf "color15=\"%s\"\n", substr($2,1,6) }
         /FOREGROUND_COLOR/ { printf "color16=\"%s\"\n", substr($2,1,6) }
-        ' "${scheme_file}" | sort -V > "${tmp_dir}/$(basename "${scheme_file}" .sh)"
+        ' "${scheme_path}" | sort -V > "${tmp_dir}/${scheme_short}"
     done
 
     # Fixing c64 scheme, dirs are unreadable

@@ -35,8 +35,8 @@ cs_list_fonts() {
     mapfile -t fnt_arr < <(_get_fonts)
     _fnt_err && exit 1
     for fnt_path in "${fnt_arr[@]}"; do
-        fnt_short="${fnt_path##*/}"
-        printf "%s\n" "${fnt_short%%.*}"
+        fnt_file="${fnt_path##*/}"
+        printf "%s\n" "${fnt_file%%.*}"
     done
 }
 
