@@ -72,22 +72,18 @@ cs_shift() {
     ind_fnt=-1
 
     mode=""
+    clear
 
     while true; do
-        clear
-
         _fnt_err && mode="cs"
 
         if [[ "${mode}" == "cs" ]] && [[ "${ind_cs}" -gt -1 ]]; then
             cs="${cs_arr[${ind_cs}]}"
-            cs_set_scheme "${cs}" > /dev/null 2>&1
-            clear
-            cs_print_palette
-            printf "Setting %s colorscheme\n" "${cs}"
+            cs_set_scheme "${cs}"
         elif [[ "${mode}" == "fnt" ]] && [[ "${ind_fnt}" -gt -1 ]]; then
             fnt="${fnt_arr[${ind_fnt}]}"
-            setfont "${fnt}" > /dev/null 2>&1
             clear
+            setfont "${fnt}"
             showconsolefont
             printf "Setting %s font\n" "$(basename "${fnt}" | cut -d. -f1)"
         fi
