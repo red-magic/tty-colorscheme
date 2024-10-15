@@ -72,10 +72,11 @@ cs_shift() {
     ind_fnt=-1
 
     mode=""
+    clear
 
     while true; do
-        clear
-        _fnt_err && mode="cs"
+        [[ "${mode}" == "fnt" ]] && clear
+        _fnt_err && ind_fnt=-1
 
         if [[ "${mode}" == "cs" ]] && [[ "${ind_cs}" -gt -1 ]]; then
             cs="${cs_arr[${ind_cs}]}"
@@ -98,6 +99,7 @@ cs_shift() {
                 mode="cs"
                 ;;
             k)
+                [[ "${ind_cs}" == -1 ]] && ind_cs=0
                 [[ "${ind_cs}" -gt 0 ]] && ((ind_cs--))
                 mode="cs"
                 ;;
@@ -106,6 +108,7 @@ cs_shift() {
                 mode="fnt"
                 ;;
             h)
+                [[ "${ind_fnt}" == -1 ]] && ind_fnt=0
                 [[ "${ind_fnt}" -gt 0 ]] && ((ind_fnt--))
                 mode="fnt"
                 ;;
