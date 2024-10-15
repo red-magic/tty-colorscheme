@@ -4,6 +4,7 @@ cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _fnt_err() {
     [[ -z "${fnt_arr[0]}" ]] && printf "No psf fonts found\n"
+    # No exit 1 to keep running during cs_shift()
 }
 
 _get_fonts() {
@@ -68,6 +69,7 @@ cs_shift() {
     clear
 
     while true; do
+        # cs_set_scheme() has `clear` already
         [[ "${mode}" == "fnt" ]] && clear
         _fnt_err && ind_fnt=-1
 
@@ -97,6 +99,8 @@ cs_shift() {
                 if [[ "${ind_cs}" -gt 0 ]]; then
                     ((ind_cs--))
                 elif [[ "${ind_cs}" == -1 ]]; then
+                    # Get to the first element in the array
+                    # even if 'k' is pressed first, same for 'h'
                     ind_cs=0
                 fi
                 ;;
