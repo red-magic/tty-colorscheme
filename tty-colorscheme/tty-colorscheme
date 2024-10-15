@@ -73,11 +73,13 @@ cs_shift() {
         if [[ "${mode}" == "cs" ]] && [[ "${ind_cs}" -gt -1 ]]; then
             cs="${cs_arr[${ind_cs}]}"
             cs_set_scheme "${cs}"
+            printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
         elif [[ "${mode}" == "fnt" ]] && [[ "${ind_fnt}" -gt -1 ]]; then
             fnt="${fnt_arr[${ind_fnt}]}"
             setfont "${fnt}"
             showconsolefont
             printf "Setting %s font\n" "$(basename "${fnt}" | cut -d. -f1)"
+            printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
         fi
 
         printf "\nUse j and k keys to shift through colorschemes\n"
