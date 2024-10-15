@@ -141,16 +141,16 @@ cs_set_scheme() {
 }
 
 cs_print_help() {
-    printf "Usage: %s [-lps | colorscheme]\n" "$(basename "$0")"
-    printf "  -l    list colorschemes\n"
+    printf "Usage: %s [-cfps | colorscheme]\n" "$(basename "$0")"
+    printf "  -c    list colorschemes\n"
     printf "  -f    list psf fonts\n"
     printf "  -p    print current palette\n"
     printf "  -s    shift through colorschemes and fonts\n"
 }
 
-while getopts ":lfps" opt; do
+while getopts ":cfps" opt; do
     case "${opt}" in
-        l)
+        c)
             cs_list_schemes
             exit 0
             ;;
