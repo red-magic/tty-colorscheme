@@ -135,7 +135,7 @@ cs_set_scheme() {
 
     if [[ "${TERM}" == "linux" ]]; then
         clear
-        $(basename "$0") -p
+        cs_print_palette
     fi
 
     printf "\nSetting %s colorscheme\n\n" "$1"
