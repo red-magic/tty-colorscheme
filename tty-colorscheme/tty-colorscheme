@@ -2,6 +2,10 @@
 
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
+_fnt_err() {
+    [[ -z "${fnt_arr[0]}" ]] && printf "No psf fonts found\n"
+}
+
 _get_fonts() {
     fnt_dir="$(find /usr -type d -name "consolefonts" 2>/dev/null)"
     find "${fnt_dir}" -name "*.psf*" -exec file {} + \
@@ -36,8 +40,9 @@ cs_list_schemes() {
 }
 
 cs_list_fonts() {
-    mapfile -t fnt_list < <(_get_fonts)
-    for fnt_name in "${fnt_list[@]}"; do
+    mapfile -t fnt_arr < <(_get_fonts)
+    _fnt_err && exit 1
+    for fnt_name in "${fnt_arr[@]}"; do
         basename "${fnt_name}" | cut -d. -f1
     done
 }
@@ -62,7 +67,7 @@ cs_shift() {
     max_ind_cs="$((${#cs_arr[@]}-1))"
     ind_cs=-1
 
-    mapfile -t fnt_arr < <(_get_fonts 2>/dev/null)
+    mapfile -t fnt_arr < <(_get_fonts)
     max_ind_fnt="$((${#fnt_arr[@]}-1))"
     ind_fnt=-1
 
@@ -70,6 +75,8 @@ cs_shift() {
 
     while true; do
         clear
+
+        _fnt_err && mode="cs"
 
         if [[ "${mode}" == "cs" ]] && [[ "${ind_cs}" -gt -1 ]]; then
             cs="${cs_arr[${ind_cs}]}"
