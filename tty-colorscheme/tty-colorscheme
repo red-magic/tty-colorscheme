@@ -8,7 +8,7 @@ _fnt_err() {
 
 _get_fonts() {
     fnt_dir="$(find /usr -type d -name "consolefonts" 2>/dev/null)"
-    find "${fnt_dir}" -name "*.psf*" -exec file {} + \
+    find "${fnt_dir}" -name "*.psf*" -exec file {} + 2>/dev/null \
         | grep -E 'gzip | PC Screen Font' \
         | cut -d: -f 1 \
         | sort -V
