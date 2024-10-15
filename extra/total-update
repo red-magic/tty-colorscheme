@@ -61,6 +61,7 @@ find_dup_names() {
 
 find_and_remove_dups() {
     find "${cs_dir}" -type f -exec sha256sum {} + > checksums.txt
+
     list_dups() {
         awk '{print $1}' checksums.txt \
             | sort \
