@@ -137,6 +137,7 @@ cs_set_scheme() {
         _set_colors > "/dev/tty${i}"
     done > /dev/null 2>&1
 
+    # Prevent palette going into logs
     if [[ "${TERM}" == "linux" ]]; then
         clear
         cs_print_palette
