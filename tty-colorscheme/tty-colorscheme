@@ -72,9 +72,9 @@ cs_shift() {
     ind_fnt=-1
 
     mode=""
-    clear
 
     while true; do
+        clear
         _fnt_err && mode="cs"
 
         if [[ "${mode}" == "cs" ]] && [[ "${ind_cs}" -gt -1 ]]; then
