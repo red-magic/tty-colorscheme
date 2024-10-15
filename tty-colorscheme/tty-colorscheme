@@ -78,7 +78,7 @@ cs_shift() {
             fnt="${fnt_arr[${ind_fnt}]}"
             setfont "${fnt}"
             showconsolefont
-            printf "Setting %s font\n" "$(basename "${fnt}" | cut -d. -f1)"
+            printf "Setting %s font\n\n" "$(basename "${fnt}" | cut -d. -f1)"
             printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
         fi
 
@@ -137,7 +137,7 @@ cs_set_scheme() {
         $(basename "$0") -p
     fi
 
-    printf "Setting %s colorscheme\n" "$1"
+    printf "\nSetting %s colorscheme\n\n" "$1"
 }
 
 cs_print_help() {
