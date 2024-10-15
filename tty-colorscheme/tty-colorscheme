@@ -28,9 +28,7 @@ _set_colors() {
 }
 
 cs_list_schemes() {
-    for cs_name in "${cs_dir}"/*; do
-        basename "${cs_name}"
-    done
+    ls -1 "${cs_dir}"
 }
 
 cs_list_fonts() {
