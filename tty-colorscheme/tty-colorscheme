@@ -83,7 +83,6 @@ cs_shift() {
             cs_set_scheme "${cs}"
         elif [[ "${mode}" == "fnt" ]] && [[ "${ind_fnt}" -gt -1 ]]; then
             fnt="${fnt_arr[${ind_fnt}]}"
-            clear
             setfont "${fnt}"
             showconsolefont
             printf "Setting %s font\n" "$(basename "${fnt}" | cut -d. -f1)"
