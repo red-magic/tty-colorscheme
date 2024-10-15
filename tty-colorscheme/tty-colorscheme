@@ -94,22 +94,28 @@ cs_shift() {
         read -rsn1
         case "${REPLY}" in
             j)
-                [[ "${ind_cs}" -lt "${max_ind_cs}" ]] && ((ind_cs++))
                 mode="cs"
+                [[ "${ind_cs}" -lt "${max_ind_cs}" ]] && ((ind_cs++))
                 ;;
             k)
-                [[ "${ind_cs}" == -1 ]] && ind_cs=0
-                [[ "${ind_cs}" -gt 0 ]] && ((ind_cs--))
                 mode="cs"
+                if [[ "${ind_cs}" -gt 0 ]]; then
+                    ((ind_cs--))
+                elif [[ "${ind_cs}" == -1 ]]; then
+                    ind_cs=0
+                fi
                 ;;
             l)
-                [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]] && ((ind_fnt++))
                 mode="fnt"
+                [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]] && ((ind_fnt++))
                 ;;
             h)
-                [[ "${ind_fnt}" == -1 ]] && ind_fnt=0
-                [[ "${ind_fnt}" -gt 0 ]] && ((ind_fnt--))
                 mode="fnt"
+                if [[ "${ind_fnt}" -gt 0 ]]; then
+                    ((ind_fnt--))
+                elif [[ "${ind_fnt}" == -1 ]]; then
+                    ind_fnt=0
+                fi
                 ;;
             *)
                 exit 0
