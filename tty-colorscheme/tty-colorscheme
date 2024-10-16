@@ -72,17 +72,31 @@ cs_shift() {
         [[ "${mode}" == "fnt" ]] && clear
         _fnt_err && ind_fnt=-1
 
-        if [[ "${mode}" == "cs" ]] && [[ "${ind_cs}" -gt -1 ]]; then
-            cs="${cs_arr[${ind_cs}]}"
-            cs_set_scheme "${cs}"
-            printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
-        elif [[ "${mode}" == "fnt" ]] && [[ "${ind_fnt}" -gt -1 ]]; then
-            fnt="${fnt_arr[${ind_fnt}]##*/}"
-            setfont "${fnt%%.*}"
-            showconsolefont
-            printf "Setting %s font\n\n" "${fnt%%.*}"
-            printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
-        fi
+        case "${mode}" in
+            "cs")
+                cs="${cs_arr[${ind_cs}]}"
+                cs_set_scheme "${cs}"
+                printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
+                ;;
+            "fnt")
+                if [[ "${ind_fnt}" != -1 ]]; then
+                    fnt="${fnt_arr[${ind_fnt}]##*/}"
+
+                    if [[ "$(id -u)" -eq 0 ]]; then
+                        for i in {1..6}; do
+                            setfont "${fnt%%.*}" -C "/dev/tty${i}"
+                        done
+                    else
+                        setfont "${fnt%%.*}"
+                    fi
+
+                    showconsolefont
+
+                    printf "Setting %s font\n\n" "${fnt%%.*}"
+                    printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
+                fi
+                ;;
+        esac
 
         printf "\nUse j and k keys to shift through colorschemes\n"
         printf "Use h and l keys to shift through fonts\n"
@@ -132,9 +146,13 @@ cs_set_scheme() {
 
     source "${cs_file}"
 
-    for i in {1..6}; do
-        _set_colors > "/dev/tty${i}"
-    done 2>/dev/null
+    if [[ "$(id -u)" -eq 0 ]]; then
+        for i in {1..6}; do
+            _set_colors > "/dev/tty${i}"
+        done
+    else
+        _set_colors
+    fi
 
     # Prevent palette going into logs
     if [[ "${TERM}" == "linux" ]]; then

@@ -18,7 +18,7 @@ Usage: tty-colorscheme [-cfps | colorscheme]
 
 To change colors for a current TTY at user log in add `tty-colorscheme [colorscheme]` to your `~/.profile`.
 
-It requires using `sudo` if you want to change colors across the TTYs you are not logged in.
+It requires using `sudo` if you want to change colors across all TTYs.
 
 If you get screen artifacts hit `Ctrl+l` or type `clear`.
 
