@@ -2,18 +2,6 @@
 
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
-_fnt_err() {
-    [[ -z "${fnt_arr[0]}" ]] && printf "No psf fonts found\n"
-    # No exit 1 to keep running during cs_shift()
-}
-
-_get_fonts() {
-    fnt_dir="$(find /usr -type d -name "consolefonts" 2>/dev/null)"
-    find "${fnt_dir}" -name "*.psf*" -exec file {} + 2>/dev/null \
-        | awk -F: '/gzip|PC Screen Font/ { print $1 }' \
-        | sort -V
-}
-
 _set_colors() {
     # Black   Red     Green   Yellow  Blue    Magenta Cyan    White
     # color01 color02 color03 color04 color05 color06 color07 color08
@@ -26,6 +14,18 @@ _set_colors() {
     printf "\e]P8%s\e]P9%s\e]PA%s\e]PB%s\e]PC%s\e]PD%s\e]PE%s\e]PF%s" \
         "${color09:?}" "${color10:?}" "${color11:?}" "${color12:?}" \
         "${color13:?}" "${color14:?}" "${color15:?}" "${color16:?}"
+}
+
+_fnt_err() {
+    [[ -z "${fnt_arr[0]}" ]] && printf "No psf fonts found\n"
+    # No exit 1 to keep running during cs_shift()
+}
+
+_get_fonts() {
+    fnt_dir="$(find /usr -type d -name "consolefonts" 2>/dev/null)"
+    find "${fnt_dir}" -name "*.psf*" -exec file {} + 2>/dev/null \
+        | awk -F: '/gzip|PC Screen Font/ { print $1 }' \
+        | sort -V
 }
 
 cs_list_schemes() {
