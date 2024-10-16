@@ -28,6 +28,22 @@ _get_fonts() {
         | sort -V
 }
 
+_set_font() {
+    fnt="$1"
+
+    if [[ "$(id -u)" -eq 0 ]]; then
+        for i in {1..6}; do
+            setfont "${fnt%%.*}" -C "/dev/tty${i}"
+        done
+    else
+        setfont "${fnt%%.*}"
+    fi
+
+    showconsolefont
+
+    printf "Setting %s font\n\n" "${fnt%%.*}"
+}
+
 cs_list_schemes() {
     ls -1 "${cs_dir}"
 }
@@ -80,19 +96,7 @@ cs_shift() {
                 ;;
             "fnt")
                 if [[ "${ind_fnt}" != -1 ]]; then
-                    fnt="${fnt_arr[${ind_fnt}]##*/}"
-
-                    if [[ "$(id -u)" -eq 0 ]]; then
-                        for i in {1..6}; do
-                            setfont "${fnt%%.*}" -C "/dev/tty${i}"
-                        done
-                    else
-                        setfont "${fnt%%.*}"
-                    fi
-
-                    showconsolefont
-
-                    printf "Setting %s font\n\n" "${fnt%%.*}"
+                    _set_font "${fnt_arr[${ind_fnt}]##*/}"
                     printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
                 fi
                 ;;

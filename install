@@ -41,7 +41,7 @@ remove_files() {
 }
 
 case "$1" in
-    remove)
+    "remove")
         remove_files
         ;;
     "")
