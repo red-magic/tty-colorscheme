@@ -35,8 +35,7 @@ cs_list_schemes() {
 cs_list_fonts() {
     mapfile -t fnt_arr < <(_get_fonts)
     _fnt_err && exit 1
-    for fnt_path in "${fnt_arr[@]}"; do
-        fnt_file="${fnt_path##*/}"
+    for fnt_file in "${fnt_arr[@]##*/}"; do
         printf "%s\n" "${fnt_file%%.*}"
     done
 }
@@ -78,10 +77,10 @@ cs_shift() {
             cs_set_scheme "${cs}"
             printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
         elif [[ "${mode}" == "fnt" ]] && [[ "${ind_fnt}" -gt -1 ]]; then
-            fnt="${fnt_arr[${ind_fnt}]}"
-            setfont "${fnt}"
+            fnt="${fnt_arr[${ind_fnt}]##*/}"
+            setfont "${fnt%%.*}"
             showconsolefont
-            printf "Setting %s font\n\n" "$(basename "${fnt}" | cut -d. -f1)"
+            printf "Setting %s font\n\n" "${fnt%%.*}"
             printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
         fi
 
