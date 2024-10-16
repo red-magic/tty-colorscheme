@@ -134,7 +134,7 @@ cs_set_scheme() {
 
     for i in {1..6}; do
         _set_colors > "/dev/tty${i}"
-    done > /dev/null 2>&1
+    done 2>/dev/null
 
     # Prevent palette going into logs
     if [[ "${TERM}" == "linux" ]]; then
