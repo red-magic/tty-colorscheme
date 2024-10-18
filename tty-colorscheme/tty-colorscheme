@@ -169,6 +169,10 @@ cs_set_scheme() {
 cs_print_help() {
     prog_name="$(basename "$0")"
 
+    if [[ "$(uname -s)" != "Linux" ]]; then
+        printf "%s only works on Linux systems\n" "${prog_name}"
+    fi
+
     if ! tty | grep -q tty; then
         printf "%s should be run from TTY\n" "${prog_name}"
     fi
