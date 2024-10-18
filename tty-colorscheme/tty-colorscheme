@@ -2,6 +2,10 @@
 
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
+if ! tty | grep -q tty; then
+    printf "%s should be run from TTY\n" "$(basename "$0")"
+fi
+
 _set_colors() {
     # Black   Red     Green   Yellow  Blue    Magenta Cyan    White
     # color01 color02 color03 color04 color05 color06 color07 color08
@@ -16,9 +20,8 @@ _set_colors() {
         "${color13:?}" "${color14:?}" "${color15:?}" "${color16:?}"
 }
 
-_fnt_err() {
+_fnt_warn() {
     [[ -z "${fnt_arr[0]}" ]] && printf "No psf fonts found\n"
-    # No exit 1 to keep running during cs_shift()
 }
 
 _get_fonts() {
@@ -50,7 +53,7 @@ cs_list_schemes() {
 
 cs_list_fonts() {
     mapfile -t fnt_arr < <(_get_fonts)
-    _fnt_err && exit 1
+    _fnt_warn && exit 1
     for fnt_file in "${fnt_arr[@]##*/}"; do
         printf "%s\n" "${fnt_file%%.*}"
     done
@@ -86,7 +89,7 @@ cs_shift() {
     while true; do
         # cs_set_scheme() has `clear` already
         [[ "${mode}" == "fnt" ]] && clear
-        _fnt_err && ind_fnt=-1
+        _fnt_warn && ind_fnt=-1
 
         case "${mode}" in
             "cs")
