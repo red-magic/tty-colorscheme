@@ -170,7 +170,7 @@ cs_print_help() {
     prog_name="$(basename "$0")"
 
     if [[ "$(uname -s)" != "Linux" ]]; then
-        printf "%s works on Linux systems only\n" "${prog_name}"
+        printf "%s works only on Linux systems\n" "${prog_name}"
     fi
 
     if ! tty | grep -q tty; then
