@@ -80,7 +80,7 @@ find_and_remove_dups() {
 
     printf "\nDuplicates removed:\n"
     list_dups \
-        | awk 'NR % 2 == 1 {print $2}' \
+        | awk 'NR % 2 == 0 {print $2}' \
         | while read -r line; do
               rm -vf "${line}";
           done
