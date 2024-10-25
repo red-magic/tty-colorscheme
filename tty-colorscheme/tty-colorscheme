@@ -169,6 +169,12 @@ cs_set_scheme() {
 cs_print_help() {
     prog_name="$(basename "$0")"
 
+    printf "Usage: %s [-cfps | colorscheme]\n" "${prog_name}"
+    printf "  -c    list colorschemes\n"
+    printf "  -f    list psf fonts\n"
+    printf "  -p    print current palette\n"
+    printf "  -s    shift through colorschemes and fonts\n"
+
     if [[ "$(uname -s)" != "Linux" ]]; then
         printf "%s works only on Linux systems\n" "${prog_name}"
     fi
@@ -176,12 +182,6 @@ cs_print_help() {
     if ! tty | grep -q tty; then
         printf "%s should be run from TTY\n" "${prog_name}"
     fi
-
-    printf "Usage: %s [-cfps | colorscheme]\n" "${prog_name}"
-    printf "  -c    list colorschemes\n"
-    printf "  -f    list psf fonts\n"
-    printf "  -p    print current palette\n"
-    printf "  -s    shift through colorschemes and fonts\n"
 }
 
 while getopts ":cfps" opt; do
