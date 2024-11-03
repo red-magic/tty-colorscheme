@@ -6,7 +6,7 @@ if [[ "$(basename "$(pwd)")" != "extra" ]] && [[ ! -f "total-update"  ]]; then
 fi
 
 update_gogh() {
-    gogh_ver=327
+    gogh_ver=329
     gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
     cs_dir="../tty-colorscheme/colorschemes"
     gogh_dir="${cs_dir}/gogh"
