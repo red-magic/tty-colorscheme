@@ -108,28 +108,38 @@ cs_shift() {
         case "${REPLY}" in
             j)
                 mode="cs"
-                [[ "${ind_cs}" -lt "${max_ind_cs}" ]] && ((ind_cs++))
+                if [[ "${ind_cs}" -lt "${max_ind_cs}" ]]; then
+                    ((ind_cs++))
+                else
+                    ind_cs=0  # Wrap around to the first element
+                fi
                 ;;
             k)
                 mode="cs"
                 if [[ "${ind_cs}" -gt 0 ]]; then
                     ((ind_cs--))
                 elif [[ "${ind_cs}" == -1 ]]; then
-                    # Get to the first element in the array
-                    # even if 'k' is pressed first, same for 'h'
-                    ind_cs=0
+                    ind_cs=0  # Get to the first element if none is selected
+                else
+                    ind_cs="${max_ind_cs}"  # Wrap around to the last element
                 fi
                 ;;
             l)
                 mode="fnt"
-                [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]] && ((ind_fnt++))
+                if [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]]; then
+                    ((ind_fnt++))
+                else
+                    ind_fnt=0  # Wrap around to the first element
+                fi
                 ;;
             h)
                 mode="fnt"
                 if [[ "${ind_fnt}" -gt 0 ]]; then
                     ((ind_fnt--))
                 elif [[ "${ind_fnt}" == -1 ]]; then
-                    ind_fnt=0
+                    ind_fnt=0  # Get to the first element if none is selected
+                else
+                    ind_fnt="${max_ind_fnt}"  # Wrap around to the last element
                 fi
                 ;;
             *)
