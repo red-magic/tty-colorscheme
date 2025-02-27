@@ -6,7 +6,7 @@ if [[ "$(basename "$(pwd)")" != "extra" ]] && [[ ! -f "total-update"  ]]; then
 fi
 
 update_gogh() {
-    gogh_ver=347
+    gogh_ver=353
     gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
     cs_dir="../tty-colorscheme/colorschemes"
     gogh_dir="${cs_dir}/gogh"
@@ -80,7 +80,7 @@ find_and_remove_dups() {
 
     printf "\nDuplicates removed:\n"
     list_dups \
-        | awk 'NR % 2 == 0 {print $2}' \
+        | awk 'NR % 2 != 0 {print $2}' \
         | while read -r line; do
               rm -vf "${line}";
           done
