@@ -40,6 +40,7 @@ _set_font() {
         setfont "${fnt%%.*}"
     fi
 
+    clear
     showconsolefont
 
     printf "Setting %s font\n\n" "${fnt%%.*}"
@@ -73,34 +74,48 @@ cs_print_palette() {
 }
 
 cs_shift() {
-    set +e
-
     mapfile -t cs_arr < <(cs_list_schemes)
-    max_ind_cs="$((${#cs_arr[@]}-1))"
+    # Handle empty arrays
+    if ((${#cs_arr[@]} > 0)); then
+        max_ind_cs=$((${#cs_arr[@]} - 1))
+    else
+        max_ind_cs=-1
+    fi
     ind_cs=-1
 
     mapfile -t fnt_arr < <(_get_fonts)
-    max_ind_fnt="$((${#fnt_arr[@]}-1))"
+    # Handle empty arrays
+    if ((${#fnt_arr[@]} > 0)); then
+        max_ind_fnt=$((${#fnt_arr[@]} - 1))
+    else
+        max_ind_fnt=-1
+    fi
     ind_fnt=-1
 
     mode=""
     clear
 
     while true; do
-        # cs_set_scheme() has `clear` already
-        [[ "${mode}" == "fnt" ]] && clear
-        _fnt_warn && ind_fnt=-1
-
         case "${mode}" in
             "cs")
-                cs="${cs_arr[${ind_cs}]}"
-                cs_set_scheme "${cs}"
-                printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
+                # Only process if index is valid
+                if [[ "${ind_cs}" -ge 0 && "${ind_cs}" -le "${max_ind_cs}" ]]; then
+                    cs="${cs_arr[${ind_cs}]}"
+                    cs_set_scheme "${cs}" || true  # Prevent exit on failure
+                    printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
+                else
+                    clear
+                    printf "No valid colorscheme selected\n"
+                fi
                 ;;
             "fnt")
-                if [[ "${ind_fnt}" != -1 ]]; then
-                    _set_font "${fnt_arr[${ind_fnt}]##*/}"
+                # Only process if index is valid
+                if [[ "${ind_fnt}" -ge 0 && "${ind_fnt}" -le "${max_ind_fnt}" ]]; then
+                    _set_font "${fnt_arr[${ind_fnt}]##*/}" || true  # Prevent exit on failure
                     printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
+                else
+                    clear
+                    printf "No valid font selected\n"
                 fi
                 ;;
         esac
@@ -112,16 +127,20 @@ cs_shift() {
         case "${REPLY}" in
             j)
                 mode="cs"
+                # Skip if no colorschemes
+                if ((${#cs_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_cs}" -lt "${max_ind_cs}" ]]; then
-                    ((ind_cs++))
+                    ((ind_cs++)) || true  # Ignore arithmetic errors
                 else
                     ind_cs=0  # Wrap around to the first element
                 fi
                 ;;
             k)
                 mode="cs"
+                # Skip if no colorschemes
+                if ((${#cs_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_cs}" -gt 0 ]]; then
-                    ((ind_cs--))
+                    ((ind_cs--)) || true  # Ignore arithmetic errors
                 elif [[ "${ind_cs}" == -1 ]]; then
                     ind_cs=0  # Get to the first element if none is selected
                 else
@@ -130,16 +149,20 @@ cs_shift() {
                 ;;
             l)
                 mode="fnt"
+                # Skip if no fonts
+                if ((${#fnt_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]]; then
-                    ((ind_fnt++))
+                    ((ind_fnt++)) || true  # Ignore arithmetic errors
                 else
                     ind_fnt=0  # Wrap around to the first element
                 fi
                 ;;
             h)
                 mode="fnt"
+                # Skip if no fonts
+                if ((${#fnt_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_fnt}" -gt 0 ]]; then
-                    ((ind_fnt--))
+                    ((ind_fnt--)) || true  # Ignore arithmetic errors
                 elif [[ "${ind_fnt}" == -1 ]]; then
                     ind_fnt=0  # Get to the first element if none is selected
                 else
@@ -151,9 +174,8 @@ cs_shift() {
                 ;;
         esac
     done
-
-    set -e
 }
+
 
 cs_set_scheme() {
     cs_file="${cs_dir}/$1"
