@@ -75,21 +75,11 @@ cs_print_palette() {
 
 cs_shift() {
     mapfile -t cs_arr < <(cs_list_schemes)
-    # Handle empty arrays
-    if ((${#cs_arr[@]} > 0)); then
-        max_ind_cs=$((${#cs_arr[@]} - 1))
-    else
-        max_ind_cs=-1
-    fi
+    max_ind_cs="$((${#cs_arr[@]}-1))"
     ind_cs=-1
 
     mapfile -t fnt_arr < <(_get_fonts)
-    # Handle empty arrays
-    if ((${#fnt_arr[@]} > 0)); then
-        max_ind_fnt=$((${#fnt_arr[@]} - 1))
-    else
-        max_ind_fnt=-1
-    fi
+    max_ind_fnt="$((${#fnt_arr[@]}-1))"
     ind_fnt=-1
 
     mode=""
@@ -127,8 +117,6 @@ cs_shift() {
         case "${REPLY}" in
             j)
                 mode="cs"
-                # Skip if no colorschemes
-                if ((${#cs_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_cs}" -lt "${max_ind_cs}" ]]; then
                     ((ind_cs++)) || true # Ignore arithmetic errors
                 else
@@ -137,10 +125,8 @@ cs_shift() {
                 ;;
             k)
                 mode="cs"
-                # Skip if no colorschemes
-                if ((${#cs_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_cs}" -gt 0 ]]; then
-                    ((ind_cs--)) || true # Ignore arithmetic errors
+                    ((ind_cs--))
                 elif [[ "${ind_cs}" == -1 ]]; then
                     ind_cs=0 # Get to the first element if none is selected
                 else
@@ -149,8 +135,6 @@ cs_shift() {
                 ;;
             l)
                 mode="fnt"
-                # Skip if no fonts
-                if ((${#fnt_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]]; then
                     ((ind_fnt++)) || true # Ignore arithmetic errors
                 else
@@ -159,10 +143,8 @@ cs_shift() {
                 ;;
             h)
                 mode="fnt"
-                # Skip if no fonts
-                if ((${#fnt_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_fnt}" -gt 0 ]]; then
-                    ((ind_fnt--)) || true # Ignore arithmetic errors
+                    ((ind_fnt--))
                 elif [[ "${ind_fnt}" == -1 ]]; then
                     ind_fnt=0 # Get to the first element if none is selected
                 else
@@ -175,7 +157,6 @@ cs_shift() {
         esac
     done
 }
-
 
 cs_set_scheme() {
     cs_file="${cs_dir}/$1"
