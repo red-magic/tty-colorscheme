@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _set_colors() {
@@ -17,12 +19,12 @@ _set_colors() {
 }
 
 _fnt_warn() {
-    [[ -z "${fnt_arr[0]}" ]] && printf "No psf fonts found\n"
+    [[ -z "${#fnt_arr[@]}" ]] && printf "No psf fonts found\n"
 }
 
 _get_fonts() {
-    fnt_dir="$(find /usr -type d -name "consolefonts" 2>/dev/null)"
-    find "${fnt_dir}" -name "*.psf*" -exec file {} + 2>/dev/null \
+    fnt_dir="$(find /usr -type d -name "consolefonts" 2> /dev/null || true)"
+    find "${fnt_dir}" -name "*.psf*" -exec file {} + 2> /dev/null \
         | awk -F: '/gzip|PC Screen Font/ { print $1 }' \
         | sort -V
 }
@@ -56,7 +58,7 @@ cs_list_fonts() {
 }
 
 cs_print_palette() {
-    cnt=0
+    cnt=1
     for bkgrnd in {40..47}; do
         printf "\e[%sm" "${bkgrnd}"
         for bold in 22 1; do
@@ -71,6 +73,8 @@ cs_print_palette() {
 }
 
 cs_shift() {
+    set +e
+
     mapfile -t cs_arr < <(cs_list_schemes)
     max_ind_cs="$((${#cs_arr[@]}-1))"
     ind_cs=-1
@@ -147,6 +151,8 @@ cs_shift() {
                 ;;
         esac
     done
+
+    set -e
 }
 
 cs_set_scheme() {
