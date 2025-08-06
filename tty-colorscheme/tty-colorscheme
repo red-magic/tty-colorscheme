@@ -101,7 +101,7 @@ cs_shift() {
                 # Only process if index is valid
                 if [[ "${ind_cs}" -ge 0 && "${ind_cs}" -le "${max_ind_cs}" ]]; then
                     cs="${cs_arr[${ind_cs}]}"
-                    cs_set_scheme "${cs}" || true  # Prevent exit on failure
+                    cs_set_scheme "${cs}"
                     printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
                 else
                     clear
@@ -111,7 +111,7 @@ cs_shift() {
             "fnt")
                 # Only process if index is valid
                 if [[ "${ind_fnt}" -ge 0 && "${ind_fnt}" -le "${max_ind_fnt}" ]]; then
-                    _set_font "${fnt_arr[${ind_fnt}]##*/}" || true  # Prevent exit on failure
+                    _set_font "${fnt_arr[${ind_fnt}]##*/}"
                     printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
                 else
                     clear
@@ -130,9 +130,9 @@ cs_shift() {
                 # Skip if no colorschemes
                 if ((${#cs_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_cs}" -lt "${max_ind_cs}" ]]; then
-                    ((ind_cs++)) || true  # Ignore arithmetic errors
+                    ((ind_cs++)) || true # Ignore arithmetic errors
                 else
-                    ind_cs=0  # Wrap around to the first element
+                    ind_cs=0 # Wrap around to the first element
                 fi
                 ;;
             k)
@@ -140,11 +140,11 @@ cs_shift() {
                 # Skip if no colorschemes
                 if ((${#cs_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_cs}" -gt 0 ]]; then
-                    ((ind_cs--)) || true  # Ignore arithmetic errors
+                    ((ind_cs--)) || true # Ignore arithmetic errors
                 elif [[ "${ind_cs}" == -1 ]]; then
-                    ind_cs=0  # Get to the first element if none is selected
+                    ind_cs=0 # Get to the first element if none is selected
                 else
-                    ind_cs="${max_ind_cs}"  # Wrap around to the last element
+                    ind_cs="${max_ind_cs}" # Wrap around to the last element
                 fi
                 ;;
             l)
@@ -152,9 +152,9 @@ cs_shift() {
                 # Skip if no fonts
                 if ((${#fnt_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]]; then
-                    ((ind_fnt++)) || true  # Ignore arithmetic errors
+                    ((ind_fnt++)) || true # Ignore arithmetic errors
                 else
-                    ind_fnt=0  # Wrap around to the first element
+                    ind_fnt=0 # Wrap around to the first element
                 fi
                 ;;
             h)
@@ -162,11 +162,11 @@ cs_shift() {
                 # Skip if no fonts
                 if ((${#fnt_arr[@]} == 0)); then continue; fi
                 if [[ "${ind_fnt}" -gt 0 ]]; then
-                    ((ind_fnt--)) || true  # Ignore arithmetic errors
+                    ((ind_fnt--)) || true # Ignore arithmetic errors
                 elif [[ "${ind_fnt}" == -1 ]]; then
-                    ind_fnt=0  # Get to the first element if none is selected
+                    ind_fnt=0 # Get to the first element if none is selected
                 else
-                    ind_fnt="${max_ind_fnt}"  # Wrap around to the last element
+                    ind_fnt="${max_ind_fnt}" # Wrap around to the last element
                 fi
                 ;;
             *)
