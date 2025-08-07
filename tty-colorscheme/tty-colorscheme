@@ -24,7 +24,7 @@ _fnt_warn() {
 
 _get_fonts() {
     fnt_dir="$(find /usr -type d -name "consolefonts" 2> /dev/null || true)"
-    find "${fnt_dir}" -name "*.psf*" -exec file {} + 2> /dev/null \
+    find "${fnt_dir}" -name "*.psf*" -exec file {} \; 2> /dev/null \
         | awk -F: '/gzip|PC Screen Font/ { print $1 }' \
         | sort -V
 }
