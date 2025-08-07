@@ -19,7 +19,7 @@ _set_colors() {
 }
 
 _fnt_warn() {
-    [[ -z "${#fnt_arr[@]}" ]] && printf "No psf fonts found\n"
+    [[ -z "${fnt_dir:-}" ]] && printf "No psf fonts found\n"
 }
 
 _get_fonts() {
@@ -46,13 +46,25 @@ _set_font() {
     printf "Setting %s font\n\n" "${fnt%%.*}"
 }
 
+_cs_warn() {
+    [[ -z "${cs_arr:-}" ]] && printf "No colorschemes found\n"
+}
+
+_get_schemes() {
+   find "${cs_dir}"/* 2> /dev/null
+}
+
 cs_list_schemes() {
-    ls -1 "${cs_dir}"
+    mapfile -t cs_arr < <(_get_schemes)
+    _cs_warn && exit 1
+    for cs_file in "${cs_arr[@]}"; do
+        printf "%s\n" "${cs_file##*/}"
+    done
 }
 
 cs_list_fonts() {
     mapfile -t fnt_arr < <(_get_fonts)
-    _fnt_warn && exit 1
+    ! _fnt_warn && exit 1
     for fnt_file in "${fnt_arr[@]##*/}"; do
         printf "%s\n" "${fnt_file%%.*}"
     done
@@ -74,7 +86,7 @@ cs_print_palette() {
 }
 
 cs_shift() {
-    mapfile -t cs_arr < <(cs_list_schemes)
+    mapfile -t cs_arr < <(_get_schemes)
     max_ind_cs="$((${#cs_arr[@]}-1))"
     ind_cs=-1
 
@@ -95,7 +107,8 @@ cs_shift() {
                     printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
                 else
                     clear
-                    printf "No valid colorscheme selected\n"
+                    _cs_warn
+                    #printf "No colorschemes found\n"
                 fi
                 ;;
             "fnt")
@@ -105,7 +118,8 @@ cs_shift() {
                     printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
                 else
                     clear
-                    printf "No valid font selected\n"
+                    _fnt_warn
+                    #printf "No psf fonts found\n"
                 fi
                 ;;
         esac
@@ -159,7 +173,7 @@ cs_shift() {
 }
 
 cs_set_scheme() {
-    cs_file="${cs_dir}/$1"
+    cs_file="${cs_dir}/${1##*/}"
 
     if [[ ! -f "${cs_file}" ]]; then
         printf "Invalid colorscheme: %s\n" "$1"
@@ -182,7 +196,7 @@ cs_set_scheme() {
         cs_print_palette
     fi
 
-    printf "\nSetting %s colorscheme\n\n" "$1"
+    printf "\nSetting %s colorscheme\n\n" "${1##*/}"
 }
 
 cs_print_help() {
