@@ -19,7 +19,7 @@ _set_colors() {
 }
 
 _fnt_warn() {
-    [[ -z "${fnt_dir:-}" ]] && printf "No psf fonts found\n"
+    [[ -z "${fnt_arr:-}" ]] && printf "No psf fonts found\n"
 }
 
 _get_fonts() {
@@ -64,7 +64,7 @@ cs_list_schemes() {
 
 cs_list_fonts() {
     mapfile -t fnt_arr < <(_get_fonts)
-    ! _fnt_warn && exit 1
+    _fnt_warn && exit 1
     for fnt_file in "${fnt_arr[@]##*/}"; do
         printf "%s\n" "${fnt_file%%.*}"
     done
