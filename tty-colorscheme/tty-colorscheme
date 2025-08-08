@@ -200,7 +200,7 @@ cs_set_scheme() {
 }
 
 cs_print_help() {
-    prog_name="$(basename "$0")"
+    prog_name="$(basename "${0}")"
 
     printf "Usage: %s [-cfps | colorscheme]\n" "${prog_name}"
     printf "  -c    list colorschemes\n"
@@ -244,7 +244,7 @@ while getopts ":cfps" opt; do
 done
 
 if [[ "$#" -eq 1 ]]; then
-    cs_set_scheme "$1"
+    cs_set_scheme "${1}"
     exit 0
 fi
 
