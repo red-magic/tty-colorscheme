@@ -243,7 +243,7 @@ while getopts ":cfps" opt; do
     esac
 done
 
-if [[ "$#" -eq 1 ]]; then
+if [[ "${#}" -eq 1 ]]; then
     cs_set_scheme "${1}"
     exit 0
 fi
