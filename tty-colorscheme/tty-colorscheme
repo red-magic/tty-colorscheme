@@ -232,7 +232,6 @@ while getopts ":cfps" opt; do
             exit 0
             ;;
         s)
-            printf "Searching for colorschemes and psf fonts\n"
             cs_shift
             exit 0
             ;;
