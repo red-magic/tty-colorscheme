@@ -2,9 +2,9 @@
 
 ## Installation
 
-Run `./install` script as root to install `tty-colorscheme` and various themes.
+- `sudo ./install` to install `tty-colorscheme` and various themes.
 
-`./install remove` if you want to uninstall it.
+- `sudo ./install remove` if you want to uninstall it.
 
 ## Usage
 
