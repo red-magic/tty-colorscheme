@@ -34,10 +34,10 @@ _set_font() {
 
     if [[ "$(id -u)" -eq 0 ]]; then
         for i in {1..6}; do
-            setfont "${fnt%%.*}" -C "/dev/tty${i}"
+            setfont "${fnt}" -C "/dev/tty${i}"
         done
     else
-        setfont "${fnt%%.*}"
+        setfont "${fnt}"
     fi
 
     clear
