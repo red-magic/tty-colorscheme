@@ -9,7 +9,7 @@
 ## Usage
 
 ```
-Usage: tty-colorscheme [-cfps | colorscheme]
+tty-colorscheme [-cfps | colorscheme]
   -c    list colorschemes
   -f    list psf fonts
   -p    print current palette
