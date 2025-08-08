@@ -30,7 +30,7 @@ install_files() {
     if [[ -x "$(command -v systemctl)" ]]; then
         install -vm 644 tty-colorscheme/tty-colorscheme.conf -t /etc/tty-colorscheme
         install -vm 644 tty-colorscheme/tty-colorscheme.service -t /usr/lib/systemd/system
-        printf "\nRun \"systemctl enable tty-colorscheme\" to apply colors at boot"
+        printf "\nRun \"systemctl enable tty-colorscheme\" to apply colors on boot"
         printf "\nColorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n"
     fi
 }
