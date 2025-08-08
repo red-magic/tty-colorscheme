@@ -30,7 +30,7 @@ _get_fonts() {
 }
 
 _set_font() {
-    fnt="$1"
+    fnt="${1}"
 
     if [[ "$(id -u)" -eq 0 ]]; then
         for i in {1..6}; do
