@@ -1,4 +1,4 @@
-.TH TTY\-COLORSCHEME "1" "October 2024" "tty\-colorscheme" "User Commands"
+.TH TTY\-COLORSCHEME "1" "August 2025" "tty\-colorscheme" "User Commands"
 .hy 0
 .SH NAME
 tty\-colorscheme \- Colorschemes for the linux TTY
@@ -23,7 +23,10 @@ Shift through colorschemes using \fIj\fR and \fIk\fR keys. Shift through fonts u
 .SH EXAMPLES
 .TP
 \fB$ tty\-colorscheme\fR \fIaura\fR
-Sets \fIaura\fR colorscheme for the TTYs you are logged in.
+Apply the \fIaura\fR colorscheme  to the current TTY.
+.TP
+\fB# tty\-colorscheme\fR \fIhybrid\fR
+Apply the \fIhybrid\fR colorscheme to all TTYs.
 .SH CONFIGURATION
 To change colors for a current TTY at user log in add \fBtty\-colorscheme\fR [\fIcolorscheme\fR] to your \fI~/.profile\fR.
 It requires using \fBsudo\fR(8) if you want to change colors across all TTYs.
