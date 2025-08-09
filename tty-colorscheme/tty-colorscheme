@@ -176,7 +176,7 @@ cs_set_scheme() {
     cs_file="${cs_dir}/${1##*/}"
 
     if [[ ! -f "${cs_file}" ]]; then
-        printf "Invalid colorscheme: %s\n" "$1"
+        printf "Invalid colorscheme %s\n" "$1"
         exit 1
     fi
 
