@@ -22,7 +22,7 @@ _fnt_warn() {
     [[ -z "${fnt_arr:-}" ]] && printf "No PSF fonts found\n"
 }
 
-_get_fonts() { # Output file name only
+_get_fonts() { # Only output file name
     fnt_dir="$(find /usr -type d -name "consolefonts" 2> /dev/null || true)"
     find "${fnt_dir}" -name "*.psf*" -exec file {} \; 2> /dev/null \
         | awk -F: '/gzip|PC Screen Font/ {print $1}' \
@@ -51,7 +51,7 @@ _cs_warn() {
     [[ -z "${cs_arr:-}" ]] && printf "No colorschemes found\n"
 }
 
-_get_schemes() { # Output file name only
+_get_schemes() { # Only output file name
    find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
 }
 
