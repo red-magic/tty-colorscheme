@@ -171,14 +171,12 @@ cs_shift() {
 }
 
 cs_set_scheme() {
-    cs_file="${cs_dir}/${1}"
-
-    if [[ ! -f "${cs_file}" ]]; then
+    if [[ ! -f "${cs_dir}/${1}" ]]; then
         printf "Invalid colorscheme %s\n" "$1"
         exit 1
     fi
 
-    source "${cs_file}"
+    source "${cs_dir}/${1}"
 
     if [[ "$(id -u)" -eq 0 ]]; then
         for i in {1..6}; do
