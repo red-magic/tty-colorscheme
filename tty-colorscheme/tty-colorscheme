@@ -25,7 +25,7 @@ _fnt_warn() {
 _get_fonts() {
     fnt_dir="$(find /usr -type d -name "consolefonts" 2> /dev/null || true)"
     find "${fnt_dir}" -name "*.psf*" -exec file {} \; 2> /dev/null \
-        | awk -F: '/gzip|PC Screen Font/ { print $1 }' \
+        | awk -F: '/gzip|PC Screen Font/ {print $1}' \
         | sort -V
 }
 
@@ -51,14 +51,14 @@ _cs_warn() {
 }
 
 _get_schemes() {
-   find "${cs_dir}"/* 2> /dev/null
+   find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
 }
 
 cs_list_schemes() {
     mapfile -t cs_arr < <(_get_schemes)
     _cs_warn && exit 1
     for cs_file in "${cs_arr[@]}"; do
-        printf "%s\n" "${cs_file##*/}"
+        printf "%s\n" "${cs_file}"
     done
 }
 
@@ -173,7 +173,7 @@ cs_shift() {
 }
 
 cs_set_scheme() {
-    cs_file="${cs_dir}/${1##*/}"
+    cs_file="${cs_dir}/${1}"
 
     if [[ ! -f "${cs_file}" ]]; then
         printf "Invalid colorscheme %s\n" "$1"
