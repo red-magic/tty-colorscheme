@@ -11,7 +11,7 @@
 ```
 tty-colorscheme [-cfps | colorscheme]
   -c    list colorschemes
-  -f    list psf fonts
+  -f    list PSF fonts
   -p    print current palette
   -s    shift through colorschemes and fonts
 ```

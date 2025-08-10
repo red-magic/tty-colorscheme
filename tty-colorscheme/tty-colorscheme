@@ -19,7 +19,7 @@ _set_colors() {
 }
 
 _fnt_warn() {
-    [[ -z "${fnt_arr:-}" ]] && printf "No psf fonts found\n"
+    [[ -z "${fnt_arr:-}" ]] && printf "No PSF fonts found\n"
 }
 
 _get_fonts() {
@@ -200,7 +200,7 @@ cs_print_help() {
 
     printf "Usage: %s [-cfps | colorscheme]\n" "${prog_name}"
     printf "  -c    list colorschemes\n"
-    printf "  -f    list psf fonts\n"
+    printf "  -f    list PSF fonts\n"
     printf "  -p    print current palette\n"
     printf "  -s    shift through colorschemes and fonts\n"
 
