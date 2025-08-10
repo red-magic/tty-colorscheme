@@ -26,6 +26,7 @@ _get_fonts() {
     fnt_dir="$(find /usr -type d -name "consolefonts" 2> /dev/null || true)"
     find "${fnt_dir}" -name "*.psf*" -exec file {} \; 2> /dev/null \
         | awk -F: '/gzip|PC Screen Font/ {print $1}' \
+        | awk -F/ '{print $NF}' \
         | sort -V
 }
 
@@ -65,7 +66,7 @@ cs_list_schemes() {
 cs_list_fonts() {
     mapfile -t fnt_arr < <(_get_fonts)
     _fnt_warn && exit 1
-    for fnt_file in "${fnt_arr[@]##*/}"; do
+    for fnt_file in "${fnt_arr[@]}"; do
         printf "%s\n" "${fnt_file%%.*}"
     done
 }
@@ -112,7 +113,7 @@ cs_shift() {
             "fnt")
                 # Only process if index is valid
                 if [[ "${ind_fnt}" -ge 0 && "${ind_fnt}" -le "${max_ind_fnt}" ]]; then
-                    _set_font "${fnt_arr[${ind_fnt}]##*/}"
+                    _set_font "${fnt_arr[${ind_fnt}]}"
                     printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
                 else
                     clear
