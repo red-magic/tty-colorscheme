@@ -102,13 +102,11 @@ cs_shift() {
             "cs")
                 # Only process if index is valid
                 if [[ "${ind_cs}" -ge 0 && "${ind_cs}" -le "${max_ind_cs}" ]]; then
-                    cs="${cs_arr[${ind_cs}]}"
-                    cs_set_scheme "${cs}"
+                    cs_set_scheme "${cs_arr[${ind_cs}]}"
                     printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
                 else
                     clear
                     _cs_warn
-                    #printf "No colorschemes found\n"
                 fi
                 ;;
             "fnt")
@@ -119,7 +117,6 @@ cs_shift() {
                 else
                     clear
                     _fnt_warn
-                    #printf "No psf fonts found\n"
                 fi
                 ;;
         esac
@@ -196,7 +193,7 @@ cs_set_scheme() {
         cs_print_palette
     fi
 
-    printf "\nSetting %s colorscheme\n\n" "${1##*/}"
+    printf "\nSetting %s colorscheme\n\n" "${1}"
 }
 
 cs_print_help() {
