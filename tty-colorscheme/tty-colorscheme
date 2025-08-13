@@ -221,14 +221,6 @@ cs_print_help() {
     printf "  -f    list PSF fonts\n"
     printf "  -p    print current palette\n"
     printf "  -s    shift through colorschemes and fonts\n"
-
-    if [[ "$(uname -s)" != "Linux" ]]; then
-        printf "%s works only on Linux systems\n" "${prog_name}"
-    fi
-
-    if ! tty | grep -q tty; then
-        printf "%s should be run from TTY\n" "${prog_name}"
-    fi
 }
 
 while getopts ":cfps" opt; do
@@ -263,3 +255,9 @@ if [[ "${#}" -eq 1 ]]; then
 fi
 
 cs_print_help
+
+if [[ "$(uname -s)" != "Linux" ]]; then
+    printf "%s works only on Linux systems\n" "${prog_name}"
+elif ! tty | grep -q tty; then
+    printf "%s should be run from TTY\n" "${prog_name}"
+fi
