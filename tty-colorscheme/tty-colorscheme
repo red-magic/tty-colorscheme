@@ -2,6 +2,13 @@
 
 set -euo pipefail
 
+if [[ "$(uname -s)" != "Linux" ]]; then
+    printf "%s works only on Linux systems\n" "$(basename "${0}")"
+    exit 1
+elif ! tty | grep -q tty; then
+    printf "%s should be run from TTY\n" "$(basename "${0}")"
+fi
+
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _set_colors() {
@@ -214,9 +221,7 @@ cs_set_scheme() {
 }
 
 cs_print_help() {
-    prog_name="$(basename "${0}")"
-
-    printf "Usage: %s [-cfps | colorscheme]\n" "${prog_name}"
+    printf "Usage: %s [-cfps | colorscheme]\n" "$(basename "${0}")"
     printf "  -c    list colorschemes\n"
     printf "  -f    list PSF fonts\n"
     printf "  -p    print current palette\n"
@@ -255,9 +260,3 @@ if [[ "${#}" -eq 1 ]]; then
 fi
 
 cs_print_help
-
-if [[ "$(uname -s)" != "Linux" ]]; then
-    printf "%s works only on Linux systems\n" "${prog_name}"
-elif ! tty | grep -q tty; then
-    printf "%s should be run from TTY\n" "${prog_name}"
-fi
