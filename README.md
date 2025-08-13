@@ -9,7 +9,7 @@
 ## Usage
 
 ```
-tty-colorscheme [-cfps | colorscheme]
+tty-colorscheme [option] | [colorscheme]
   -c    list colorschemes
   -f    list PSF fonts
   -p    print current palette
