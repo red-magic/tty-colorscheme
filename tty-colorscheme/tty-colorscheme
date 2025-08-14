@@ -5,8 +5,6 @@ set -euo pipefail
 if [[ "$(uname -s)" != "Linux" ]]; then
     printf "%s works only on Linux systems\n" "$(basename "${0}")"
     exit 1
-elif ! tty | grep -q tty; then
-    printf "%s should be run from TTY\n" "$(basename "${0}")"
 fi
 
 cs_dir="/etc/tty-colorscheme/colorschemes"
@@ -30,11 +28,20 @@ _fnt_warn() {
 }
 
 _get_fonts() { # Only output file name
-    fnt_dir="$(find /usr -type d -name "consolefonts" 2> /dev/null || true)"
-    find "${fnt_dir}" -name "*.psf*" -exec file {} \; 2> /dev/null \
-        | awk -F: '/gzip|PC Screen Font/ {print $1}' \
-        | awk -F/ '{print $NF}' \
-        | sort -V
+    fnt_dirs=(
+        "/usr/share/consolefonts"
+        "/usr/share/kbd/consolefonts"
+        "/usr/lib/kbd/consolefonts"
+    )
+
+    for fnt_dir in "${fnt_dirs[@]}"; do
+        if [[ -d "${fnt_dir}" ]]; then
+            find "${fnt_dir}" -name "*.psf*" -exec file {} \; \
+                | awk -F: '/gzip|PC Screen Font/ {print $1}' \
+                | awk -F/ '{print $NF}' \
+                | sort -V
+        fi
+    done
 }
 
 _set_font() {
@@ -179,7 +186,7 @@ cs_shift() {
 
 cs_set_scheme() {
     if [[ ! -f "${cs_dir}/${1}" ]]; then
-        printf "Invalid colorscheme %s\n" "$1"
+        printf "Invalid colorscheme %s\n" "${1}"
         exit 1
     fi
 
@@ -226,6 +233,10 @@ cs_print_help() {
     printf "  -f    list PSF fonts\n"
     printf "  -p    print current palette\n"
     printf "  -s    shift through colorschemes and fonts\n"
+
+    if ! tty | grep -q tty; then
+        printf "%s should be run from TTY\n" "$(basename "${0}")"
+    fi
 }
 
 while getopts ":cfps" opt; do
