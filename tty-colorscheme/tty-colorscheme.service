@@ -1,5 +1,5 @@
 [Unit]
-Description=Change TTY colors
+Description=Set TTY colors
 After=getty@tty1.service
 
 [Service]
