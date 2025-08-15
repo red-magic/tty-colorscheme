@@ -7,7 +7,7 @@ cs_dir="/etc/tty-colorscheme/colorschemes"
 _set_colors() {
     for i in {0..15}; do
         color_var="$(printf "color%02d" $((i + 1)))"
-        printf '\e]P%X%s' "${i}" "${!color_var}"
+        printf "\e]P%X%s" "${i}" "${!color_var}"
     done
 
     # Black   Red     Green   Yellow  Blue    Magenta Cyan    White
