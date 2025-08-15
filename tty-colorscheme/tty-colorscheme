@@ -53,7 +53,7 @@ _set_font() {
     clear
     showconsolefont
 
-    printf "Setting %s font\n\n" "${fnt%%.*}"
+    printf "Setting font: %s\n\n" "${fnt%%.*}"
 }
 
 _cs_warn() {
@@ -181,7 +181,7 @@ cs_shift() {
 
 cs_set_scheme() {
     if [[ ! -f "${cs_dir}/${1}" ]]; then
-        printf "Invalid colorscheme %s\n" "${1}"
+        printf "Invalid colorscheme: %s\n" "${1}"
         exit 1
     fi
 
@@ -219,7 +219,7 @@ cs_set_scheme() {
         cs_print_palette
     fi
 
-    printf "\nSetting %s colorscheme\n\n" "${1}"
+    printf "\nSetting colorscheme: %s\n\n" "${1}"
 }
 
 cs_print_help() {
@@ -253,7 +253,7 @@ while getopts ":cfps" opt; do
             exit 0
             ;;
         *)
-            printf "Invalid option -%s\n" "${OPTARG}"
+            printf "Invalid option: -%s\n" "${OPTARG}"
             cs_print_help
             exit 1
             ;;
