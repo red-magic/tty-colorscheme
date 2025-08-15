@@ -5,17 +5,14 @@ set -euo pipefail
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _set_colors() {
+    for i in {0..15}; do
+        color_var="$(printf "color%02d" $((i + 1)))"
+        printf '\e]P%X%s' "${i}" "${!color_var}"
+    done
+
     # Black   Red     Green   Yellow  Blue    Magenta Cyan    White
     # color01 color02 color03 color04 color05 color06 color07 color08
     # color09 color10 color11 color12 color13 color14 color15 color16
-
-    printf "\e]P0%s\e]P1%s\e]P2%s\e]P3%s\e]P4%s\e]P5%s\e]P6%s\e]P7%s" \
-        "${color01:?}" "${color02:?}" "${color03:?}" "${color04:?}" \
-        "${color05:?}" "${color06:?}" "${color07:?}" "${color08:?}"
-
-    printf "\e]P8%s\e]P9%s\e]PA%s\e]PB%s\e]PC%s\e]PD%s\e]PE%s\e]PF%s" \
-        "${color09:?}" "${color10:?}" "${color11:?}" "${color12:?}" \
-        "${color13:?}" "${color14:?}" "${color15:?}" "${color16:?}"
 }
 
 _fnt_warn() {
@@ -61,23 +58,19 @@ _cs_warn() {
 }
 
 _get_schemes() { # Only output file name
-   find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
+    find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
 }
 
 cs_list_schemes() {
     mapfile -t cs_arr < <(_get_schemes)
     _cs_warn && exit 1
-    for cs_file in "${cs_arr[@]}"; do
-        printf "%s\n" "${cs_file}"
-    done
+    printf "%s\n" "${cs_arr[@]}"
 }
 
 cs_list_fonts() {
     mapfile -t fnt_arr < <(_get_fonts)
     _fnt_warn && exit 1
-    for fnt_file in "${fnt_arr[@]}"; do
-        printf "%s\n" "${fnt_file%%.*}"
-    done
+    printf "%s\n" "${fnt_arr[@]%%.*}"
 }
 
 cs_print_palette() {
@@ -138,39 +131,19 @@ cs_shift() {
         case "${REPLY}" in
             j)
                 mode="cs"
-                if [[ "${ind_cs}" -lt "${max_ind_cs}" ]]; then
-                    ((ind_cs++)) || true # Ignore arithmetic errors
-                else
-                    ind_cs=0 # Wrap around to the first element
-                fi
+                ((ind_cs = (ind_cs + 1) % ${#cs_arr[@]})) || true
                 ;;
             k)
                 mode="cs"
-                if [[ "${ind_cs}" -gt 0 ]]; then
-                    ((ind_cs--))
-                elif [[ "${ind_cs}" == -1 ]]; then
-                    ind_cs=0 # Get to the first element if none is selected
-                else
-                    ind_cs="${max_ind_cs}" # Wrap around to the last element
-                fi
+                ((ind_cs = (ind_cs - 1 + ${#cs_arr[@]}) % ${#cs_arr[@]})) || true
                 ;;
             l)
                 mode="fnt"
-                if [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]]; then
-                    ((ind_fnt++)) || true # Ignore arithmetic errors
-                else
-                    ind_fnt=0 # Wrap around to the first element
-                fi
+                ((ind_fnt = (ind_fnt + 1) % ${#fnt_arr[@]})) || true
                 ;;
             h)
                 mode="fnt"
-                if [[ "${ind_fnt}" -gt 0 ]]; then
-                    ((ind_fnt--))
-                elif [[ "${ind_fnt}" == -1 ]]; then
-                    ind_fnt=0 # Get to the first element if none is selected
-                else
-                    ind_fnt="${max_ind_fnt}" # Wrap around to the last element
-                fi
+                ((ind_fnt = (ind_fnt - 1 + ${#fnt_arr[@]}) % ${#fnt_arr[@]})) || true
                 ;;
             *)
                 exit 0
@@ -186,23 +159,13 @@ cs_set_scheme() {
     fi
 
     while IFS="" read -r line || [[ -n "${line}" ]]; do
-        # Skip empty lines and comments
-        [[ -z "${line}" || "${line}" =~ ^[[:space:]]*# ]] && continue
-
-        # Check string format and HEX value
-        if [[ ! "${line}" =~ ^color(0[1-9]|1[0-6])=\"[0-9A-Fa-f]{6}\"$ ]]; then
+        if [[ "${line}" =~ ^(color(0[1-9]|1[0-6]))=\"([0-9A-Fa-f]{6})\"$ ]]; then
+            declare -g "${BASH_REMATCH[1]}=${BASH_REMATCH[3]}"
+        else
+            [[ -z "${line}" || "${line}" =~ ^[[:space:]]*# ]] && continue
             printf "Invalid color format: %s in %s\n" "${line}" "${1}"
             exit 1
         fi
-
-        # Assign variables
-        if ! [[ "${line}" =~ ^(color(0[1-9]|1[0-6]))=\"([0-9A-Fa-f]{6})\"$ ]]; then
-            printf "Failed to parse line: %s from %s\n" "${line}" "${1}"
-            exit 1
-        fi
-
-        declare -g "${BASH_REMATCH[1]}=${BASH_REMATCH[3]}"
-
     done < "${cs_dir}/${1}"
 
     if [[ "$(id -u)" -eq 0 ]]; then
