@@ -6,7 +6,7 @@ cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _set_colors() {
     for i in {0..15}; do
-        color_var="$(printf "color%02d" $((i + 1)))"
+        color_var="$(printf "color%02d" $((i+1)))"
         printf "\e]P%X%s" "${i}" "${!color_var}"
     done
 
@@ -131,19 +131,19 @@ cs_shift() {
         case "${REPLY}" in
             j)
                 mode="cs"
-                ((ind_cs = (ind_cs + 1) % ${#cs_arr[@]})) || true
+                ((ind_cs=(ind_cs+1)%${#cs_arr[@]})) || true
                 ;;
             k)
                 mode="cs"
-                ((ind_cs = (ind_cs - 1 + ${#cs_arr[@]}) % ${#cs_arr[@]})) || true
+                ((ind_cs=(ind_cs-1+${#cs_arr[@]})%${#cs_arr[@]})) || true
                 ;;
             l)
                 mode="fnt"
-                ((ind_fnt = (ind_fnt + 1) % ${#fnt_arr[@]})) || true
+                ((ind_fnt=(ind_fnt+1)%${#fnt_arr[@]})) || true
                 ;;
             h)
                 mode="fnt"
-                ((ind_fnt = (ind_fnt - 1 + ${#fnt_arr[@]}) % ${#fnt_arr[@]})) || true
+                ((ind_fnt=(ind_fnt-1+${#fnt_arr[@]})%${#fnt_arr[@]})) || true
                 ;;
             *)
                 exit 0
