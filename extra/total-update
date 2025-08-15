@@ -65,7 +65,7 @@ find_dup_names() {
         | uniq -f1 --all-repeated=separate
 }
 
-find_and_remove_dups() {
+remove_dup_files() {
     find "${cs_dir}" -type f -exec sha256sum {} + > checksums.txt
 
     list_dups() {
@@ -96,5 +96,5 @@ clean_up() {
 update_gogh
 make_hex_uppercase
 find_dup_names
-find_and_remove_dups
+remove_dup_files
 clean_up
