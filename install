@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+if [[ "$(uname -s)" != "Linux" ]]; then
+    printf "tty-colorscheme only works on Linux systems\n"
+    exit 1
+fi
+
 if [[ "$(id -u)" -ne 0 ]]; then
     printf "This script must be run as root\n"
     printf "Pass \"remove\" arg to uninstall\n"
