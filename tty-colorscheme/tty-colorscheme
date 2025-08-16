@@ -5,14 +5,17 @@ set -euo pipefail
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _set_colors() {
-    for i in {0..15}; do
-        color_var="$(printf "color%02d" $((i+1)))"
-        printf "\e]P%X%s" "${i}" "${!color_var}"
-    done
-
     # Black   Red     Green   Yellow  Blue    Magenta Cyan    White
     # color01 color02 color03 color04 color05 color06 color07 color08
     # color09 color10 color11 color12 color13 color14 color15 color16
+
+    printf "\e]P0%s\e]P1%s\e]P2%s\e]P3%s\e]P4%s\e]P5%s\e]P6%s\e]P7%s" \
+        "${color01:?}" "${color02:?}" "${color03:?}" "${color04:?}" \
+        "${color05:?}" "${color06:?}" "${color07:?}" "${color08:?}"
+
+    printf "\e]P8%s\e]P9%s\e]PA%s\e]PB%s\e]PC%s\e]PD%s\e]PE%s\e]PF%s" \
+        "${color09:?}" "${color10:?}" "${color11:?}" "${color12:?}" \
+        "${color13:?}" "${color14:?}" "${color15:?}" "${color16:?}"
 }
 
 _fnt_warn() {
@@ -131,19 +134,39 @@ cs_shift() {
         case "${REPLY}" in
             j)
                 mode="cs"
-                ((ind_cs=(ind_cs+1)%${#cs_arr[@]})) || true
+                if [[ "${ind_cs}" -lt "${max_ind_cs}" ]]; then
+                    ((ind_cs++)) || true # Ignore arithmetic errors
+                else
+                    ind_cs=0 # Wrap around to the first element
+                fi
                 ;;
             k)
                 mode="cs"
-                ((ind_cs=(ind_cs-1+${#cs_arr[@]})%${#cs_arr[@]})) || true
+                if [[ "${ind_cs}" -gt 0 ]]; then
+                    ((ind_cs--))
+                elif [[ "${ind_cs}" == -1 ]]; then
+                    ind_cs=0 # Get to the first element if none is selected
+                else
+                    ind_cs="${max_ind_cs}" # Wrap around to the last element
+                fi
                 ;;
             l)
                 mode="fnt"
-                ((ind_fnt=(ind_fnt+1)%${#fnt_arr[@]})) || true
+                if [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]]; then
+                    ((ind_fnt++)) || true # Ignore arithmetic errors
+                else
+                    ind_fnt=0 # Wrap around to the first element
+                fi
                 ;;
             h)
                 mode="fnt"
-                ((ind_fnt=(ind_fnt-1+${#fnt_arr[@]})%${#fnt_arr[@]})) || true
+                if [[ "${ind_fnt}" -gt 0 ]]; then
+                    ((ind_fnt--))
+                elif [[ "${ind_fnt}" == -1 ]]; then
+                    ind_fnt=0 # Get to the first element if none is selected
+                else
+                    ind_fnt="${max_ind_fnt}" # Wrap around to the last element
+                fi
                 ;;
             *)
                 exit 0
