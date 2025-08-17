@@ -91,7 +91,7 @@ cs_print_palette() {
     done
 }
 
-cs_shift() {
+cs_cycle() {
     mapfile -t cs_arr < <(_get_schemes)
     max_ind_cs="$((${#cs_arr[@]}-1))"
     ind_cs=-1
@@ -127,8 +127,8 @@ cs_shift() {
                 ;;
         esac
 
-        printf "\nUse j and k keys to shift through colorschemes\n"
-        printf "Use h and l keys to shift through fonts\n"
+        printf "\nUse j/k keys to cycle through colorschemes\n"
+        printf "Use h/l keys to cycle through fonts\n"
 
         read -rsn1
         case "${REPLY}" in
@@ -210,19 +210,19 @@ cs_set_scheme() {
 
 cs_print_help() {
     printf "Usage: %s [option] | [colorscheme]\n" "$(basename "${0}")"
-    printf "  -c    list colorschemes\n"
-    printf "  -f    list PSF fonts\n"
-    printf "  -p    print current palette\n"
-    printf "  -s    shift through colorschemes and fonts\n"
+    printf "  -l    List available colorschemes\n"
+    printf "  -f    List available PSF fonts\n"
+    printf "  -p    Print the current palette\n"
+    printf "  -c    Cycle through colorschemes and fonts\n"
 
     if ! tty | grep -q tty; then
         printf "%s should be run from TTY\n" "$(basename "${0}")"
     fi
 }
 
-while getopts ":cfps" opt; do
+while getopts ":lfpc" opt; do
     case "${opt}" in
-        c)
+        l)
             cs_list_schemes
             exit 0
             ;;
@@ -234,8 +234,8 @@ while getopts ":cfps" opt; do
             cs_print_palette
             exit 0
             ;;
-        s)
-            cs_shift
+        c)
+            cs_cycle
             exit 0
             ;;
         *)

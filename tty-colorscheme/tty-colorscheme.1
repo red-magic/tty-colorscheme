@@ -1,25 +1,25 @@
 .TH TTY\-COLORSCHEME "1" "August 2025" "tty\-colorscheme" "User Commands"
 .hy 0
 .SH NAME
-tty\-colorscheme \- Colorschemes for the linux TTY
+tty\-colorscheme \- Colorschemes for the Linux TTY
 .SH SYNOPSIS
 .B tty\-colorscheme
 [\fBoption\fR] | [\fIcolorscheme\fR]
 .SH DESCRIPTION
-A simple script to set colors in the linux TTY.
+A simple script to set colors in the Linux TTY.
 .SH OPTIONS
 .TP
-\fB\-c\fR
-List colorschemes.
+\fB\-l\fR
+List available colorschemes.
 .TP
 \fB\-f\fR
-List PSF fonts.
+List available PSF fonts.
 .TP
 \fB\-p\fR
-Print current palette.
+Print the current palette.
 .TP
-\fB\-s\fR
-Shift through colorschemes using \fIj\fR and \fIk\fR keys. Shift through fonts using \fIh\fR and \fIl\fR keys.
+\fB\-c\fR
+Cycle through colorschemes and fonts using \fIj\fR/\fIk\fR and \fIh\fR/\fIl\fR keys.
 .SH EXAMPLES
 .TP
 \fB$ tty\-colorscheme\fR \fIaura\fR
@@ -28,12 +28,13 @@ Apply the \fIaura\fR colorscheme to the current TTY.
 \fB# tty\-colorscheme\fR \fIhybrid\fR
 Apply the \fIhybrid\fR colorscheme to all TTYs.
 .SH CONFIGURATION
-To change colors for a current TTY at user log in add \fBtty\-colorscheme\fR [\fIcolorscheme\fR] to your \fI~/.profile\fR.
-It requires using \fBsudo\fR(8) if you want to change colors across all TTYs.
-If you get screen artifacts use \fBclear\fR(1) or hit \fIC\-l\fR. Use \fBreset\fR(1) to get back to the system default colors.
-TTY font can also be set with \fBsetfont\fR(8).
+Changing colors across all TTYs requires \fBsudo\fR(8).
+If you encounter screen artifacts, press \fICtrl+L\fR or type \fBclear\fR(1).
+To revert to the system default colors, type \fBreset\fR(1).
+The TTY font can also be changed using \fBsetfont\fR(8).
+To apply a colorscheme automatically upon login, add \fBtty\-colorscheme\fR [\fIcolorscheme]\fR to your \fI~/.profile\fR.
 .SH CUSTOMIZATION
-A colorscheme file looks like this:
+A colorscheme file has the following format:
 .RS
 .PP
 color01="000000" # Black (Background)
@@ -69,7 +70,7 @@ color15="00BCD4" # Cyan
 color16="9E9E9E" # White
 .RE
 .PP
-Just change the hex values of colors and put it in the colorschemes directory.
+To create a custom colorscheme, modify the HEX values and place the file in `/etc/tty-colorscheme/colorschemes`.
 .SH FILES
 .TP
 \fI/etc/tty\-colorscheme/colorschemes\fR

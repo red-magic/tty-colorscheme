@@ -1,50 +1,45 @@
-# Colorschemes for the linux TTY
+# Colorschemes for the Linux TTY
 
 ## Installation
 
-- `sudo ./install` to install `tty-colorscheme` and various themes.
-
-- `sudo ./install remove` if you want to uninstall it.
+- `sudo ./install` to install `tty-colorscheme` along with various themes.
+- `sudo ./install remove` to uninstall it.
 
 ## Usage
 
 ```
 tty-colorscheme [option] | [colorscheme]
-  -c    list colorschemes
-  -f    list PSF fonts
-  -p    print current palette
-  -s    shift through colorschemes and fonts
+  -l    List available colorschemes
+  -f    List available PSF fonts
+  -p    Print the current palette
+  -c    Cycle through colorschemes and fonts
 ```
 
-To change colors for a current TTY at user log in add `tty-colorscheme [colorscheme]` to your `~/.profile`.
+Changing colors across all TTYs requires `sudo`.
 
-It requires using `sudo` if you want to change colors across all TTYs.
+If you encounter screen artifacts, press `Ctrl+L` or type `clear`.
 
-If you get screen artifacts hit `Ctrl+l` or type `clear`.
+To revert to the system default colors, type `reset`.
 
-Type `reset` to get back to the system default colors.
+To apply a colorscheme automatically upon login, add `tty-colorscheme [colorscheme]` to your `~/.profile`.
 
 ## Screenshots
 
 ### monokai-soda
-
 ![monokai-soda](images/monokai-soda.png)
 
 ### mono-amber
-
 ![mono-amber](images/mono-amber.png)
 
 ### mono-light
-
 ![mono-light](images/mono-light.png)
 
 ### blood-dragon
-
 ![blood-dragon](images/blood-dragon.png)
 
 ## Customization
 
-A colorscheme file looks like this:
+A colorscheme file has the following format:
 
 ```
 color01="000000" # Black (Background)
@@ -65,4 +60,4 @@ color15="00BCD4" # Cyan
 color16="9E9E9E" # White
 ```
 
-Just change the hex values of colors and put it in `/etc/tty-colorscheme/colorschemes` directory.
+To create a custom colorscheme, modify the HEX values and place the file in `/etc/tty-colorscheme/colorschemes`.
