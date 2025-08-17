@@ -44,7 +44,7 @@ update_gogh() {
         ' "${scheme_path}" | sort -V > "${tmp_dir}/${scheme_short}"
     done
 
-    # Fixing c64 scheme, dirs are unreadable
+    # Fix c64 scheme, dirs are unreadable
     sed -i 's|color05="40318D"|color05="7869C4"|' "${tmp_dir}/c64"
     sed -i 's|color13="40318D"|color13="7869C4"|' "${tmp_dir}/c64"
 
