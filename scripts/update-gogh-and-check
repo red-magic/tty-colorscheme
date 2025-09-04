@@ -74,7 +74,8 @@ remove_dup_files() {
             | uniq -d \
             | while read -r dup; do
                   grep "${dup}" checksums.txt
-              done
+              done \
+            | sort -V
     }
 
     printf "\nDuplicate files:\n"
