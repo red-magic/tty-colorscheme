@@ -26,10 +26,13 @@ install_files() {
     install -vDm 644 tty-colorscheme/colorschemes/*/* -t /etc/tty-colorscheme/colorschemes
     install -vm 755 tty-colorscheme/tty-colorscheme -t /usr/bin
     install -vm 644 tty-colorscheme/tty-colorscheme.1 -t /usr/share/man/man1
+
     gzip -vf --best /usr/share/man/man1/tty-colorscheme.1
+
     if [[ -x "$(command -v systemctl)" ]]; then
         install -vm 644 tty-colorscheme/tty-colorscheme.conf -t /etc/tty-colorscheme
         install -vm 644 tty-colorscheme/tty-colorscheme.service -t /usr/lib/systemd/system
+
         printf "\nRun \"systemctl enable tty-colorscheme\" to apply colors on boot"
         printf "\nColorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n"
     fi
@@ -38,7 +41,8 @@ install_files() {
 remove_files() {
     rm -vrf /etc/tty-colorscheme
     rm -vf /usr/bin/tty-colorscheme
-    rm -vf /usr/share/man/man1/tty-colorscheme.1*
+    rm -vf /usr/share/man/man1/tty-colorscheme.1.gz
+
     [[ -x "$(command -v systemctl)" ]] && rm -vf /usr/lib/systemd/system/tty-colorscheme.service
 }
 
