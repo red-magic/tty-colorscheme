@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-if [[ "$(basename "$(pwd)")" != "extra" ]] && [[ ! -f "total-update"  ]]; then
-    printf "Run this script from \"extra\" directory\n"
+if [[ ! -f "$(pwd)/update-gogh-and-check" ]]; then
+    printf "Run this script from \"scripts\" directory\n"
     exit 1
 fi
 
@@ -68,7 +68,7 @@ find_dup_names() {
 remove_dup_files() {
     find "${cs_dir}" -type f -exec sha256sum {} \; > checksums.txt
 
-    list_dups() {
+    list_dup_files() {
         awk '{print $1}' checksums.txt \
             | sort \
             | uniq -d \
@@ -78,10 +78,10 @@ remove_dup_files() {
     }
 
     printf "\nDuplicate files:\n"
-    list_dups
+    list_dup_files
 
     printf "\nDuplicates removed:\n"
-    list_dups \
+    list_dup_files \
         | awk 'NR % 2 == 0 {print $2}' \
         | while read -r line; do
               rm -vf "${line}";
