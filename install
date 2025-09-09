@@ -27,7 +27,7 @@ install_files() {
     install -vm 755 tty-colorscheme/tty-colorscheme -t /usr/bin
     install -vm 644 tty-colorscheme/tty-colorscheme.1 -t /usr/share/man/man1
 
-    gzip -vf --best /usr/share/man/man1/tty-colorscheme.1
+    gzip -vf /usr/share/man/man1/tty-colorscheme.1
 
     if [[ -x "$(command -v systemctl)" ]]; then
         install -vm 644 tty-colorscheme/tty-colorscheme.conf -t /etc/tty-colorscheme
