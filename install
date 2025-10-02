@@ -2,10 +2,9 @@
 
 set -euo pipefail
 
-if [[ "$(id -u)" -ne 0 ]]; then
-    printf "This script must be run as root\n"
-    printf "Pass \"remove\" arg to uninstall\n"
-    exit 1
+if [ "$EUID" -ne 0 ]
+  then echo "Running as root"
+  sudo su -
 fi
 
 check_depends() {
