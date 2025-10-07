@@ -2,8 +2,8 @@
 
 ## Installation
 
-- `sudo ./install` to install `tty-colorscheme` along with various themes.
-- `sudo ./install remove` to uninstall it.
+- `./install` to install `tty-colorscheme` along with various themes.
+- `./install remove` to uninstall it.
 
 ## Usage
 
