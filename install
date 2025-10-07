@@ -2,9 +2,13 @@
 
 set -euo pipefail
 
-if [ "$EUID" -ne 0 ]
-  then echo "Running as root"
-  sudo su -
+if [[ "$(id -u)" -ne 0 ]]; then
+    printf "This script requires root privileges. Re-running with sudo...\n"
+    if ! command -v sudo &> /dev/null; then
+        printf "Error: sudo not found. Please run as root.\n"
+        exit 1
+    fi
+    exec sudo "${0}" "${@}"
 fi
 
 check_depends() {
