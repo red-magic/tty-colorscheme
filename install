@@ -9,20 +9,6 @@ config_dir="/etc/tty-colorscheme/colorschemes"
 man_dir="/usr/share/man/man1"
 service_dir="/usr/lib/systemd/system"
 
-check_depends() {
-    pkgs=("file" "gzip")
-    missing_pkgs=""
-
-    for pkg in "${pkgs[@]}"; do
-        [[ -x "$(command -v "${pkg}")" ]] || missing_pkgs="${missing_pkgs} ${pkg}"
-    done
-
-    if [[ -n "${missing_pkgs}" ]]; then
-        printf "Install the following packages:%s\n" "${missing_pkgs}"
-        exit 1
-    fi
-}
-
 install_files() {
     install -vDm 644 tty-colorscheme/colorschemes/*/* -t "${config_dir}"
     install -vm 755 tty-colorscheme/tty-colorscheme -t "${bin_dir}"
@@ -52,7 +38,6 @@ case "${1:-}" in
         remove_files
         ;;
     "")
-        check_depends
         install_files
         ;;
 esac

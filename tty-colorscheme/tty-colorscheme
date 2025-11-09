@@ -31,7 +31,7 @@ _get_fonts() { # Only output file name
 
     for fnt_dir in "${fnt_dirs[@]}"; do
         if [[ -d "${fnt_dir}" ]]; then
-            find "${fnt_dir}" -name "*.psf*" -exec file {} \; 2> /dev/null \
+            find "${fnt_dir}" -name "*.psf*" -exec file {} \; \
                 | awk -F: '/gzip|PC Screen Font/ {print $1}' \
                 | awk -F/ '{print $NF}' \
                 | sort -V
@@ -61,7 +61,7 @@ _cs_warn() {
 }
 
 _get_schemes() { # Only output file name
-    find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
+    find "${cs_dir}"/* | awk -F/ '{print $NF}'
 }
 
 cs_list_schemes() {
