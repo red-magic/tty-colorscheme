@@ -5,12 +5,12 @@ set -euo pipefail
 [[ "$(id -u)" -ne 0 ]] && exec sudo "${0}" "${@}"
 
 bin_dir="/usr/bin"
-config_dir="/etc/tty-colorscheme/colorschemes"
+config_dir="/etc/tty-colorscheme"
 man_dir="/usr/share/man/man1"
 service_dir="/usr/lib/systemd/system"
 
 install_files() {
-    install -vDm 644 tty-colorscheme/colorschemes/*/* -t "${config_dir}"
+    install -vDm 644 tty-colorscheme/colorschemes/*/* -t "${config_dir}/colorschemes"
     install -vm 755 tty-colorscheme/tty-colorscheme -t "${bin_dir}"
     install -vm 644 tty-colorscheme/tty-colorscheme.1 -t "${man_dir}"
 
