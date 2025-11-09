@@ -2,14 +2,12 @@
 
 set -euo pipefail
 
-if [[ "$(id -u)" -ne 0 ]]; then
-    printf "This script requires root privileges. Re-running with sudo...\n"
-    if ! command -v sudo &> /dev/null; then
-        printf "Error: sudo not found. Please run as root.\n"
-        exit 1
-    fi
-    exec sudo "${0}" "${@}"
-fi
+[[ "$(id -u)" -ne 0 ]] && exec sudo "${0}" "${@}"
+
+bin_dir="/usr/bin"
+config_dir="/etc/tty-colorscheme/colorschemes"
+man_dir="/usr/share/man/man1"
+service_dir="/usr/lib/systemd/system"
 
 check_depends() {
     pkgs=("file" "gzip")
@@ -26,15 +24,15 @@ check_depends() {
 }
 
 install_files() {
-    install -vDm 644 tty-colorscheme/colorschemes/*/* -t /etc/tty-colorscheme/colorschemes
-    install -vm 755 tty-colorscheme/tty-colorscheme -t /usr/bin
-    install -vm 644 tty-colorscheme/tty-colorscheme.1 -t /usr/share/man/man1
+    install -vDm 644 tty-colorscheme/colorschemes/*/* -t "${config_dir}"
+    install -vm 755 tty-colorscheme/tty-colorscheme -t "${bin_dir}"
+    install -vm 644 tty-colorscheme/tty-colorscheme.1 -t "${man_dir}"
 
-    gzip -vf /usr/share/man/man1/tty-colorscheme.1
+    gzip -vf "${man_dir}/tty-colorscheme.1"
 
     if [[ -x "$(command -v systemctl)" ]]; then
-        install -vm 644 tty-colorscheme/tty-colorscheme.conf -t /etc/tty-colorscheme
-        install -vm 644 tty-colorscheme/tty-colorscheme.service -t /usr/lib/systemd/system
+        install -vm 644 tty-colorscheme/tty-colorscheme.conf -t "${config_dir}"
+        install -vm 644 tty-colorscheme/tty-colorscheme.service -t "${service_dir}"
 
         printf "\nRun \"systemctl enable tty-colorscheme\" to apply colors on boot"
         printf "\nColorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n"
@@ -42,11 +40,11 @@ install_files() {
 }
 
 remove_files() {
-    rm -vrf /etc/tty-colorscheme
-    rm -vf /usr/bin/tty-colorscheme
-    rm -vf /usr/share/man/man1/tty-colorscheme.1.gz
+    rm -vrf "${config_dir}"
+    rm -vf "${bin_dir}/tty-colorscheme"
+    rm -vf "${man_dir}/tty-colorscheme.1.gz"
 
-    [[ -x "$(command -v systemctl)" ]] && rm -vf /usr/lib/systemd/system/tty-colorscheme.service
+    [[ -x "$(command -v systemctl)" ]] && rm -vf "${service_dir}/tty-colorscheme.service"
 }
 
 case "${1:-}" in
