@@ -8,7 +8,7 @@
 ## Usage
 
 ```
-tty-colorscheme <option | colorscheme>
+tty-colorscheme [option | colorscheme]
   -l    List available colorschemes
   -f    List available PSF fonts
   -p    Print the current palette
