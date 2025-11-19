@@ -1,10 +1,10 @@
-.TH TTY\-COLORSCHEME "1" "August 2025" "tty\-colorscheme" "User Commands"
+.TH TTY\-COLORSCHEME "1" "November 2025" "tty\-colorscheme" "User Commands"
 .hy 0
 .SH NAME
 tty\-colorscheme \- Colorschemes for the Linux TTY
 .SH SYNOPSIS
 .B tty\-colorscheme
-[\fBoption\fR] | [\fIcolorscheme\fR]
+<\fIoption\fR | \fIcolorscheme\fR>
 .SH DESCRIPTION
 A simple script to set colors in the Linux TTY.
 .SH OPTIONS
@@ -32,7 +32,7 @@ Changing colors across all TTYs requires \fBsudo\fR(8).
 If you encounter screen artifacts, press \fICtrl+L\fR or type \fBclear\fR(1).
 To revert to the system default colors, type \fBreset\fR(1).
 The TTY font can also be changed using \fBsetfont\fR(8).
-To apply a colorscheme automatically upon login, add \fBtty\-colorscheme\fR [\fIcolorscheme\fR] to your \fI~/.profile\fR.
+To apply a colorscheme automatically upon login, add \fBtty\-colorscheme\fR <\fIcolorscheme\fR> to your \fI~/.profile\fR.
 .SH CUSTOMIZATION
 A colorscheme file has the following format:
 .RS

@@ -209,7 +209,7 @@ cs_set_scheme() {
 }
 
 cs_print_help() {
-    printf "Usage: %s [option] | [colorscheme]\n" "$(basename "${0}")"
+    printf "Usage: %s <option | colorscheme>\n" "$(basename "${0}")"
     printf "  -l    List available colorschemes\n"
     printf "  -f    List available PSF fonts\n"
     printf "  -p    Print the current palette\n"

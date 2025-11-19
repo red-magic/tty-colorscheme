@@ -8,7 +8,7 @@
 ## Usage
 
 ```
-tty-colorscheme [option] | [colorscheme]
+tty-colorscheme <option | colorscheme>
   -l    List available colorschemes
   -f    List available PSF fonts
   -p    Print the current palette
@@ -21,7 +21,7 @@ If you encounter screen artifacts, press `Ctrl+L` or type `clear`.
 
 To revert to the system default colors, type `reset`.
 
-To apply a colorscheme automatically upon login, add `tty-colorscheme [colorscheme]` to your `~/.profile`.
+To apply a colorscheme automatically upon login, add `tty-colorscheme <colorscheme>` to your `~/.profile`.
 
 ## Screenshots
 
