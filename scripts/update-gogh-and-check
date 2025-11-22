@@ -8,7 +8,7 @@ if [[ ! -f "$(pwd)/update-gogh-and-check" ]]; then
 fi
 
 update_gogh() {
-    gogh_ver="361"
+    gogh_ver="362"
     gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
     cs_dir="../tty-colorscheme/colorschemes"
     gogh_dir="${cs_dir}/gogh"
