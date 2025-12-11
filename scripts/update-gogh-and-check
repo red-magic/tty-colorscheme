@@ -2,10 +2,7 @@
 
 set -euo pipefail
 
-if [[ ! -f "$(pwd)/update-gogh-and-check" ]]; then
-    printf "Run this script from \"scripts\" directory\n"
-    exit 1
-fi
+cd "$(dirname "${0}")" || exit 1
 
 update_gogh() {
     gogh_ver="362"
@@ -91,7 +88,7 @@ remove_dup_files() {
 
 clean_up() {
     printf "\nPress Enter to continue\n" && read -r
-    rm -vrf Gogh-* "${tmp_dir}" checksums.txt ./*.tar.gz
+    rm -vrf "${tmp_dir}" Gogh-* ./*.tar.gz checksums.txt
 }
 
 update_gogh
