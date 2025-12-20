@@ -21,7 +21,7 @@ install_files() {
         install -vm 644 tty-colorscheme/tty-colorscheme.service -t "${service_dir}"
 
         printf "\nRun \"systemctl enable tty-colorscheme\" to apply colors on boot"
-        printf "\nColorscheme can be set in /etc/tty-colorscheme/tty-colorscheme.conf\n\n"
+        printf "\nColorscheme can be set in %s/tty-colorscheme.conf\n\n" "${config_dir}"
     fi
 }
 
