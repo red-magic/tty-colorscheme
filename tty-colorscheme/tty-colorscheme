@@ -246,9 +246,14 @@ while getopts ":lfpc" opt; do
     esac
 done
 
-if [[ "${#}" -eq 1 ]]; then
+if [[ "${#}" -gt 1 ]]; then
+    printf "Only 1 option or 1 argument is accepted\n" >&2
+    cs_print_help
+    exit 1
+elif [[ "${#}" -eq 1 ]]; then
+    cs_set_scheme "${1}"
+    exit 0
+elif [[ "${#}" -eq 0 ]]; then
     cs_set_scheme "${1}"
     exit 0
 fi
-
-cs_print_help
