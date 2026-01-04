@@ -209,14 +209,16 @@ cs_set_scheme() {
 }
 
 cs_print_help() {
-    printf "Usage: %s <option | colorscheme>\n" "$(basename "${0}")"
+    progname="$(basename "${0}")"
+
+    printf "Usage: %s <option | colorscheme>\n" "${progname}"
     printf "  -l    List available colorschemes\n"
     printf "  -f    List available PSF fonts\n"
     printf "  -p    Print the current palette\n"
     printf "  -c    Cycle through colorschemes and fonts\n"
 
     if ! tty | grep -q tty; then
-        printf "%s should be run from TTY\n" "$(basename "${0}")" >&2
+        printf "%s should be run from TTY\n" "${progname}" >&2
     fi
 }
 
