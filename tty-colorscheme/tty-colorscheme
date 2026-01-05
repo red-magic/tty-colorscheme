@@ -209,7 +209,7 @@ cs_set_scheme() {
 }
 
 cs_print_help() {
-    progname="$(basename "${0}")"
+    progname="${0##*/}"
 
     printf "Usage: %s <option | colorscheme>\n" "${progname}"
     printf "  -l    List available colorschemes\n"
