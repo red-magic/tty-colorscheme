@@ -10,12 +10,12 @@ _set_colors() {
     # color09 color10 color11 color12 color13 color14 color15 color16
 
     printf "\e]P0%s\e]P1%s\e]P2%s\e]P3%s\e]P4%s\e]P5%s\e]P6%s\e]P7%s" \
-        "${color01:?}" "${color02:?}" "${color03:?}" "${color04:?}" \
-        "${color05:?}" "${color06:?}" "${color07:?}" "${color08:?}"
+           "${color01:?}" "${color02:?}" "${color03:?}" "${color04:?}" \
+           "${color05:?}" "${color06:?}" "${color07:?}" "${color08:?}"
 
     printf "\e]P8%s\e]P9%s\e]PA%s\e]PB%s\e]PC%s\e]PD%s\e]PE%s\e]PF%s" \
-        "${color09:?}" "${color10:?}" "${color11:?}" "${color12:?}" \
-        "${color13:?}" "${color14:?}" "${color15:?}" "${color16:?}"
+           "${color09:?}" "${color10:?}" "${color11:?}" "${color12:?}" \
+           "${color13:?}" "${color14:?}" "${color15:?}" "${color16:?}"
 }
 
 _fnt_warn() {
@@ -115,6 +115,7 @@ cs_cycle() {
                     _cs_warn
                 fi
                 ;;
+
             "fnt")
                 # Only process if index is valid
                 if [[ "${ind_fnt}" -ge 0 && "${ind_fnt}" -le "${max_ind_fnt}" ]]; then
@@ -132,7 +133,7 @@ cs_cycle() {
 
         read -rsn1
         case "${REPLY}" in
-            j)
+            "j")
                 mode="cs"
                 if [[ "${ind_cs}" -lt "${max_ind_cs}" ]]; then
                     ((ind_cs++)) || true # Ignore arithmetic errors
@@ -140,7 +141,8 @@ cs_cycle() {
                     ind_cs=0 # Wrap around to the first element
                 fi
                 ;;
-            k)
+
+            "k")
                 mode="cs"
                 if [[ "${ind_cs}" -gt 0 ]]; then
                     ((ind_cs--))
@@ -150,7 +152,8 @@ cs_cycle() {
                     ind_cs="${max_ind_cs}" # Wrap around to the last element
                 fi
                 ;;
-            l)
+
+            "l")
                 mode="fnt"
                 if [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]]; then
                     ((ind_fnt++)) || true # Ignore arithmetic errors
@@ -158,7 +161,8 @@ cs_cycle() {
                     ind_fnt=0 # Wrap around to the first element
                 fi
                 ;;
-            h)
+
+            "h")
                 mode="fnt"
                 if [[ "${ind_fnt}" -gt 0 ]]; then
                     ((ind_fnt--))
@@ -168,6 +172,7 @@ cs_cycle() {
                     ind_fnt="${max_ind_fnt}" # Wrap around to the last element
                 fi
                 ;;
+
             *)
                 exit 0
                 ;;
@@ -222,40 +227,44 @@ cs_print_help() {
     fi
 }
 
-while getopts ":lfpc" opt; do
-    case "${opt}" in
-        l)
-            cs_list_schemes
-            exit 0
-            ;;
-        f)
-            cs_list_fonts
-            exit 0
-            ;;
-        p)
-            cs_print_palette
-            exit 0
-            ;;
-        c)
-            cs_cycle
-            exit 0
-            ;;
-        *)
-            printf "Invalid option: -%s\n" "${OPTARG}" >&2
-            cs_print_help
-            exit 1
-            ;;
-    esac
-done
-
 if [[ "${#}" -gt 1 ]]; then
     printf "Only 1 option or 1 argument is accepted\n" >&2
     cs_print_help
     exit 1
-elif [[ "${#}" -eq 1 ]]; then
-    cs_set_scheme "${1}"
-    exit 0
 elif [[ "${#}" -eq 0 ]]; then
     cs_print_help
     exit 0
 fi
+
+case "${1}" in
+    "-l")
+        cs_list_schemes
+        exit 0
+        ;;
+
+    "-f")
+        cs_list_fonts
+        exit 0
+        ;;
+
+    "-p")
+        cs_print_palette
+        exit 0
+        ;;
+
+    "-c")
+        cs_cycle
+        exit 0
+        ;;
+
+    "-"*)
+        printf "Invalid option: %s\n" "${1}" >&2
+        cs_print_help
+        exit 1
+        ;;
+
+    *)
+        cs_set_scheme "${1}"
+        exit 0
+        ;;
+esac
