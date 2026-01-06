@@ -61,7 +61,7 @@ _cs_warn() {
 }
 
 _get_schemes() { # Only output file name
-    find "${cs_dir}"/* | awk -F/ '{print $NF}'
+    find "${cs_dir}"/* 2>/dev/null | awk -F/ '{print $NF}'
 }
 
 cs_list_schemes() {
@@ -239,22 +239,18 @@ fi
 case "${1}" in
     "-l")
         cs_list_schemes
-        exit 0
         ;;
 
     "-f")
         cs_list_fonts
-        exit 0
         ;;
 
     "-p")
         cs_print_palette
-        exit 0
         ;;
 
     "-c")
         cs_cycle
-        exit 0
         ;;
 
     "-"*)
@@ -265,6 +261,5 @@ case "${1}" in
 
     *)
         cs_set_scheme "${1}"
-        exit 0
         ;;
 esac
