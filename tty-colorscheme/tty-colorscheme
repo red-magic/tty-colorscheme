@@ -19,7 +19,7 @@ _set_colors() {
 }
 
 _fnt_warn() {
-    [[ -z "${fnt_arr:-}" ]] && printf "No PSF fonts found\n" >&2
+    [[ -z "${fnt_arr:-}" ]] && printf "No PSF fonts found\n" 1>&2
 }
 
 _get_fonts() { # Only output file name
@@ -57,7 +57,7 @@ _set_font() {
 }
 
 _cs_warn() {
-    [[ -z "${cs_arr:-}" ]] && printf "No colorschemes found\n" >&2
+    [[ -z "${cs_arr:-}" ]] && printf "No colorschemes found\n" 1>&2
 }
 
 _get_schemes() { # Only output file name
@@ -182,7 +182,7 @@ cs_cycle() {
 
 cs_set_scheme() {
     if [[ ! -f "${cs_dir}/${1}" ]]; then
-        printf "Invalid colorscheme: %s\n" "${1}" >&2
+        printf "Invalid colorscheme: %s\n" "${1}" 1>&2
         exit 1
     fi
 
@@ -191,7 +191,7 @@ cs_set_scheme() {
             declare -g "${BASH_REMATCH[1]}=${BASH_REMATCH[3]}"
         else
             [[ -z "${line}" || "${line}" =~ ^[[:space:]]*# ]] && continue
-            printf "Invalid color format: %s in %s\n" "${line}" "${1}" >&2
+            printf "Invalid color format: %s in %s\n" "${line}" "${1}" 1>&2
             exit 1
         fi
     done < "${cs_dir}/${1}"
@@ -223,12 +223,12 @@ cs_print_help() {
     printf "  -c    Cycle through colorschemes and fonts\n"
 
     if ! tty | grep -q tty; then
-        printf "%s should be run from TTY\n" "${progname}" >&2
+        printf "%s should be run from TTY\n" "${progname}" 1>&2
     fi
 }
 
 if [[ "${#}" -gt 1 ]]; then
-    printf "Only 1 option or 1 argument is accepted\n" >&2
+    printf "Only 1 option or 1 argument is accepted\n" 1>&2
     cs_print_help
     exit 1
 elif [[ "${#}" -eq 0 ]]; then
@@ -258,7 +258,7 @@ case "${1}" in
         ;;
 
     "-"*)
-        printf "Invalid option: %s\n" "${1}" >&2
+        printf "Invalid option: %s\n" "${1}" 1>&2
         cs_print_help
         exit 1
         ;;
