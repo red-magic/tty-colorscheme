@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "${0}")" || exit 1
 
 update_gogh() {
-    gogh_ver="364"
+    gogh_ver="365"
     gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
     cs_dir="../tty-colorscheme/colorschemes"
     gogh_dir="${cs_dir}/gogh"
