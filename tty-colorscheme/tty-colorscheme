@@ -211,6 +211,7 @@ cs_set_scheme() {
         _set_colors
     fi
 
+    # Prevent palette going into logs
     if [[ "${TERM}" == "linux" ]]; then
         clear
         cs_print_palette
