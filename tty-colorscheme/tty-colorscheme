@@ -186,15 +186,22 @@ cs_set_scheme() {
         exit 1
     fi
 
-    while IFS="" read -r line || [[ -n "${line}" ]]; do
-        if [[ "${line}" =~ ^(color(0[1-9]|1[0-6]))=\"([0-9A-Fa-f]{6})\"$ ]]; then
-            declare -g "${BASH_REMATCH[1]}=${BASH_REMATCH[3]}"
-        else
-            [[ -z "${line}" || "${line}" =~ ^[[:space:]]*# ]] && continue
-            printf "Invalid color format: %s in %s\n" "${line}" "${1}" 1>&2
+    unset color{01..16}
+    source "${cs_dir}/${1}"
+
+    for i in {01..16}; do
+        color_var="color${i}"
+
+        if [[ ! -v "${color_var}" ]]; then
+            printf "Missing %s in scheme %s\n" "${color_var}" "${1}" 1>&2
             exit 1
         fi
-    done < "${cs_dir}/${1}"
+
+        if ! [[ "${!color_var}" =~ ^[0-9A-Fa-f]{6}$ ]]; then
+            printf "Invalid value for %s in scheme %s: %s\n" "${color_var}" "${1}" "${!color_var}" 1>&2
+            exit 1
+        fi
+    done
 
     if [[ "$(id -u)" -eq 0 ]]; then
         for i in {1..6}; do
@@ -204,7 +211,6 @@ cs_set_scheme() {
         _set_colors
     fi
 
-    # Prevent palette going into logs
     if [[ "${TERM}" == "linux" ]]; then
         clear
         cs_print_palette
