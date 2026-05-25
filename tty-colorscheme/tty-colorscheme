@@ -61,7 +61,7 @@ _cs_warn() {
 }
 
 _get_schemes() { # Only output file name
-    find "${cs_dir}"/* 2>/dev/null | awk -F/ '{print $NF}'
+    find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
 }
 
 cs_list_schemes() {
