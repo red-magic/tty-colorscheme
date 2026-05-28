@@ -11,7 +11,7 @@ update_gogh() {
     gogh_dir="${cs_dir}/gogh"
     tmp_dir="converted-gogh-schemes"
 
-    curl -LO "${gogh_link}"
+    curl -fLO "${gogh_link}"
     tar xvf "v${gogh_ver}.tar.gz"
     mkdir -vp "${tmp_dir}"
 
