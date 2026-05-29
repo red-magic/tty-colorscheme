@@ -1,6 +1,6 @@
 [Unit]
 Description=Set TTY colors
-After=getty@tty1.service
+After=getty.target display-manager.service
 
 [Service]
 Type=oneshot
