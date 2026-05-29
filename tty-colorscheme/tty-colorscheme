@@ -43,9 +43,7 @@ _set_font() {
     fnt="${1}"
 
     if [[ "$(id -u)" -eq 0 ]]; then
-        for i in {1..6}; do
-            setfont "${fnt}" -C "/dev/tty${i}"
-        done
+        for i in {1..6}; do setfont "${fnt}" -C "/dev/tty${i}"; done
     else
         setfont "${fnt}"
     fi
@@ -204,9 +202,7 @@ cs_set_scheme() {
     done
 
     if [[ "$(id -u)" -eq 0 ]]; then
-        for i in {1..6}; do
-            _set_colors > "/dev/tty${i}"
-        done
+        for i in {1..6}; do _set_colors > "/dev/tty${i}"; done
     else
         _set_colors
     fi
@@ -229,9 +225,7 @@ cs_print_help() {
     printf "  -p    Print the current palette\n"
     printf "  -c    Cycle through colorschemes and fonts\n"
 
-    if ! tty | grep -q tty; then
-        printf "%s should be run from TTY\n" "${progname}" 1>&2
-    fi
+    ! tty | grep -q tty && printf "%s should be run from TTY\n" "${progname}" 1>&2
 }
 
 if [[ "${#}" -gt 1 ]]; then
