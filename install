@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-[[ "$(id -u)" -ne 0 ]] && exec sudo "${0}" "${@}"
+[[ "$(id -u)" -ne 0 ]] && exec sudo "${0}" "${1:-}"
 
 bin_dir="/usr/bin"
 config_dir="/etc/tty-colorscheme"
@@ -33,7 +33,7 @@ remove_files() {
     [[ -x "$(command -v systemctl)" ]] && rm -vf "${service_dir}/tty-colorscheme.service"
 }
 
-case "${1:-}" in
+case "${1}" in
     "remove")
         remove_files
         ;;
