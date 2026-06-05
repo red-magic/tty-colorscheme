@@ -91,12 +91,12 @@ cs_print_palette() {
 
 cs_cycle() {
     mapfile -t cs_arr < <(_get_schemes)
-    max_ind_cs="$((${#cs_arr[@]} - 1))"
-    ind_cs="-1"
+    max_idx_cs="$((${#cs_arr[@]} - 1))"
+    idx_cs="-1"
 
     mapfile -t fnt_arr < <(_get_fonts)
-    max_ind_fnt="$((${#fnt_arr[@]} - 1))"
-    ind_fnt="-1"
+    max_idx_fnt="$((${#fnt_arr[@]} - 1))"
+    idx_fnt="-1"
 
     mode=""
     clear
@@ -105,9 +105,9 @@ cs_cycle() {
         case "${mode}" in
             "cs")
                 # Only process if index is valid
-                if [[ "${ind_cs}" -ge 0 && "${ind_cs}" -le "${max_ind_cs}" ]]; then
-                    cs_set_scheme "${cs_arr[${ind_cs}]}"
-                    printf "[%s/%s]\n" "$((ind_cs + 1))" "$((max_ind_cs + 1))"
+                if [[ "${idx_cs}" -ge 0 && "${idx_cs}" -le "${max_idx_cs}" ]]; then
+                    cs_set_scheme "${cs_arr[${idx_cs}]}"
+                    printf "[%s/%s]\n" "$((idx_cs + 1))" "$((max_idx_cs + 1))"
                 else
                     clear
                     _cs_warn
@@ -116,9 +116,9 @@ cs_cycle() {
 
             "fnt")
                 # Only process if index is valid
-                if [[ "${ind_fnt}" -ge 0 && "${ind_fnt}" -le "${max_ind_fnt}" ]]; then
-                    _set_font "${fnt_arr[${ind_fnt}]}"
-                    printf "[%s/%s]\n" "$((ind_fnt + 1))" "$((max_ind_fnt + 1))"
+                if [[ "${idx_fnt}" -ge 0 && "${idx_fnt}" -le "${max_idx_fnt}" ]]; then
+                    _set_font "${fnt_arr[${idx_fnt}]}"
+                    printf "[%s/%s]\n" "$((idx_fnt + 1))" "$((max_idx_fnt + 1))"
                 else
                     clear
                     _fnt_warn
@@ -133,41 +133,41 @@ cs_cycle() {
         case "${REPLY}" in
             "j")
                 mode="cs"
-                if [[ "${ind_cs}" -lt "${max_ind_cs}" ]]; then
-                    ((ind_cs++)) || true # Ignore arithmetic errors
+                if [[ "${idx_cs}" -lt "${max_idx_cs}" ]]; then
+                    : $((idx_cs++))
                 else
-                    ind_cs="0" # Wrap around to the first element
+                    idx_cs="0" # Wrap around to the first element
                 fi
                 ;;
 
             "k")
                 mode="cs"
-                if [[ "${ind_cs}" -gt 0 ]]; then
-                    ((ind_cs--))
-                elif [[ "${ind_cs}" == -1 ]]; then
-                    ind_cs="0" # Get to the first element if none is selected
+                if [[ "${idx_cs}" -gt 0 ]]; then
+                    ((idx_cs--))
+                elif [[ "${idx_cs}" == -1 ]]; then
+                    idx_cs="0" # Get to the first element on first keypress
                 else
-                    ind_cs="${max_ind_cs}" # Wrap around to the last element
+                    idx_cs="${max_idx_cs}" # Wrap around to the last element
                 fi
                 ;;
 
             "l")
                 mode="fnt"
-                if [[ "${ind_fnt}" -lt "${max_ind_fnt}" ]]; then
-                    ((ind_fnt++)) || true # Ignore arithmetic errors
+                if [[ "${idx_fnt}" -lt "${max_idx_fnt}" ]]; then
+                    : $((idx_fnt++))
                 else
-                    ind_fnt="0" # Wrap around to the first element
+                    idx_fnt="0" # Wrap around to the first element
                 fi
                 ;;
 
             "h")
                 mode="fnt"
-                if [[ "${ind_fnt}" -gt 0 ]]; then
-                    ((ind_fnt--))
-                elif [[ "${ind_fnt}" == -1 ]]; then
-                    ind_fnt="0" # Get to the first element if none is selected
+                if [[ "${idx_fnt}" -gt 0 ]]; then
+                    ((idx_fnt--))
+                elif [[ "${idx_fnt}" == -1 ]]; then
+                    idx_fnt="0" # Get to the first element on first keypress
                 else
-                    ind_fnt="${max_ind_fnt}" # Wrap around to the last element
+                    idx_fnt="${max_idx_fnt}" # Wrap around to the last element
                 fi
                 ;;
 
