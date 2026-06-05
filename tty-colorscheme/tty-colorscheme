@@ -91,11 +91,11 @@ cs_print_palette() {
 
 cs_cycle() {
     mapfile -t cs_arr < <(_get_schemes)
-    max_ind_cs="$((${#cs_arr[@]}-1))"
+    max_ind_cs="$((${#cs_arr[@]} - 1))"
     ind_cs="-1"
 
     mapfile -t fnt_arr < <(_get_fonts)
-    max_ind_fnt="$((${#fnt_arr[@]}-1))"
+    max_ind_fnt="$((${#fnt_arr[@]} - 1))"
     ind_fnt="-1"
 
     mode=""
@@ -107,7 +107,7 @@ cs_cycle() {
                 # Only process if index is valid
                 if [[ "${ind_cs}" -ge 0 && "${ind_cs}" -le "${max_ind_cs}" ]]; then
                     cs_set_scheme "${cs_arr[${ind_cs}]}"
-                    printf "[%s/%s]\n" "$((ind_cs+1))" "$((max_ind_cs+1))"
+                    printf "[%s/%s]\n" "$((ind_cs + 1))" "$((max_ind_cs + 1))"
                 else
                     clear
                     _cs_warn
@@ -118,7 +118,7 @@ cs_cycle() {
                 # Only process if index is valid
                 if [[ "${ind_fnt}" -ge 0 && "${ind_fnt}" -le "${max_ind_fnt}" ]]; then
                     _set_font "${fnt_arr[${ind_fnt}]}"
-                    printf "[%s/%s]\n" "$((ind_fnt+1))" "$((max_ind_fnt+1))"
+                    printf "[%s/%s]\n" "$((ind_fnt + 1))" "$((max_ind_fnt + 1))"
                 else
                     clear
                     _fnt_warn
