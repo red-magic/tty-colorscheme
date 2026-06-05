@@ -179,24 +179,26 @@ cs_cycle() {
 }
 
 cs_set_scheme() {
-    if [[ ! -f "${cs_dir}/${1}" ]]; then
-        printf "Invalid colorscheme: %s\n" "${1}" 1>&2
+    cs="${1}"
+
+    if [[ ! -f "${cs_dir}/${cs}" ]]; then
+        printf "Invalid colorscheme: %s\n" "${cs}" 1>&2
         exit 1
     fi
 
     unset color{01..16}
-    source "${cs_dir}/${1}"
+    source "${cs_dir}/${cs}"
 
     for i in {01..16}; do
         color_var="color${i}"
 
         if [[ ! -v "${color_var}" ]]; then
-            printf "Missing %s in scheme %s\n" "${color_var}" "${1}" 1>&2
+            printf "Missing %s in scheme %s\n" "${color_var}" "${cs}" 1>&2
             exit 1
         fi
 
         if ! [[ "${!color_var}" =~ ^[0-9A-Fa-f]{6}$ ]]; then
-            printf "Invalid value for %s in scheme %s: %s\n" "${color_var}" "${1}" "${!color_var}" 1>&2
+            printf "Invalid value for %s in scheme %s: %s\n" "${color_var}" "${cs}" "${!color_var}" 1>&2
             exit 1
         fi
     done
@@ -213,7 +215,7 @@ cs_set_scheme() {
         cs_print_palette
     fi
 
-    printf "\nSetting colorscheme: %s\n\n" "${1}"
+    printf "\nSetting colorscheme: %s\n\n" "${cs}"
 }
 
 cs_print_help() {
