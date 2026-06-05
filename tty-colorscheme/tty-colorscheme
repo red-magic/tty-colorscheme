@@ -225,7 +225,7 @@ cs_print_help() {
     printf "  -p    Print the current palette\n"
     printf "  -c    Cycle through colorschemes and fonts\n"
 
-    ! tty | grep -q tty && printf "%s should be run from TTY\n" "${progname}" 1>&2
+    tty | grep -q tty || printf "%s should be run from TTY\n" "${progname}" 1>&2
 }
 
 if [[ "${#}" -gt 1 ]]; then
