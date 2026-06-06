@@ -4,11 +4,11 @@ set -euo pipefail
 
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
-_cs_warn() {
+_warn_cs() {
     [[ -z "${cs_arr:-}" ]] && printf "No colorschemes found\n" 1>&2
 }
 
-_fnt_warn() {
+_warn_fnt() {
     [[ -z "${fnt_arr:-}" ]] && printf "No PSF fonts found\n" 1>&2
 }
 
@@ -69,19 +69,19 @@ _set_font() {
     printf "Setting font: %s\n\n" "${fnt%%.*}"
 }
 
-cs_list_schemes() {
+list_schemes() {
     _fill_cs_arr
-    _cs_warn && exit 1
+    _warn_cs && exit 1
     printf "%s\n" "${cs_arr[@]}"
 }
 
-cs_list_fonts() {
+list_fonts() {
     _fill_fnt_arr
-    _fnt_warn && exit 1
+    _warn_fnt && exit 1
     printf "%s\n" "${fnt_arr[@]%%.*}"
 }
 
-cs_print_palette() {
+print_palette() {
     cnt="1"
     for bkgrnd in {40..47}; do
         printf "\e[%sm" "${bkgrnd}"
@@ -96,7 +96,7 @@ cs_print_palette() {
     done
 }
 
-cs_cycle() {
+cycle_through() {
     _fill_cs_arr
     max_idx_cs="$((${#cs_arr[@]} - 1))"
     idx_cs="-1"
@@ -117,7 +117,7 @@ cs_cycle() {
                     printf "[%s/%s]\n" "$((idx_cs + 1))" "$((max_idx_cs + 1))"
                 else
                     clear
-                    _cs_warn
+                    _warn_cs
                 fi
                 ;;
 
@@ -128,7 +128,7 @@ cs_cycle() {
                     printf "[%s/%s]\n" "$((idx_fnt + 1))" "$((max_idx_fnt + 1))"
                 else
                     clear
-                    _fnt_warn
+                    _warn_fnt
                 fi
                 ;;
         esac
@@ -219,7 +219,7 @@ cs_set_scheme() {
     # Prevent palette going into logs
     if [[ "${TERM}" == "linux" ]]; then
         clear
-        cs_print_palette
+        print_palette
     fi
 
     printf "\nSetting colorscheme: %s\n\n" "${cs}"
@@ -248,28 +248,28 @@ fi
 
 case "${1}" in
     "-l")
-        cs_list_schemes
+        list_schemes
         ;;
 
     "-f")
-        cs_list_fonts
+        list_fonts
         ;;
 
     "-p")
-        cs_print_palette
+        print_palette
         ;;
 
     "-c")
-        cs_cycle
+        cycle_through
         ;;
 
     "-"*)
         printf "Invalid option: %s\n" "${1}" 1>&2
-        cs_print_help
+        print_help
         exit 1
         ;;
 
     *)
-        cs_set_scheme "${1}"
+        set_scheme "${1}"
         ;;
 esac
