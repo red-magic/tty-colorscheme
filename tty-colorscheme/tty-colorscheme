@@ -24,15 +24,14 @@ _fnt_warn() {
 
 _get_fonts() { # Only output file name
     fnt_dirs=(
-        "/usr/share/consolefonts"
-        "/usr/share/kbd/consolefonts"
-        "/usr/lib/kbd/consolefonts"
+        "/usr/share/consolefonts" # Debian
+        "/usr/share/kbd/consolefonts" # Arch
+        "/usr/lib/kbd/consolefonts" # Fedora
     )
 
     for fnt_dir in "${fnt_dirs[@]}"; do
         if [[ -d "${fnt_dir}" ]]; then
-            find "${fnt_dir}" -name "*.psf*" -exec file {} \; \
-                | awk -F: '/gzip|PC Screen Font/ {print $1}' \
+            find "${fnt_dir}" -name "*.psf*.gz" \
                 | awk -F/ '{print $NF}' \
                 | sort -V
         fi
