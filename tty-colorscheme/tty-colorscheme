@@ -4,22 +4,16 @@ set -euo pipefail
 
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
-_set_colors() {
-    # Black   Red     Green   Yellow  Blue    Magenta Cyan    White
-    # color01 color02 color03 color04 color05 color06 color07 color08
-    # color09 color10 color11 color12 color13 color14 color15 color16
-
-    printf "\e]P0%s\e]P1%s\e]P2%s\e]P3%s\e]P4%s\e]P5%s\e]P6%s\e]P7%s" \
-           "${color01:?}" "${color02:?}" "${color03:?}" "${color04:?}" \
-           "${color05:?}" "${color06:?}" "${color07:?}" "${color08:?}"
-
-    printf "\e]P8%s\e]P9%s\e]PA%s\e]PB%s\e]PC%s\e]PD%s\e]PE%s\e]PF%s" \
-           "${color09:?}" "${color10:?}" "${color11:?}" "${color12:?}" \
-           "${color13:?}" "${color14:?}" "${color15:?}" "${color16:?}"
+_cs_warn() {
+    [[ -z "${cs_arr:-}" ]] && printf "No colorschemes found\n" 1>&2
 }
 
 _fnt_warn() {
     [[ -z "${fnt_arr:-}" ]] && printf "No PSF fonts found\n" 1>&2
+}
+
+_get_schemes() { # Only output full file name
+    find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
 }
 
 _get_fonts() { # Only output full file name
@@ -38,6 +32,28 @@ _get_fonts() { # Only output full file name
     done
 }
 
+_fill_cs_arr() {
+    mapfile -t cs_arr < <(_get_schemes)
+}
+
+_fill_fnt_arr() {
+    mapfile -t fnt_arr < <(_get_fonts)
+}
+
+_set_colors() {
+    # Black   Red     Green   Yellow  Blue    Magenta Cyan    White
+    # color01 color02 color03 color04 color05 color06 color07 color08
+    # color09 color10 color11 color12 color13 color14 color15 color16
+
+    printf "\e]P0%s\e]P1%s\e]P2%s\e]P3%s\e]P4%s\e]P5%s\e]P6%s\e]P7%s" \
+           "${color01:?}" "${color02:?}" "${color03:?}" "${color04:?}" \
+           "${color05:?}" "${color06:?}" "${color07:?}" "${color08:?}"
+
+    printf "\e]P8%s\e]P9%s\e]PA%s\e]PB%s\e]PC%s\e]PD%s\e]PE%s\e]PF%s" \
+           "${color09:?}" "${color10:?}" "${color11:?}" "${color12:?}" \
+           "${color13:?}" "${color14:?}" "${color15:?}" "${color16:?}"
+}
+
 _set_font() {
     fnt="${1}"
 
@@ -53,22 +69,14 @@ _set_font() {
     printf "Setting font: %s\n\n" "${fnt%%.*}"
 }
 
-_cs_warn() {
-    [[ -z "${cs_arr:-}" ]] && printf "No colorschemes found\n" 1>&2
-}
-
-_get_schemes() { # Only output full file name
-    find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
-}
-
 cs_list_schemes() {
-    mapfile -t cs_arr < <(_get_schemes)
+    _fill_cs_arr
     _cs_warn && exit 1
     printf "%s\n" "${cs_arr[@]}"
 }
 
 cs_list_fonts() {
-    mapfile -t fnt_arr < <(_get_fonts)
+    _fill_fnt_arr
     _fnt_warn && exit 1
     printf "%s\n" "${fnt_arr[@]%%.*}"
 }
@@ -89,11 +97,11 @@ cs_print_palette() {
 }
 
 cs_cycle() {
-    mapfile -t cs_arr < <(_get_schemes)
+    _fill_cs_arr
     max_idx_cs="$((${#cs_arr[@]} - 1))"
     idx_cs="-1"
 
-    mapfile -t fnt_arr < <(_get_fonts)
+    _fill_fnt_arr
     max_idx_fnt="$((${#fnt_arr[@]} - 1))"
     idx_fnt="-1"
 
