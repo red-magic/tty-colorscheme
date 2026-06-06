@@ -151,7 +151,7 @@ cycle_through() {
                 mode="cs"
                 if [[ "${idx_cs}" -gt 0 ]]; then
                     ((idx_cs--))
-                elif [[ "${idx_cs}" == -1 ]]; then
+                elif [[ "${idx_cs}" -eq -1 ]]; then
                     idx_cs="0" # Get to the first element on first keypress
                 else
                     idx_cs="${max_idx_cs}" # Wrap around to the last element
@@ -171,7 +171,7 @@ cycle_through() {
                 mode="fnt"
                 if [[ "${idx_fnt}" -gt 0 ]]; then
                     ((idx_fnt--))
-                elif [[ "${idx_fnt}" == -1 ]]; then
+                elif [[ "${idx_fnt}" -eq -1 ]]; then
                     idx_fnt="0" # Get to the first element on first keypress
                 else
                     idx_fnt="${max_idx_fnt}" # Wrap around to the last element
