@@ -22,7 +22,7 @@ _fnt_warn() {
     [[ -z "${fnt_arr:-}" ]] && printf "No PSF fonts found\n" 1>&2
 }
 
-_get_fonts() { # Only output file name
+_get_fonts() { # Only output full file name
     fnt_dirs=(
         "/usr/share/consolefonts" # Debian
         "/usr/share/kbd/consolefonts" # Arch
@@ -57,7 +57,7 @@ _cs_warn() {
     [[ -z "${cs_arr:-}" ]] && printf "No colorschemes found\n" 1>&2
 }
 
-_get_schemes() { # Only output file name
+_get_schemes() { # Only output full file name
     find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
 }
 
