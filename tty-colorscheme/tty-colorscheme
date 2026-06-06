@@ -113,7 +113,7 @@ cycle_through() {
             "cs")
                 # Only process if index is valid
                 if [[ "${idx_cs}" -ge 0 && "${idx_cs}" -le "${max_idx_cs}" ]]; then
-                    cs_set_scheme "${cs_arr[${idx_cs}]}"
+                    set_scheme "${cs_arr[${idx_cs}]}"
                     printf "[%s/%s]\n" "$((idx_cs + 1))" "$((max_idx_cs + 1))"
                 else
                     clear
@@ -185,7 +185,7 @@ cycle_through() {
     done
 }
 
-cs_set_scheme() {
+set_scheme() {
     cs="${1}"
 
     if [[ ! -f "${cs_dir}/${cs}" ]]; then
