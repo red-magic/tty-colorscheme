@@ -225,7 +225,7 @@ set_scheme() {
     printf "\nSetting colorscheme: %s\n\n" "${cs}"
 }
 
-cs_print_help() {
+print_help() {
     progname="${0##*/}"
 
     printf "Usage: %s <option | colorscheme>\n" "${progname}"
@@ -239,10 +239,10 @@ cs_print_help() {
 
 if [[ "${#}" -gt 1 ]]; then
     printf "Only 1 option or 1 argument is accepted\n" 1>&2
-    cs_print_help
+    print_help
     exit 1
 elif [[ "${#}" -eq 0 ]]; then
-    cs_print_help
+    print_help
     exit 0
 fi
 
