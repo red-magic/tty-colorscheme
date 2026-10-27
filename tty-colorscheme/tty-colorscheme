@@ -14,7 +14,6 @@ _fill_fnt_arr() {
     for dir in /usr/share/consolefonts /usr/share/kbd/consolefonts /usr/lib/kbd/consolefonts; do
         [[ -d "${dir}" ]] && dirs+=("${dir}")
     done
-    fnt_arr=()
     if (( ${#dirs[@]} > 0 )); then
         mapfile -t fnt_arr < <(
             find "${dirs[@]}" -name "*.psf*.gz" \
@@ -28,7 +27,6 @@ _set_colors() {
     printf "\e]P0%s\e]P1%s\e]P2%s\e]P3%s\e]P4%s\e]P5%s\e]P6%s\e]P7%s" \
            "${color01:?}" "${color02:?}" "${color03:?}" "${color04:?}" \
            "${color05:?}" "${color06:?}" "${color07:?}" "${color08:?}"
-
     printf "\e]P8%s\e]P9%s\e]PA%s\e]PB%s\e]PC%s\e]PD%s\e]PE%s\e]PF%s" \
            "${color09:?}" "${color10:?}" "${color11:?}" "${color12:?}" \
            "${color13:?}" "${color14:?}" "${color15:?}" "${color16:?}"
@@ -36,13 +34,11 @@ _set_colors() {
 
 _set_font() {
     fnt="${1}"
-
     if [[ "$(id -u)" -eq 0 ]]; then
         for i in {1..6}; do setfont "${fnt}" -C "/dev/tty${i}"; done
     else
         setfont "${fnt}"
     fi
-
     clear
     showconsolefont
     printf "Setting font: %s\n\n" "${fnt%%.*}"
@@ -87,7 +83,6 @@ cycle_through() {
 
     cs_max="$(( ${#cs_arr[@]} - 1 ))"
     fnt_max="$(( ${#fnt_arr[@]} - 1 ))"
-
     cs_idx="-1"
     fnt_idx="-1"
     mode=""
