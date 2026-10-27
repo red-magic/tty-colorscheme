@@ -4,47 +4,27 @@ set -euo pipefail
 
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
-_warn_cs() {
-    [[ -z "${cs_arr:-}" ]] && printf "No colorschemes found\n" 1>&2
-}
-
-_warn_fnt() {
-    [[ -z "${fnt_arr:-}" ]] && printf "No PSF fonts found\n" 1>&2
-}
-
-_get_schemes() { # Only output full file name
-    find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
-}
-
-_get_fonts() { # Only output full file name
-    fnt_dirs=(
-        "/usr/share/consolefonts" # Debian
-        "/usr/share/kbd/consolefonts" # Arch
-        "/usr/lib/kbd/consolefonts" # Fedora
-    )
-
-    for fnt_dir in "${fnt_dirs[@]}"; do
-        if [[ -d "${fnt_dir}" ]]; then
-            find "${fnt_dir}" -name "*.psf*.gz" \
-                | awk -F/ '{print $NF}' \
-                | sort -V
-        fi
-    done
-}
-
 _fill_cs_arr() {
-    mapfile -t cs_arr < <(_get_schemes)
+    mapfile -t cs_arr < <(
+        find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
+    )
 }
 
 _fill_fnt_arr() {
-    mapfile -t fnt_arr < <(_get_fonts)
+    for dir in /usr/share/consolefonts /usr/share/kbd/consolefonts /usr/lib/kbd/consolefonts; do
+        [[ -d "${dir}" ]] && dirs+=("${dir}")
+    done
+    fnt_arr=()
+    if (( ${#dirs[@]} > 0 )); then
+        mapfile -t fnt_arr < <(
+            find "${dirs[@]}" -name "*.psf*.gz" \
+                | awk -F/ '{print $NF}' \
+                | sort -V
+        )
+    fi
 }
 
 _set_colors() {
-    # Black   Red     Green   Yellow  Blue    Magenta Cyan    White
-    # color01 color02 color03 color04 color05 color06 color07 color08
-    # color09 color10 color11 color12 color13 color14 color15 color16
-
     printf "\e]P0%s\e]P1%s\e]P2%s\e]P3%s\e]P4%s\e]P5%s\e]P6%s\e]P7%s" \
            "${color01:?}" "${color02:?}" "${color03:?}" "${color04:?}" \
            "${color05:?}" "${color06:?}" "${color07:?}" "${color08:?}"
@@ -65,19 +45,24 @@ _set_font() {
 
     clear
     showconsolefont
-
     printf "Setting font: %s\n\n" "${fnt%%.*}"
 }
 
 list_schemes() {
     _fill_cs_arr
-    _warn_cs && exit 1
+    if (( ${#cs_arr[@]} == 0 )); then
+        printf "No colorschemes found\n" 1>&2
+        exit 1
+    fi
     printf "%s\n" "${cs_arr[@]}"
 }
 
 list_fonts() {
     _fill_fnt_arr
-    _warn_fnt && exit 1
+    if (( ${#fnt_arr[@]} == 0 )); then
+        printf "No PSF fonts found\n" 1>&2
+        exit 1
+    fi
     printf "%s\n" "${fnt_arr[@]%%.*}"
 }
 
@@ -89,7 +74,7 @@ print_palette() {
             printf "\e[%sm" "${bold}"
             for frgrnd in {30..37}; do
                 printf "\e[%sm %3s" "${frgrnd}" "${cnt}"
-                ((cnt++))
+                cnt="$((cnt + 1))"
             done
         done
         printf "\e[0m\n"
@@ -98,37 +83,34 @@ print_palette() {
 
 cycle_through() {
     _fill_cs_arr
-    max_idx_cs="$((${#cs_arr[@]} - 1))"
-    idx_cs="-1"
-
     _fill_fnt_arr
-    max_idx_fnt="$((${#fnt_arr[@]} - 1))"
-    idx_fnt="-1"
 
+    cs_max="$(( ${#cs_arr[@]} - 1 ))"
+    fnt_max="$(( ${#fnt_arr[@]} - 1 ))"
+
+    cs_idx="-1"
+    fnt_idx="-1"
     mode=""
-    clear
 
+    clear
     while true; do
         case "${mode}" in
             "cs")
-                # Only process if index is valid
-                if [[ "${idx_cs}" -ge 0 && "${idx_cs}" -le "${max_idx_cs}" ]]; then
-                    set_scheme "${cs_arr[${idx_cs}]}"
-                    printf "[%s/%s]\n" "$((idx_cs + 1))" "$((max_idx_cs + 1))"
+                if (( cs_idx >= 0 && cs_idx <= cs_max )); then
+                    set_scheme "${cs_arr[cs_idx]}"
+                    printf "[%d/%d]\n" "$((cs_idx + 1))" "$((cs_max + 1))"
                 else
                     clear
-                    _warn_cs
+                    printf "No colorschemes found\n" 1>&2
                 fi
                 ;;
-
             "fnt")
-                # Only process if index is valid
-                if [[ "${idx_fnt}" -ge 0 && "${idx_fnt}" -le "${max_idx_fnt}" ]]; then
-                    _set_font "${fnt_arr[${idx_fnt}]}"
-                    printf "[%s/%s]\n" "$((idx_fnt + 1))" "$((max_idx_fnt + 1))"
+                if (( fnt_idx >= 0 && fnt_idx <= fnt_max )); then
+                    _set_font "${fnt_arr[fnt_idx]}"
+                    printf "[%d/%d]\n" "$((fnt_idx + 1))" "$((fnt_max + 1))"
                 else
                     clear
-                    _warn_fnt
+                    printf "No PSF fonts found\n" 1>&2
                 fi
                 ;;
         esac
@@ -140,44 +122,40 @@ cycle_through() {
         case "${REPLY}" in
             "j")
                 mode="cs"
-                if [[ "${idx_cs}" -lt "${max_idx_cs}" ]]; then
-                    : $((idx_cs++))
+                if (( cs_idx < cs_max )); then
+                    cs_idx="$((cs_idx + 1))"
                 else
-                    idx_cs="0" # Wrap around to the first element
+                    cs_idx="0"
                 fi
                 ;;
-
             "k")
                 mode="cs"
-                if [[ "${idx_cs}" -gt 0 ]]; then
-                    ((idx_cs--))
-                elif [[ "${idx_cs}" -eq -1 ]]; then
-                    idx_cs="0" # Get to the first element on first keypress
+                if (( cs_idx > 0 )); then
+                    cs_idx="$((cs_idx - 1))"
+                elif (( cs_idx == -1 )); then
+                    cs_idx="0"
                 else
-                    idx_cs="${max_idx_cs}" # Wrap around to the last element
+                    cs_idx="${cs_max}"
                 fi
                 ;;
-
             "l")
                 mode="fnt"
-                if [[ "${idx_fnt}" -lt "${max_idx_fnt}" ]]; then
-                    : $((idx_fnt++))
+                if (( fnt_idx < fnt_max )); then
+                    fnt_idx="$((fnt_idx + 1))"
                 else
-                    idx_fnt="0" # Wrap around to the first element
+                    fnt_idx="0"
                 fi
                 ;;
-
             "h")
                 mode="fnt"
-                if [[ "${idx_fnt}" -gt 0 ]]; then
-                    ((idx_fnt--))
-                elif [[ "${idx_fnt}" -eq -1 ]]; then
-                    idx_fnt="0" # Get to the first element on first keypress
+                if (( fnt_idx > 0 )); then
+                    fnt_idx="$((fnt_idx - 1))"
+                elif (( fnt_idx == -1 )); then
+                    fnt_idx="0"
                 else
-                    idx_fnt="${max_idx_fnt}" # Wrap around to the last element
+                    fnt_idx="${fnt_max}"
                 fi
                 ;;
-
             *)
                 exit 0
                 ;;
@@ -198,12 +176,10 @@ set_scheme() {
 
     for i in {01..16}; do
         color_var="color${i}"
-
         if [[ ! -v "${color_var}" ]]; then
             printf "Missing %s in scheme %s\n" "${color_var}" "${cs}" 1>&2
             exit 1
         fi
-
         if ! [[ "${!color_var}" =~ ^[0-9A-Fa-f]{6}$ ]]; then
             printf "Invalid value for %s in scheme %s: %s\n" "${color_var}" "${cs}" "${!color_var}" 1>&2
             exit 1
@@ -216,7 +192,6 @@ set_scheme() {
         _set_colors
     fi
 
-    # Prevent palette going into logs
     if [[ "${TERM}" == "linux" ]]; then
         clear
         print_palette
@@ -250,25 +225,20 @@ case "${1}" in
     "-l")
         list_schemes
         ;;
-
     "-f")
         list_fonts
         ;;
-
     "-p")
         print_palette
         ;;
-
     "-c")
         cycle_through
         ;;
-
     "-"*)
         printf "Invalid option: %s\n" "${1}" 1>&2
         print_help
         exit 1
         ;;
-
     *)
         set_scheme "${1}"
         ;;
