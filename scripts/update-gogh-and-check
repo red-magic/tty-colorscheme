@@ -5,10 +5,12 @@ set -euo pipefail
 cd "$(dirname "${0}")" || exit 1
 
 update_gogh() {
-    gogh_ver="1251"
-    gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
+    local gogh_ver="1251"
+    local gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
+    local gogh_dir="${cs_dir}/gogh"
+    local scheme_path scheme_file scheme_short
+
     cs_dir="../tty-colorscheme/colorschemes"
-    gogh_dir="${cs_dir}/gogh"
     tmp_dir="converted-gogh-schemes"
 
     curl -fLO "${gogh_link}"
@@ -50,6 +52,7 @@ update_gogh() {
 }
 
 make_hex_uppercase() {
+    local cs_file
     for cs_file in "${cs_dir}"/*/*; do sed -i 's/=\(.*\)/=\U\1/' "${cs_file}"; done
 }
 
@@ -61,9 +64,12 @@ find_dup_names() {
 }
 
 remove_dup_files() {
+    local dup line
+
     find "${cs_dir}" -type f -exec sha256sum {} \; > checksums.txt
 
     list_dup_files() {
+        local dup line
         awk '{print $1}' checksums.txt \
             | sort \
             | uniq -d \
