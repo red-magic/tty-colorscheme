@@ -6,7 +6,8 @@ cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _fill_cs_arr() {
     mapfile -t cs_arr < <(
-        find "${cs_dir}"/* 2> /dev/null | awk -F/ '{print $NF}'
+        find "${cs_dir}" -mindepth 1 -maxdepth 1 -type f -printf "%f\n" 2> /dev/null \
+            | sort -V
     )
 }
 
@@ -16,8 +17,7 @@ _fill_fnt_arr() {
     done
     if (( ${#dirs[@]} > 0 )); then
         mapfile -t fnt_arr < <(
-            find "${dirs[@]}" -name "*.psf*.gz" \
-                | awk -F/ '{print $NF}' \
+            find "${dirs[@]}" -name "*.psf*.gz" -type f -printf "%f\n"\
                 | sort -V
         )
     fi
@@ -204,7 +204,7 @@ print_help() {
     printf "  -p    Print the current palette\n"
     printf "  -c    Cycle through colorschemes and fonts\n"
 
-    tty | grep -q '/dev/tty*' || printf "%s should be run from TTY\n" "${progname}" 1>&2
+    [[ "$(tty)" == "/dev/tty"* ]] || printf "%s should be run from TTY\n" "${progname}" 1>&2
 }
 
 if [[ "${#}" -gt 1 ]]; then
