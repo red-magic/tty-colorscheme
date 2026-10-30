@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-cs_dir="/etc/tty-colorscheme/colorschemes"
+readonly cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _fill_cs_arr() {
     cs_arr=()
@@ -13,15 +13,20 @@ _fill_cs_arr() {
 }
 
 _fill_fnt_arr() {
+    readonly -a fnt_search_dirs=(
+        "/usr/share/consolefonts"
+        "/usr/share/kbd/consolefonts"
+        "/usr/lib/kbd/consolefonts"
+    )
     local dir
     local -a dirs=()
     fnt_arr=()
-    for dir in /usr/share/consolefonts /usr/share/kbd/consolefonts /usr/lib/kbd/consolefonts; do
+    for dir in "${fnt_search_dirs[@]}"; do
         [[ -d "${dir}" ]] && dirs+=("${dir}")
     done
     if (( ${#dirs[@]} > 0 )); then
         mapfile -t fnt_arr < <(
-            find "${dirs[@]}" -name "*.psf*.gz" -type f -printf "%f\n"\
+            find "${dirs[@]}" -name "*.psf*.gz" -type f -printf "%f\n" \
                 | sort -V
         )
     fi
@@ -67,13 +72,13 @@ list_fonts() {
 }
 
 print_palette() {
-    local cnt="1" bkgrnd bold frgrnd
-    for bkgrnd in {40..47}; do
-        printf "\e[%sm" "${bkgrnd}"
+    local cnt="1" fg bg bold
+    for bg in {40..47}; do
+        printf "\e[%sm" "${bg}"
         for bold in 22 1; do
             printf "\e[%sm" "${bold}"
-            for frgrnd in {30..37}; do
-                printf "\e[%sm %3s" "${frgrnd}" "${cnt}"
+            for fg in {30..37}; do
+                printf "\e[%sm %3s" "${fg}" "${cnt}"
                 cnt="$((cnt + 1))"
             done
         done
