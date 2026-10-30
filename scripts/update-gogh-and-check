@@ -86,6 +86,24 @@ remove_dup_files() {
         | while read -r line; do rm -vf "${line}"; done
 }
 
+check_scheme_size() {
+    local expected_size="272"
+    local cs_file size
+    local -a bad=()
+
+    shopt -s nullglob
+    for cs_file in "${cs_dir}"/*/*; do
+        size="$(stat -c %s "${cs_file}")"
+        (( size == expected_size )) || bad+=("${cs_file}: ${size}B")
+    done
+
+    if (( ${#bad[@]} > 0 )); then
+        printf "\nFiles with unexpected size (expected %sB):\n" "${expected_size}" 1>&2
+        printf "%s\n" "${bad[@]}" 1>&2
+        exit 1
+    fi
+}
+
 clean_up() {
     printf "\nPress Enter to continue\n" && read -r
     rm -vrf "${tmp_dir}" Gogh-* ./*.tar.gz checksums.txt
@@ -95,4 +113,5 @@ update_gogh
 make_hex_uppercase
 find_dup_names
 remove_dup_files
+check_scheme_size
 clean_up
