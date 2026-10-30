@@ -5,6 +5,7 @@ set -euo pipefail
 cs_dir="/etc/tty-colorscheme/colorschemes"
 
 _fill_cs_arr() {
+    cs_arr=()
     mapfile -t cs_arr < <(
         find "${cs_dir}" -mindepth 1 -maxdepth 1 -type f -printf "%f\n" 2> /dev/null \
             | sort -V
@@ -12,6 +13,9 @@ _fill_cs_arr() {
 }
 
 _fill_fnt_arr() {
+    local dir
+    local -a dirs=()
+    fnt_arr=()
     for dir in /usr/share/consolefonts /usr/share/kbd/consolefonts /usr/lib/kbd/consolefonts; do
         [[ -d "${dir}" ]] && dirs+=("${dir}")
     done
@@ -33,7 +37,7 @@ _set_colors() {
 }
 
 _set_font() {
-    fnt="${1}"
+    local fnt="${1}" i
     if [[ "$(id -u)" -eq 0 ]]; then
         for i in {1..6}; do setfont "${fnt}" -C "/dev/tty${i}"; done
     else
@@ -63,7 +67,7 @@ list_fonts() {
 }
 
 print_palette() {
-    cnt="1"
+    local cnt="1" bkgrnd bold frgrnd
     for bkgrnd in {40..47}; do
         printf "\e[%sm" "${bkgrnd}"
         for bold in 22 1; do
@@ -81,6 +85,7 @@ cycle_through() {
     _fill_cs_arr
     _fill_fnt_arr
 
+    local cs_max fnt_max cs_idx fnt_idx mode
     cs_max="$(( ${#cs_arr[@]} - 1 ))"
     fnt_max="$(( ${#fnt_arr[@]} - 1 ))"
     cs_idx="-1"
@@ -159,7 +164,7 @@ cycle_through() {
 }
 
 set_scheme() {
-    cs="${1}"
+    local cs="${1}" i color_var
 
     if [[ ! -f "${cs_dir}/${cs}" ]]; then
         printf "Invalid colorscheme: %s\n" "${cs}" 1>&2
@@ -196,7 +201,7 @@ set_scheme() {
 }
 
 print_help() {
-    progname="${0##*/}"
+    local progname="${0##*/}"
 
     printf "Usage: %s <option | colorscheme>\n" "${progname}"
     printf "  -l    List available colorschemes\n"
