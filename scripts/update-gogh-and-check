@@ -5,13 +5,13 @@ set -euo pipefail
 cd "$(dirname "${0}")" || exit 1
 
 update_gogh() {
+    cs_dir="../tty-colorscheme/colorschemes"
+    tmp_dir="converted-gogh-schemes"
+
     local gogh_ver="1251"
     local gogh_link="https://github.com/Gogh-Co/Gogh/archive/refs/tags/v${gogh_ver}.tar.gz"
     local gogh_dir="${cs_dir}/gogh"
     local scheme_path scheme_file scheme_short
-
-    cs_dir="../tty-colorscheme/colorschemes"
-    tmp_dir="converted-gogh-schemes"
 
     curl -fLO "${gogh_link}"
     tar xvf "v${gogh_ver}.tar.gz"
