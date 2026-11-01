@@ -218,7 +218,7 @@ print_help() {
 }
 
 if [[ "${#}" -gt 1 ]]; then
-    printf "Only 1 option or 1 argument is accepted\n" 1>&2
+    printf "Too many arguments\n" 1>&2
     print_help
     exit 1
 elif [[ "${#}" -eq 0 ]]; then
