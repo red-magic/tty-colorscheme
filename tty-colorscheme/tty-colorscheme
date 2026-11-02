@@ -42,7 +42,7 @@ _set_colors() {
 }
 
 _set_font() {
-    local fnt="${1}" i
+    local fnt="$1" i
     if [[ "$(id -u)" -eq 0 ]]; then
         for i in {1..6}; do setfont "${fnt}" -C "/dev/tty${i}"; done
     else
@@ -87,7 +87,7 @@ print_palette() {
 }
 
 set_scheme() {
-    local cs="${1}"
+    local cs="$1"
     local file="${cs_dir}/${cs}"
     local line var val
     local -a color_vars=()
@@ -231,16 +231,16 @@ print_help() {
 }
 
 main() {
-    if [[ "${#}" -gt 1 ]]; then
+    if [[ "$#" -gt 1 ]]; then
         printf "Too many arguments\n" 1>&2
         print_help
         exit 1
-    elif [[ "${#}" -eq 0 ]]; then
+    elif [[ "$#" -eq 0 ]]; then
         print_help
         exit 0
     fi
 
-    case "${1}" in
+    case "$1" in
         "-l")
             list_schemes
             ;;
@@ -254,14 +254,14 @@ main() {
             cycle_through
             ;;
         "-"*)
-            printf "Invalid option: %s\n" "${1}" 1>&2
+            printf "Invalid option: %s\n" "$1" 1>&2
             print_help
             exit 1
             ;;
         *)
-            set_scheme "${1}"
+            set_scheme "$1"
             ;;
     esac
 }
 
-main "${@}"
+main "$@"

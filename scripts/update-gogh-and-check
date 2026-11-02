@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-cd "$(dirname "${0}")" || exit 1
+cd "$(dirname "$0")" || exit 1
 
 cs_dir="../tty-colorscheme/colorschemes"
 tmp_dir="converted-gogh-schemes"
