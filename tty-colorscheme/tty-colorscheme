@@ -218,7 +218,7 @@ cycle_through() {
     done
 }
 
-print_help() {
+usage() {
     local progname="${0##*/}"
 
     printf "Usage: %s <option | colorscheme>\n" "${progname}"
@@ -233,10 +233,10 @@ print_help() {
 main() {
     if [[ "$#" -gt 1 ]]; then
         printf "Too many arguments\n" 1>&2
-        print_help
+        usage
         exit 1
     elif [[ "$#" -eq 0 ]]; then
-        print_help
+        usage
         exit 0
     fi
 
@@ -255,7 +255,7 @@ main() {
             ;;
         "-"*)
             printf "Invalid option: %s\n" "$1" 1>&2
-            print_help
+            usage
             exit 1
             ;;
         *)
