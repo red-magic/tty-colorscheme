@@ -86,6 +86,56 @@ print_palette() {
     done
 }
 
+set_scheme() {
+    local cs="${1}"
+    local file="${cs_dir}/${cs}"
+    local line var val
+    local -a color_vars=()
+    local -a color_vals=()
+    local i
+
+    if [[ ! -f "${file}" ]]; then
+        printf "Invalid colorscheme: %s\n" "${cs}" 1>&2
+        exit 1
+    fi
+
+    while IFS= read -r line || [[ -n "${line}" ]]; do
+        [[ -z "${line}" || "${line}" =~ ^[[:space:]]*# ]] && continue
+        if [[ "${line}" =~ ^color(0[1-9]|1[0-6])=\"([0-9A-Fa-f]{6})\"$ ]]; then
+            var="color${BASH_REMATCH[1]}"
+            val="${BASH_REMATCH[2]}"
+            color_vars+=("${var}")
+            color_vals+=("${val}")
+        else
+            printf "Invalid line in scheme %s: %s\n" "${cs}" "${line}" 1>&2
+            exit 1
+        fi
+    done < "${file}"
+
+    if (( ${#color_vars[@]} != 16 )); then
+        printf "Scheme %s must define exactly 16 colors\n" "${cs}" 1>&2
+        exit 1
+    fi
+
+    unset color{01..16}
+    for (( i = 0; i < 16; i++ )); do
+        printf -v "${color_vars[i]}" '%s' "${color_vals[i]}"
+    done
+
+    if [[ "$(id -u)" -eq 0 ]]; then
+        for i in {1..6}; do _set_colors > "/dev/tty${i}"; done
+    else
+        _set_colors
+    fi
+
+    if [[ "${TERM}" == "linux" ]]; then
+        clear
+        print_palette
+    fi
+
+    printf "\nSetting colorscheme: %s\n\n" "${cs}"
+}
+
 cycle_through() {
     _fill_cs_arr
     _fill_fnt_arr
@@ -168,43 +218,6 @@ cycle_through() {
     done
 }
 
-set_scheme() {
-    local cs="${1}" i color_var
-
-    if [[ ! -f "${cs_dir}/${cs}" ]]; then
-        printf "Invalid colorscheme: %s\n" "${cs}" 1>&2
-        exit 1
-    fi
-
-    unset color{01..16}
-    source "${cs_dir}/${cs}"
-
-    for i in {01..16}; do
-        color_var="color${i}"
-        if [[ ! -v "${color_var}" ]]; then
-            printf "Missing %s in scheme %s\n" "${color_var}" "${cs}" 1>&2
-            exit 1
-        fi
-        if ! [[ "${!color_var}" =~ ^[0-9A-Fa-f]{6}$ ]]; then
-            printf "Invalid value for %s in scheme %s: %s\n" "${color_var}" "${cs}" "${!color_var}" 1>&2
-            exit 1
-        fi
-    done
-
-    if [[ "$(id -u)" -eq 0 ]]; then
-        for i in {1..6}; do _set_colors > "/dev/tty${i}"; done
-    else
-        _set_colors
-    fi
-
-    if [[ "${TERM}" == "linux" ]]; then
-        clear
-        print_palette
-    fi
-
-    printf "\nSetting colorscheme: %s\n\n" "${cs}"
-}
-
 print_help() {
     local progname="${0##*/}"
 
@@ -217,34 +230,38 @@ print_help() {
     [[ "$(tty)" == "/dev/tty"* ]] || printf "%s should be run from TTY\n" "${progname}" 1>&2
 }
 
-if [[ "${#}" -gt 1 ]]; then
-    printf "Too many arguments\n" 1>&2
-    print_help
-    exit 1
-elif [[ "${#}" -eq 0 ]]; then
-    print_help
-    exit 0
-fi
-
-case "${1}" in
-    "-l")
-        list_schemes
-        ;;
-    "-f")
-        list_fonts
-        ;;
-    "-p")
-        print_palette
-        ;;
-    "-c")
-        cycle_through
-        ;;
-    "-"*)
-        printf "Invalid option: %s\n" "${1}" 1>&2
+main() {
+    if [[ "${#}" -gt 1 ]]; then
+        printf "Too many arguments\n" 1>&2
         print_help
         exit 1
-        ;;
-    *)
-        set_scheme "${1}"
-        ;;
-esac
+    elif [[ "${#}" -eq 0 ]]; then
+        print_help
+        exit 0
+    fi
+
+    case "${1}" in
+        "-l")
+            list_schemes
+            ;;
+        "-f")
+            list_fonts
+            ;;
+        "-p")
+            print_palette
+            ;;
+        "-c")
+            cycle_through
+            ;;
+        "-"*)
+            printf "Invalid option: %s\n" "${1}" 1>&2
+            print_help
+            exit 1
+            ;;
+        *)
+            set_scheme "${1}"
+            ;;
+    esac
+}
+
+main "${@}"
