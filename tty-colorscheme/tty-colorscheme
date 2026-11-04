@@ -128,7 +128,7 @@ set_scheme() {
         _set_colors
     fi
 
-    if [[ "${TERM}" == "linux" ]]; then
+    if [[ -t 1 ]]; then
         clear
         print_palette
     fi
@@ -226,8 +226,6 @@ usage() {
     printf "  -f    List available PSF fonts\n"
     printf "  -p    Print the current palette\n"
     printf "  -c    Cycle through colorschemes and fonts\n"
-
-    [[ "$(tty)" == "/dev/tty"* ]] || printf "%s should be run from TTY\n" "${progname}" 1>&2
 }
 
 main() {
